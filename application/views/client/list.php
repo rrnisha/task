@@ -169,17 +169,16 @@
                         <table class="tablesorter" cellspacing="0"> 
                             <thead> 
                                 <tr>
-                                    <th rowspan="1">File</th>                                    
-                                    <th rowspan="1">Title</th>
-                                    <th rowspan="1">Full Name</th> 
-                                    <th rowspan="1">Type</th>
-                                    <th rowspan="1">Mobile</th>
-                                    <th rowspan="1">Home</th>
+                                    <th class="required" rowspan="1">File</th>                                    
+                                    <th class="required" rowspan="1">Title</th>
+                                    <th class="required" rowspan="1">Full Name</th> 
+                                    <th class="required" rowspan="1">Type</th>
+                                    <th class="required" rowspan="1">Mobile</th>
                                     <th rowspan="1">Office</th>
                                     <th rowspan="1">eMail</th>
-                                    <th rowspan="1">PAN/TAN</th>
+                                    <th class="required" rowspan="1">PAN/TAN</th>
                                     <th rowspan="1">Address</th>
-                                    <th rowspan="1">Genius Id</th>
+                                    <th class="required" rowspan="1">Genius Id</th>
                                     <th  rowspan="1" colspan="2">Action</th>
                                 </tr>
                             </thead>
@@ -194,7 +193,6 @@
                                         <td><?php echo $client->full_name; ?></td>
                                         <td><?php echo $client->client_type; ?></td>
                                         <td><?php echo $client->phone_mobile; ?></td>
-                                        <td><?php echo $client->phone_home; ?></td>
                                         <td><?php echo $client->phone_office; ?></td>
                                         <td><?php echo $client->email; ?></td>
                                         <td><?php echo $client->pan_tan; ?></td>

@@ -48,11 +48,11 @@ class Client extends CI_Controller {
             $this->form_validation->set_rules('title', 'Title', 'required');
             $this->form_validation->set_rules('fullname', 'Name', 'required');
             $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');
-            $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');
+//             $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');
             $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'required');
-            $this->form_validation->set_rules('email', 'Email', 'required');
-            $this->form_validation->set_rules('address', 'Address', 'required');
-            $this->form_validation->set_rules('client_type', 'Type', 'required');
+//             $this->form_validation->set_rules('email', 'Email', 'required');
+//             $this->form_validation->set_rules('address', 'Address', 'required');
+//             $this->form_validation->set_rules('client_type', 'Type', 'required');
             $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');
             $this->form_validation->set_rules('file_id', 'File Id', 'required');
 
@@ -72,16 +72,11 @@ class Client extends CI_Controller {
 
         $data = array();
 
-        if (isset($_POST['edit']) && $_POST['edit'] == 'Edit') {
-//            $data['values'] = $_POST;
-
+        if (isset($_POST['edit']) && $_POST['edit'] == 'Ok') {
             $data['values']['id'] = $_POST['id'];
             $data['values']['title'] = $_POST['title'];
-//            $data['values']['first_name'] = $_POST['first_name'];
-//            $data['values']['last_name'] = $_POST['last_name'];
             $data['values']['full_name'] = $_POST['full_name'] ;
             $data['values']['phone_mobile'] = $_POST['phone_mobile'];
-            $data['values']['phone_home'] = $_POST['phone_home'];
             $data['values']['phone_office'] = $_POST['phone_office'];
             $data['values']['client_type'] = $_POST['client_type'];
             $data['values']['email'] = $_POST['email'];
@@ -91,35 +86,29 @@ class Client extends CI_Controller {
             $data['values']['file_id'] = $_POST['file_id'];
 
             // Loading form validation library
-//            $this->load->library('form_validation');
-//            // Setting validation rules
-//            $this->form_validation->set_rules('title', 'Title', 'required');    
-//            $this->form_validation->set_rules('first_name', 'First Name', 'required');    
-//            $this->form_validation->set_rules('last_name', 'Last Name', 'required');    
-//            $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');    
-//            $this->form_validation->set_rules('phone_home', 'Home Phone No', 'required');    
-//            $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');    
-//            $this->form_validation->set_rules('phone_fax', 'Fax Phone No', 'required');    
-//            $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'required');    
-//            $this->form_validation->set_rules('itr_password', 'Login Password', 'required');    
-//            $this->form_validation->set_rules('email', 'Email', 'required');    
-//            $this->form_validation->set_rules('address', 'Address', 'required');    
-////            $this->form_validation->set_rules('client_type', 'Type', 'required');    
-//            $this->form_validation->set_rules('bank_name', 'Client Bank Name', 'required');    
-//            $this->form_validation->set_rules('bank_acc_no', 'Client Bank Account', 'required');    
-//            $this->form_validation->set_rules('bank_ifsc_code', 'Client Bank IFSC COde', 'required');    
-//            $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');    
-//            $this->form_validation->set_rules('file_id', 'File Id', 'required');    
+           $this->load->library('form_validation');
+           // Setting validation rules
+           $this->form_validation->set_rules('title', 'Title', 'required');    
+           $this->form_validation->set_rules('full_name', 'Name', 'required');    
+           $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');    
+           $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'required');    
+           $this->form_validation->set_rules('client_type', 'Client Type', 'required');
+           $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');    
+           $this->form_validation->set_rules('file_id', 'File Id', 'required');    
             // Validating..
-//            if ($this->form_validation->run() == TRUE ){      
-            $this->Client_model->edit($data['values']);
-            redirect('/client/lists?msg=clientEditSuccess');
-//            } 
-//            else
-//            {
-//                //validation failed
-//            }
+           if ($this->form_validation->run() == TRUE ) {
+           		print_r("Validation passed");
+	       		$this->Client_model->edit($data['values']);
+	            redirect('/client/lists?msg=clientEditSuccess');
+           } 
         }
+        $client_query = $this->Client_model->get($_POST['id']);
+        $res = $client_query->result();
+        $data['client'] = $res[0];
+                
+        $this->load->view('layout/header');
+        $this->load->view('client/edit', $data);
+        $this->load->view('layout/footer');
     }
 
     public function get($clientId) {

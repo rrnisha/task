@@ -273,7 +273,6 @@ class Task extends CI_Controller {
         $data['values']['remarks'] = '';
 
         if (isset($_POST['create']) && $_POST['create'] == 'Create') {
-        	print_r($_POST);
             $data['values'] = $_POST;
             // Loading form validation library
             $this->load->library('form_validation');
