@@ -728,13 +728,13 @@
                                 <tr>
                                     <th rowspan="1"></th>
                                     <th rowspan="1">ID</th>                                    
-                                    <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <th rowspan="1">Owner</th>  <!-- TODO : Only for Super Admin --> <?php } ?>
-                                    <th rowspan="1">Task</th>
-                                    <th rowspan="1">Client</th>
+                                    <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <th class="required" rowspan="1">Owner</th>  <!-- TODO : Only for Super Admin --> <?php } ?>
+                                    <th class="required" rowspan="1">Task</th>
+                                    <th class="required" rowspan="1">Client</th>
                                     <th rowspan="1">Status</th>
-                                    <th rowspan="1">Priority</th>
-                                    <th rowspan="1">Type</th>
-                                    <th rowspan="1">Due Date</th>                                    
+                                    <th class="required" rowspan="1">Priority</th>
+                                    <th class="required" rowspan="1">Type</th>
+                                    <th class="required" rowspan="1">Due Date</th>                                    
                                     <?php if ($status == 'completed' || $status == 'finalized' || $status == 'created') { ?> <th  rowspan="1">End Date</th> <?php } ?>
                                     <?php if (!($status == 'completed' || $status == 'finalized')) { ?> <th  rowspan="1" colspan="7" align="center">Action</th> <?php } ?>
                                 </tr>
@@ -923,17 +923,17 @@
                         }
                         else{ 
                         ?>
-                        <p>Details for <strong><?php echo $tasks[0]->id; ?> - <?php echo $tasks[0]->title; ?></strong></p>
+                        <p>Details for Task #<strong><?php echo $tasks[0]->id; ?> - <?php echo $tasks[0]->title; ?></strong></p>
                         <table class="tablesorter" cellspacing="0">
                             <tr>
-                                <td>
+                                <td  class="required">
                                     Start Date
                                 </td>
                                 <td>
                                     <?php echo $tasks[0]->start_date ?>
                                 </td>
                                 <td>&nbsp;</td>
-                                <td>
+                                <td  class="required">
                                     Due Date
                                 </td>
                                 <td>
@@ -944,12 +944,6 @@
                                 </td>
                                 <td>
                                     <?php echo $tasks[0]->end_date ?>
-                                </td>
-                                <td>
-                                    Doc Links
-                                </td>
-                                <td>
-                                    If Task - Doc
                                 </td>
                             </tr>
                         <?php 

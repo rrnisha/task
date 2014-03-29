@@ -9,7 +9,7 @@
             <form name="frmEditTask" id="frmEditTask" method="post" action="<?php echo base_url(); ?>index.php/task/edit">    
                 <input type="hidden" name="id" value="<?php echo $task->id; ?>"></input>
                 <fieldset>
-                    <label>Task Description</label>
+                    <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?>>Task Description</label>
                     <input type="text" name="title" value="<?php echo $task->title; ?>"/>
                 </fieldset>
                 <fieldset>

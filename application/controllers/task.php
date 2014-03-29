@@ -285,9 +285,6 @@ class Task extends CI_Controller {
             $this->form_validation->set_rules('date_start', 'from date', 'required');
             $this->form_validation->set_rules('date_end', 'end date', 'required');
             
-            $_POST['date_start'] = $this->changeDateFormat($_POST['date_start']);
-            $_POST['date_end'] = $this->changeDateFormat($_POST['date_end']);
-            
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
 
@@ -300,7 +297,9 @@ class Task extends CI_Controller {
             
             // Validating..
             if ($this->form_validation->run() == TRUE) {
-                $this->Task_model->insert();
+            	$_POST['date_start'] = $this->changeDateFormat($_POST['date_start']);
+            	$_POST['date_end'] = $this->changeDateFormat($_POST['date_end']);
+            	$this->Task_model->insert();
                 redirect('/task/index?msg=success');
             }
         }
@@ -432,11 +431,24 @@ class Task extends CI_Controller {
     }
 
     public function edit() {
-        echo $_POST['id'];
         if (isset($_POST['Yes']) && $_POST['Yes'] == 'Ok') {
-            $this->Task_model->edit();
-            redirect('/task/index?msg=taskEditSuccess');
+        	// Loading form validation library
+        	$this->load->library('form_validation');
+        	// Setting validation rules        	
+        	$this->form_validation->set_rules('title', 'Title', 'required');
+        	// Validating..
+        	if ($this->form_validation->run() == TRUE) {
+	            $this->Task_model->edit();
+	            redirect('/task/index?msg=taskEditSuccess');
+        	}        	
         }
+        $task_query = $this->Task_model->get($_POST['id']);
+        $res = $task_query->result();
+        $data['task'] = $res[0];
+        
+        $this->load->view('layout/header');
+        $this->load->view('task/edit', $data);
+        $this->load->view('layout/footer');        
     }
 
     public function reports() {
