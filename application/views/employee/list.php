@@ -117,15 +117,13 @@
                                 <tr>
                                     <th rowspan="1">SNo</th>
                                     <th rowspan="1">Emp ID</th>
-                                    <th rowspan="1">Title</th>
-                                    <th rowspan="1">First Name</th> 
-                                    <th rowspan="1">Last Name</th> 
-                                    <th rowspan="1">Full Name</th> 
-                                    <th rowspan="1">Login Name</th>
+                                    <th class="required" rowspan="1">Title</th>
+                                    <th class="required" rowspan="1">Name</th> 
+                                    <th class="required" rowspan="1">Login Name</th>
                                     <th rowspan="1">Phone</th>
                                     <th rowspan="1">eMail</th>
                                     <th rowspan="1">Address</th>
-                                    <th rowspan="1">Role</th>
+                                    <th class="required" rowspan="1">Role</th>
                                     <th rowspan="1">Status</th>
                                     <th  rowspan="1" colspan="2">Action</th>
                                 </tr>
@@ -139,8 +137,6 @@
                                         <td><?php echo $i; ?></td>
                                         <td><?php echo $employee->id; ?></td>
                                         <td><?php echo $employee->title; ?></td> 
-                                        <td><?php echo $employee->first_name; ?></td>
-                                        <td><?php echo $employee->last_name; ?></td>
                                         <td><?php echo $employee->full_name; ?></td>
                                         <td><?php echo $employee->login; ?></td>
                                         <td><?php echo $employee->phone; ?></td>

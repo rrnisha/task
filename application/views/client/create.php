@@ -11,7 +11,7 @@
                         <input type="radio" name="client_type" value="company" <?php if ($values['client_type'] == 'company') { ?>checked<?php } ?>/> Company
                     </fieldset>
                     <fieldset>
-                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> Title</label>
+                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Title</label>
                         <input type="radio" name="title" value="Mr" <?php if ($values['title'] == 'Mr') { ?>checked<?php } ?>/> Mr
                         <input type="radio" name="title" value="Mrs" <?php if ($values['title'] == 'Mrs') { ?>checked<?php } ?>/> Mrs
                         <input type="radio" name="title" value="Mfrs" <?php if ($values['title'] == 'Mfrs') { ?>checked<?php } ?>/> M/s

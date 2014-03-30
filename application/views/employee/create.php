@@ -3,34 +3,32 @@
         <header><h3>Create New Employee</h3></header>
         <div class="module_content">
             <!-- TODO : To Fix Error Link -->
-            <?php if (validation_errors()) { ?>
+            <!-- <?php if (validation_errors()) { ?>
             <h4 class="alert_error"><?php echo validation_errors(); ?></h4>
             <?php } ?>
 			<?php if ($msg == 'createEmpSameLoginError') { ?> 
                 <h4 class="alert_error">Error during Employee Creation - Login Already Available </h4> 
-            <?php } ?>
+            <?php } ?> -->
 
             <br></br>            
             <form name="frmCreateEmployee" id="frmCreateEmployee" method="post" action="<?php echo base_url(); ?>index.php/employee/create">    
                 <table>
                     <fieldset>
-                        <label>Title</label>
-                        <input type="text" name="title" value="<?php echo $values['title']; ?>"/>
+                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Title</label>
+                        <input type="radio" name="title" value="Mr" <?php if ($values['title'] == 'Mr') { ?>checked<?php } ?>/> Mr
+                        <input type="radio" name="title" value="Ms" <?php if ($values['title'] == 'Mrs') { ?>checked<?php } ?>/> Ms
+                        <input type="radio" name="title" value="Mrs" <?php if ($values['title'] == 'Mfrs') { ?>checked<?php } ?>/> Mrs
                     </fieldset>
                     <fieldset>
-                        <label>First Name</label>
-                        <input type="text" name="firstname" value="<?php echo $values['firstname']; ?>"/>
+                        <label class="required" <?php if (form_error('fullname') !='') echo 'style="color:red;font-style:normal"'; ?> >Name</label>
+                        <input type="text" name="fullname" value="<?php echo $values['fullname']; ?>"/>
                     </fieldset>
                     <fieldset>
-                        <label>Last Name</label>
-                        <input type="text" name="lastname" value="<?php echo $values['lastname']; ?>"/>
-                    </fieldset>
-                    <fieldset>
-                        <label>Login Name</label>
+                        <label class="required" <?php if (form_error('login') !='') echo 'style="color:red;font-style:normal"'; ?> >Login Name</label>
                         <input type="text" name="login" value="<?php echo $values['login']; ?>"/>
                     </fieldset>
                     <fieldset>
-                        <label>Login Password</label>
+                        <label class="required" <?php if (form_error('password') !='') echo 'style="color:red;font-style:normal"'; ?> >Login Password</label>
                         <input type="password" name="password" value="<?php echo $values['password']; ?>"/>
                     </fieldset>
                     <fieldset>
@@ -46,7 +44,7 @@
                         <textarea name="address" cols="40"><?php echo $values['address']; ?></textarea>
                     </fieldset>        
                     <fieldset>
-                        <label>Roles</label>
+                        <label class="required" <?php if (form_error('role_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Roles</label>
                         <?php echo form_dropdown('role_id', $roles, $values['role_id']); ?>
                     </fieldset>
                     <footer>

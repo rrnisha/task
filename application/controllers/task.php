@@ -159,6 +159,7 @@ class Task extends CI_Controller {
 
     public function upload_itr_task() {
         if (isset($_POST['uploadITRComment']) && $_POST['uploadITRComment'] && isset($_POST['task_id']) && $_POST['task_id']) {
+        	print_r($_POST);
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
@@ -410,10 +411,16 @@ class Task extends CI_Controller {
         }
         
         $data['assessment_year'] = array();
+        $fy_curr_yr_query = $this->Year_model->get_curr_year();
+        foreach ($fy_curr_yr_query->result() as $res) {
+        	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
+        }
+        
         $fy_query = $this->Year_model->get();
-        $data['assessment_year'][''] = '-- Select --';
         foreach ($fy_query->result() as $res) {
-            $data['assessment_year'][$res->assessment_year] = $res->assessment_year;
+        	if ($res->is_curr_year == 'N') {
+            	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
+        	}
         }        
         $this->load->view('layout/header');
         $this->load->view('task/index', $data);

@@ -18,7 +18,10 @@
                     <input type="radio" name="type" value="itr" <?php if ($task->type == 'itr') { ?>checked<?php } ?>/> ITR
                     <input type="radio" name="type" value="st" <?php if ($task->type  == 'st') { ?>checked<?php } ?>/> Service Tax
                     <input type="radio" name="type" value="accounting" <?php if ($task->type  == 'accounting') { ?>checked<?php } ?>/> Accounting
-                    <input type="radio" name="type" value="audit" <?php if ($task->type  == 'audit') { ?>checked<?php } ?>/> Audit                    
+                    <input type="radio" name="type" value="audit" <?php if ($task->type  == 'audit') { ?>checked<?php } ?>/> Audit    
+	                <input type="radio" name="type" value="intimation" <?php if ($task->type == 'intimation') { ?>checked<?php } ?>/> Intimation
+	                <input type="radio" name="type" value="vat" <?php if ($task->type == 'vat') { ?>checked<?php } ?>/> VAT
+                    
                     <input type="radio" name="type" value="other" <?php if ($task->type == 'other') { ?>checked<?php } ?>/> Other
                 </fieldset>
                 <fieldset>

@@ -524,7 +524,7 @@
                                 </td>
                                 <td>
                                     <p class="datepair" data-language="javascript" style="">
-                                        <input type="text" class="date end" name="date_of_uploading" id="upload_itr_date_of_uploading" value="<?php echo date('m/d/Y'); ?>" style="width:40%;float:left;"/>
+                                        <input type="text" class="date end" name="date_of_uploading" id="upload_itr_date_of_uploading" value="<?php echo date('d-m-Y'); ?>" style="width:40%;float:left;"/>
                                     </p>
                                 </td>
                             </tr>
@@ -592,7 +592,7 @@
                                 </td>
                                 <td>
                                     <p class="datepair" data-language="javascript" style="">
-                                        <input type="text" class="date end" name="date_of_mailing" id="mail_itr_date_of_mailing" value="<?php echo date('m/d/Y'); ?>" style="width:40%;float:left;"/>
+                                        <input type="text" class="date end" name="date_of_mailing" id="mail_itr_date_of_mailing" value="<?php echo date('d-m-Y'); ?>" style="width:40%;float:left;"/>
                                     </p>
                                 </td>
                             </tr>
@@ -622,7 +622,7 @@
                     <form name="frmFinalizeTask" id="frmFinalizeTask" onsubmit="return false;">
                         <table cellpadding="4">
                             <tr>
-                                <td><textarea name="finalizeTaskComment" cols="40">Finalized</textarea></td>
+                                <td><textarea name="finalizeTaskComment" cols="30">Finalized</textarea></td>
                             </tr>                            
                             <tr>
                                 <td>
@@ -664,7 +664,7 @@
                                 </td>
                                 <td>
                                     <p class="datepair" data-language="javascript" style="">
-                                        <input type="text" class="date end" name="date_of_billing" id="finalize_itr_date_of_billing" value="<?php echo date('m/d/Y'); ?>" style="width:40%;float:left;"/>
+                                        <input type="text" class="date end" name="date_of_billing" id="finalize_itr_date_of_billing" value="<?php echo date('d-m-Y'); ?>" style="width:40%;float:left;"/>
                                     </p>
                                 </td>
                             </tr>

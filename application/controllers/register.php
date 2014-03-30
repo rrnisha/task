@@ -28,14 +28,50 @@ class Register extends CI_Controller {
     public function create() {
         $data = array();
         $data['values'] = array();
-        $data['values']['particulars'][0] = '';
+        $data['values']['particulars'] = '';
         $data['values']['client_id'] = '';
-        $data['values']['by_employee'][0] = '';
-        $data['values']['mode_of_receipt'][0] = 'in_person';
-        $data['values']['tag'][0] = '';
-        $data['values']['remarks'] = '';
+        $data['values']['by_employee'] = '';
+        $data['values']['mode_of_receipt'] = 'in_person';
+        $data['values']['tag'] = '';
         $data['values']['status'] = 'inward';
         $data['values']['type'] = 'others';
+
+        print_r($_POST);
+        if (isset($_POST['create']) && $_POST['create'] == 'Create') {
+            $data['values'] = $_POST;
+            // Loading form validation library
+            $this->load->library('form_validation');
+
+            $this->form_validation->set_rules('client_id', 'Client', 'callback_dropdown_id_check');
+            $this->form_validation->set_rules('status', 'Status', 'required');
+            $this->form_validation->set_rules('type', 'Type', 'required');
+//             Setting validation rules
+            for($i=0;$i<count($_POST["particulars"]);$i++) {
+            	$this->form_validation->set_rules('particulars[]', 'Particulars', 'required');
+                $this->form_validation->set_rules('by_employee[]', 'Received/Surrender By Employee', 'callback_dropdown_id_check');
+                $this->form_validation->set_rules('mode_of_receipt[]', 'Mode of Receipt', 'callback_dropdown_id_check');
+                $this->form_validation->set_rules('tag[]', 'Tag', 'required');
+            }
+            
+            // Validating..
+            if ($this->form_validation->run() == TRUE) {
+                $this->Register_model1->insert();
+                $_POST['register_id'] = $this->db->insert_id();
+                for($i=0;$i<count($_POST["particulars"]);$i++) {
+	                $_POST['trans_type'] = 'create';
+	                $this->Document_model->insert($i);
+	                $_POST['doc_id'] = $this->db->insert_id();
+	                $this->Document_Transaction_model->insert();
+                }
+                redirect('/register/tomedia/'.$_POST['register_id'].'/create');
+            } else {
+            	$data['values']['particulars'] = '';
+            	$data['values']['by_employee'] = '';
+            	$data['values']['mode_of_receipt'] = 'in_person';
+            	$data['values']['tag'] = '';
+            }
+        }
+        print_r('validation not done');
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
         
@@ -50,69 +86,39 @@ class Register extends CI_Controller {
         
         $data['employees'] = array();
         $cnt = count($employee_query->result());
-        $data['employees'][] = '-- Select --';
+        $data['employees']['-1'] = '-- Select --';
         foreach ($employee_query->result() as $res) {
         	$data['employees'][$res->id] = $res->login;
         }
         
         $data['mode_receipt'] = array();
-        $data['mode_receipt'][0] = '-- Select --';
+        $data['mode_receipt']['-1'] = '-- Select --';
         $data['mode_receipt'][1] = 'in_person';
         $data['mode_receipt'][2] = 'email';
         $data['mode_receipt'][3] = 'courier';
         $data['mode_receipt'][4] = 'other';
         $data['mode_receipt'][5] = 'post';
         
-        print_r($_POST);
-        if (isset($_POST['create']) && $_POST['create'] == 'Create') {
-            $data['values'] = $_POST;
-            // Loading form validation library
-            $this->load->library('form_validation');
-
-			print_r($_POST["client_id"].'**');
-			if ($_POST["client_id"] == -1) {
-				$_POST["client_id"] = "";
-			}
-			print_r($_POST["particulars"][0].'--');
-			print_r('particulars0'.'--');
-			print_r($_POST["by_employee"][0].'--');
-			print_r($_POST["tag"][0].'--');
-            $this->form_validation->set_rules('client_id', 'Client Name', 'required');
-            $this->form_validation->set_rules('status', 'Status', 'required');
-            $this->form_validation->set_rules('type', 'Type', 'required');
-//             Setting validation rules
-//             for($i=0;$i<count($_POST["particulars"]);$i++) {
-//             	$this->form_validation->set_rules('particulars[]', 'Particulars', 'required');
-//                 $this->form_validation->set_rules('by_employee[]', 'Received/Surrender By Employee', 'required');
-//                 $this->form_validation->set_rules('mode_of_receipt[]', 'Mode of Receipt', 'required');
-//                 $this->form_validation->set_rules('tag[]', 'Tag', 'required');
-//             }
-            
-            // Validating..
-            if ($this->form_validation->run() == TRUE) {
-                $this->Register_model->insert();
-                $_POST['register_id'] = $this->db->insert_id();
-                for($i=0;$i<count($_POST["particulars"]);$i++) {
-	                $_POST['trans_type'] = 'create';
-	                $this->Document_model->insert($i);
-	                $_POST['doc_id'] = $this->db->insert_id();
-	                $this->Document_Transaction_model->insert();
-                }
-                redirect('/register/tomedia/'.$_POST['register_id'].'/create');
-            }
-        }
-        print_r('validation not done');
-
+        
     	 
     	$this->load->view('layout/header');
     	$this->load->view('register/create', $data);
     	$this->load->view('layout/footer');
     }
 
-    public function loadValues() {
-
+    public function dropdown_id_check($str)
+    {
+    	if ($str == '-1')
+    	{
+    		$this->form_validation->set_message('dropdown_id_check', 'Please select a valid value');
+    		return FALSE;
+    	}
+    	else
+    	{
+    		return TRUE;
+    	}
     }
-    
+        
     public function edit() {
         $data = array();
         if (isset($_POST['edit']) && $_POST['edit'] == 'Ok') {
@@ -127,23 +133,23 @@ class Register extends CI_Controller {
             $data['values']['type'] = $_POST['type'];
             
             // Loading form validation library
-            $this->load->library('form_validation');
+//             $this->load->library('form_validation');
 
-            for($i=0;$i<count($_POST["particulars"]);$i++) {
-            	print_r("Test");
-            	$this->form_validation->set_rules('particulars', 'Particulars', 'required');
-            	$this->form_validation->set_rules('by_employee', 'Received/Surrender By Employee', 'required');
-            	$this->form_validation->set_rules('mode_of_receipt', 'Mode Of Receipt', 'required');
-            	$this->form_validation->set_rules('tag', 'Tag', 'required');
-            }            
+//             for($i=0;$i<count($_POST["particulars"]);$i++) {
+//             	print_r("Test");
+//             	$this->form_validation->set_rules('particulars', 'Particulars', 'required');
+//             	$this->form_validation->set_rules('by_employee', 'Received/Surrender By Employee', 'required');
+//             	$this->form_validation->set_rules('mode_of_receipt', 'Mode Of Receipt', 'required');
+//             	$this->form_validation->set_rules('tag', 'Tag', 'required');
+//             }            
             
-            if ($this->form_validation->run() == TRUE) {
+//             if ($this->form_validation->run() == TRUE) {
 	            $this->Register_model->edit($data['values']);
 	            $_POST['register_id'] = $_POST['id'];
 	            $this->Document_model->edit();
 	//            redirect('/register/lists?msg=documentEditSuccess');
 	            redirect('/register/tomedia/'.$_POST['register_id'].'/edit/'.$_POST['edit_start_date']);
-            }
+//             }
         }
     }
 
@@ -250,7 +256,7 @@ class Register extends CI_Controller {
         $data['mode_receipt']['post'] = 'post';
         $data['mode_receipt']['other'] = 'other';
 
-        $data['edit_start_date'] =  mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),"UP45",FALSE)); 
+        $data['edit_start_date'] =  mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),"UP35",FALSE)); 
         $this->load->view('layout/header');
         $this->load->view('register/edit', $data);
         $this->load->view('layout/footer');

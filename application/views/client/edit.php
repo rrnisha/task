@@ -54,7 +54,6 @@
                     <div class="submit_link">    
                         <input type="submit" name="edit" value="Ok"/>
                         <a href="<?php echo base_url(); ?>index.php/client/lists"><input type="button" name="No" value="Back"/></a>
-<!--                            <input type="submit" name="create" value="Create" class="alt_btn"/>-->
                     </div>
                 </footer>                     
             </form>    

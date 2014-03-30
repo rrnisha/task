@@ -102,6 +102,8 @@
 	                    <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
 	                    <input type="radio" name="type" value="accounting" <?php if ($values['type'] == 'accounting') { ?>checked<?php } ?>/> Accounting
 	                    <input type="radio" name="type" value="audit" <?php if ($values['type'] == 'audit') { ?>checked<?php } ?>/> Audit
+	                    <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
+	                    <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
 	                    <input type="radio" name="type" value="other" <?php if ($values['type'] == 'other') { ?>checked<?php } ?>/> Other
 	                </fieldset>
 	                <fieldset>

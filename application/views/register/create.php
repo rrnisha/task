@@ -7,12 +7,12 @@ $(document).ready(function() {
 });
 function addParticularsRow(){
 	$(".particularsRow:last").after('<tr class="particularsRow"><td><a onclick="removeParticularsRow(this)"><img src="<?php echo base_url(); ?>/assets/img/delete.png"/></a></td>'
-			+'<td><fieldset><input type="text" name="particulars[]" value="<?php echo set_value('particulars[]'); ?>" /></fieldset></td>'
+			+'<td><fieldset><input type="text" name="particulars[]" value="<?php echo $values['particulars']; ?>" /></fieldset></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('by_employee[]', $employees, $values['by_employee']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('mode_of_receipt[]', $mode_receipt, $values['mode_of_receipt']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
-			+'<td><fieldset><input style="width:200px;" type="text" name="tag[]" value="<?php echo set_value('tag[]'); ?>" "/></fieldset></td>'
+			+'<td><fieldset><input style="width:200px;" type="text" name="tag[]" value="<?php echo $values['tag']; ?>" "/></fieldset></td>'
 			+'<td><a onclick="addParticularsRow()"><img src="<?php echo base_url(); ?>/assets/img/add.png"/></a></td></tr>');
 }
 
@@ -39,7 +39,7 @@ function removeParticularsRow(r){
         <div class="module_content">
            <form name="frmCreateDocument" id="frmCreateDocument" method="post" action="<?php echo base_url(); ?>index.php/register/create">
                     <fieldset>
-                        <label class="required">Client</label>
+                        <label class="required" <?php if (form_error('client_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Client</label>
                         <?php $js = 'id="client_select"'; echo form_dropdown('client_id', $clients, $values['client_id'], $js); ?>
                     </fieldset>
 	                <fieldset>
@@ -48,6 +48,8 @@ function removeParticularsRow(r){
 	                    <input type="radio" name="type" value="it" <?php if ($values['type'] == 'it') { ?>checked<?php } ?>/> IT
 	                    <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
 	                    <input type="radio" name="type" value="books" <?php if ($values['type'] == 'books') { ?>checked<?php } ?>/> Account Books
+	                    <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
+	                    <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
 	                    <input type="radio" name="type" value="others" <?php if ($values['type'] == 'others') { ?>checked<?php } ?>/> Other
 	                </fieldset>                            
                     <fieldset>
@@ -59,11 +61,11 @@ function removeParticularsRow(r){
 						<thead>
 						<tr>
 							<th></th>
-							<th class="required">Particulars</th>
+							<th class="required" <?php if (form_error('particulars[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Particulars</th>
 <!--							<th class="required">Quantity</th>-->
-							<th class="required">By Employee</th>
-							<th class="required">Mode of Receipt</th>
-							<th class="required">Tag</th>							
+							<th class="required" <?php if (form_error('by_employee[]') !='') echo 'style="color:red;font-style:normal"'; ?> >By Employee</th>
+							<th class="required" <?php if (form_error('mode_of_receipt[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Mode of Receipt</th>
+							<th class="required" <?php if (form_error('tag[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Tag</th>							
 							<th></th>
 						</tr>
 						</thead>

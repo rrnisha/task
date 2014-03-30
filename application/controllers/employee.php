@@ -88,9 +88,8 @@ class Employee extends CI_Controller {
     	$data['msg'] = isset($_POST['msg'])?$_POST['msg']:'';
 
         $data['values'] = array();
-        $data['values']['title'] = '';
-        $data['values']['firstname'] = '';
-        $data['values']['lastname'] = '';
+        $data['values']['title'] = 'Mr';
+        $data['values']['fullname'] = '';
         $data['values']['login'] = '';
         $data['values']['password'] = '';
         $data['values']['phone'] = '';
@@ -125,13 +124,12 @@ class Employee extends CI_Controller {
 		            $this->load->library('form_validation');
 		            // Setting validation rules
 		            $this->form_validation->set_rules('title', 'Title', 'required');    
-		            $this->form_validation->set_rules('firstname', 'First Name', 'required');    
-		            $this->form_validation->set_rules('lastname', 'Last Name', 'required');    
+		            $this->form_validation->set_rules('fullname', 'Name', 'required');    
 		            $this->form_validation->set_rules('login', 'Login Name', 'required');    
 		            $this->form_validation->set_rules('password', 'Login Password', 'required');    
-		            $this->form_validation->set_rules('phone', 'Phone', 'required');    
-		            $this->form_validation->set_rules('email', 'Email', 'required');    
-		            $this->form_validation->set_rules('address', 'Address', 'required');    
+// 		            $this->form_validation->set_rules('phone', 'Phone', 'required');    
+// 		            $this->form_validation->set_rules('email', 'Email', 'required');    
+// 		            $this->form_validation->set_rules('address', 'Address', 'required');    
 		            $this->form_validation->set_rules('role_id', 'Role', 'required');    
 		            
 		            // Validating..
@@ -193,41 +191,49 @@ class Employee extends CI_Controller {
     public function edit(){
         $data = array();            
 
-        if( isset($_POST['edit']) && $_POST['edit'] == 'Edit'){
+        if( isset($_POST['edit']) && $_POST['edit'] == 'Ok'){
             $data['values'] = array();
             $data['values']['id'] = $_POST['id'];
             $data['values']['title'] = $_POST['title'];
-            $data['values']['first_name'] = $_POST['first_name'];
-            $data['values']['last_name'] = $_POST['last_name'];
-            $data['values']['full_name'] = $_POST['first_name'].' '.$_POST['last_name'];
+            $data['values']['full_name'] = $_POST['full_name'];
             $data['values']['login'] = $_POST['login'];
             $data['values']['phone'] = $_POST['phone'];
             $data['values']['email'] = $_POST['email'];
             $data['values']['address'] = $_POST['address'];
             $data['values']['role_id'] = $_POST['role_id'];
 
-//            // Loading form validation library
-//            $this->load->library('form_validation');
-//            // Setting validation rules
-//            $this->form_validation->set_rules('title', 'Title', 'required');    
-//            $this->form_validation->set_rules('firstname', 'First Name', 'required');    
-//            $this->form_validation->set_rules('lastname', 'Last Name', 'required');    
-//            $this->form_validation->set_rules('login', 'Login Name', 'required');    
-//            $this->form_validation->set_rules('password', 'Login Password', 'required');    
+           // Loading form validation library
+           $this->load->library('form_validation');
+           // Setting validation rules
+           $this->form_validation->set_rules('title', 'Title', 'required');    
+           $this->form_validation->set_rules('full_name', 'First Name', 'required');    
+           $this->form_validation->set_rules('login', 'Login Name', 'required');    
 //            $this->form_validation->set_rules('phone', 'Phone', 'required');    
 //            $this->form_validation->set_rules('email', 'Email', 'required');    
 //            $this->form_validation->set_rules('address', 'Address', 'required');    
-//            $this->form_validation->set_rules('role_id', 'Role', 'required');    
-//            
-//            // Validating..
-//            if ($this->form_validation->run() == TRUE ){
-
-			$this->db->set('update_date', 'NOW()', FALSE);
-            
-            $this->Employee_model->edit($data['values']);
-            redirect('/employee/lists?msg=editEmpSuccess');
-//            }
+           $this->form_validation->set_rules('role_id', 'Role', 'required');    
+           
+           // Validating..
+           if ($this->form_validation->run() == TRUE ){
+				$this->db->set('update_date', 'NOW()', FALSE);
+	            $this->Employee_model->edit($data['values']);
+	            redirect('/employee/lists?msg=editEmpSuccess');
+           }
         }    
+        $employee_query = $this->Employee_model->get($_POST['id']);
+        $res = $employee_query->result();
+        $data['employee'] = $res[0];
+
+        // Get all roles
+        $role_query = $this->Role_model->get_all();
+        $data['roles'] = array();
+        foreach($role_query->result() as $res){
+            $data['roles'][$res->id] = $res->role;
+        }    
+        
+        $this->load->view('layout/header');
+        $this->load->view('employee/edit',$data);
+        $this->load->view('layout/footer');
     }
     
     public function get($empId){

@@ -67,6 +67,7 @@ class Document_model extends CI_Model{
 //            		$this->Document_Transaction_model->insert();            
 //        		}
 //        	}    	      
+	
         for($i=0;$i<count($_POST["particularsID"]);$i++) {
         	if (mysql_real_escape_string($_POST['particularsChanged'][$i])=="Y") {
 		        $this->register_id = mysql_real_escape_string($_POST['register_id']);
@@ -79,9 +80,13 @@ class Document_model extends CI_Model{
 				
 		        $this->db->set('update_date', 'NOW()', FALSE);
 		
-		        // Updating..
-		        $this->db->where('doc_id', $_POST['particularsID'][$i]);
-		        $this->db->update('documents', $this)  or die($this->db->_error_message());
+		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->mode_of_receipt == '') {
+		        	continue;
+		        } else {		        
+			        // Updating..
+			        $this->db->where('doc_id', $_POST['particularsID'][$i]);
+			        $this->db->update('documents', $this)  or die($this->db->_error_message());
+		        }
 
 		        $_POST['doc_id'] = $_POST['particularsID'][$i];
 		        $_POST['trans_type'] = 'edit';
@@ -96,7 +101,7 @@ class Document_model extends CI_Model{
 				$this->status = mysql_real_escape_string($_POST['status']);
 		        $this->db->set('create_date', 'NOW()', FALSE);
 		
-		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == 0 || $this->mode_of_receipt == 0) {
+		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->mode_of_receipt == '') {
 		        	continue;
 		        } else {
 			        // Inserting..

@@ -13,8 +13,6 @@
     <article class="module width_full">
         <header><h3>Create New Task</h3></header>
         <div class="module_content">
-            <!-- TODO : To Fix Error Link -->
-            <!-- <h4 class="alert_error"><?php echo validation_errors(); ?></h4> -->
             <form name="frmCreateTask" id="frmCreateTask" method="post" action="<?php echo base_url(); ?>index.php/task/create">    
                 <fieldset>
                     <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Task Description</label>
@@ -27,6 +25,8 @@
                     <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
                     <input type="radio" name="type" value="accounting" <?php if ($values['type'] == 'accounting') { ?>checked<?php } ?>/> Accounting
                     <input type="radio" name="type" value="audit" <?php if ($values['type'] == 'audit') { ?>checked<?php } ?>/> Audit
+	                <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
+	                <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
                     <input type="radio" name="type" value="other" <?php if ($values['type'] == 'other') { ?>checked<?php } ?>/> Other
                 </fieldset>
                 <fieldset>

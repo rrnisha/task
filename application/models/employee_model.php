@@ -55,9 +55,7 @@ class Employee_model extends CI_Model{
     function insert(){      
         // Setting variables
         $this->title = mysql_real_escape_string($_POST['title']);
-        $this->first_name = mysql_real_escape_string($_POST['firstname']);
-        $this->last_name = mysql_real_escape_string($_POST['lastname']);
-        $this->full_name = mysql_real_escape_string($_POST['firstname']).' '.mysql_real_escape_string($_POST['lastname']);
+        $this->full_name = mysql_real_escape_string($_POST['fullname']);
         $this->login = mysql_real_escape_string($_POST['login']);
         $this->password = md5(mysql_real_escape_string($_POST['password']));
         $this->phone = mysql_real_escape_string($_POST['phone']);

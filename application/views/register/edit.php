@@ -82,7 +82,7 @@ function removeParticulars(id,r){
                     <input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
                     <input type="hidden" id="rowCount" name="rowCount" value="<?php echo count($particulars); ?>"></input>
                     <input type="hidden" id="particularsDeleted" name="particularsDeleted" value=""></input>
-                    <input type="hidden" id="edit_start_date" name="edit_start_date" value="<?php echo $edit_start_date ?>"></input>
+                    <input type="text" id="edit_start_date" name="edit_start_date" value="<?php echo $edit_start_date ?>"></input>
                     <fieldset>
                         <label>Client</label>
                         <?php echo form_dropdown('client_id', $clients, $register->client_id); ?>
@@ -99,6 +99,8 @@ function removeParticulars(id,r){
 	                    <input type="radio" name="type" value="it" <?php if ($register->type == 'it') { ?>checked<?php } ?>/> IT
 	                    <input type="radio" name="type" value="st" <?php if ($register->type == 'st') { ?>checked<?php } ?>/> Service Tax
 	                    <input type="radio" name="type" value="books" <?php if ($register->type == 'books') { ?>checked<?php } ?>/> Account Books
+	                	<input type="radio" name="type" value="intimation" <?php if ($register->type == 'intimation') { ?>checked<?php } ?>/> Intimation
+	                	<input type="radio" name="type" value="vat" <?php if ($register->type == 'vat') { ?>checked<?php } ?>/> VAT
 	                    <input type="radio" name="type" value="others" <?php if ($register->type == 'others') { ?>checked<?php } ?>/> Other
 	                </fieldset>    
                     <input type="hidden" name="status_value" value="<?php if ($register->status == 'inward') { echo "inward"; } else if ($register->status == 'outward') { echo "outward"; } else if ($register->status == 'in_out') { echo "in_out"; } ?>" />

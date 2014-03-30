@@ -13,24 +13,20 @@
             <form name="frmProfileEmployee" id="frmProfileEmployee" method="post" action="<?php echo base_url(); ?>index.php/employee/change_password/<?php echo $employee->id; ?>">    
                 <input type="hidden" name="emp_id" value="<?php echo $employee->id; ?>"/>
                 <fieldset>
-                    <label>Title</label>
+                    <label  class="required">Title</label>
                     <label><?php echo $employee->title; ?></label>
                 </fieldset>
                 <fieldset>
-                    <label>First Name</label>
-                    <label><?php echo $employee->first_name; ?></label>
+                    <label  class="required">Name</label>
+                    <label><?php echo $employee->full_name; ?></label>
                 </fieldset>
                 <fieldset>
-                    <label>Last Name</label>
-                    <label><?php echo $employee->last_name; ?></label>
-                </fieldset>
-                <fieldset>
-                    <label>Login Name</label>
+                    <label  class="required">Login Name</label>
                     <label><?php echo $employee->login; ?></label>
                 </fieldset>
                 <fieldset>
-                    <label>Login Password</label>
-                    <input type="password" name="password" value="<?php echo $employee->password; ?>"/>
+                    <label  class="required">Login Password</label>
+                    <input style="padding-left: 10px; width:300px" type="password" name="password" value="<?php echo $employee->password; ?>"/>
                     <input type="submit" name="edit" value="Change"/>
                 </fieldset>
                 <fieldset>

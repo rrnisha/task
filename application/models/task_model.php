@@ -41,7 +41,7 @@ class Task_model extends CI_Model {
             $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
         }
         if (!($status == 'query' || $status == 'created' || $status == 'tofinalize')) $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'];
-        $ext_sql .= ' ORDER by update_date desc, status, id desc';
+        $ext_sql .= ' ORDER by priority, update_date desc, status, id desc';
         $query = $this->db->select('* FROM tasks' . $ext_sql)->limit($num, $offset);
 
         $query = $this->db->get();

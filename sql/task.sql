@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2014 at 03:16 PM
+-- Generation Time: Mar 30, 2014 at 05:36 PM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.9
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `update_date` datetime NOT NULL,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `clients`
@@ -65,7 +65,8 @@ INSERT INTO `clients` (`id`, `title`, `full_name`, `client_type`, `phone_mobile`
 (15, 'Mfrs', 'Pakkirisamy Group', 'company', '9876543210', '9876543210', '9876543210', 'test@test.com', 'Chennai', 'AQWIPR144B', 'G1006', 'F1006', '2013-07-16 19:32:10', '2013-07-16 19:32:10', 'active'),
 (16, 'Mfrs', 'Reframe Softtech (p) Ltd', 'company', '9876543210', '9876543210', '9876543210', 'test@test.com', 'Chennai', 'AQWIPR144B', 'G1007', 'F1007', '2013-07-16 20:30:24', '2013-07-17 12:31:04', 'active'),
 (17, 'Mr', 'Balaji Andrews', 'individual', '9999999999', '044 23643710', '044 22222222', 'balahi@gmail.com', 'kk nagar\r\nchennai\r\ntn', 'AAAAB1234H', 'G1006', '250', '2013-07-17 12:14:05', '2013-07-21 00:01:04', 'active'),
-(18, 'Mfrs', 'Test', 'company', '9876543210', '', '04487654321', 'a@a.com', 'Chennai', 'QWEIP2668V', 'G1', 'F1', '2014-03-22 18:25:10', '2014-03-22 18:25:10', 'active');
+(18, 'Mfrs', 'Test', 'company', '9876543210', '', '04487654321', 'a@a.com', 'Chennai', 'QWEIP2668V', 'G1', 'F1', '2014-03-22 18:25:10', '2014-03-22 18:25:10', 'active'),
+(19, 'Mr', 'test100', 'individual', '9876543210', '', '', '', 'Chennai', 'QEELK2779V', 'g10', 'f10', '2014-03-30 00:14:46', '2014-03-30 00:41:33', 'active');
 
 -- --------------------------------------------------------
 
@@ -86,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `documents` (
   `create_date` datetime NOT NULL,
   `update_date` datetime NOT NULL,
   PRIMARY KEY (`doc_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=64 ;
 
 --
 -- Dumping data for table `documents`
@@ -122,7 +123,14 @@ INSERT INTO `documents` (`register_id`, `doc_id`, `particulars`, `quantity`, `ta
 (27, 53, '2nd book', 0, '2', 'outward', 6, 'in_person', 'active', '2014-03-23 17:07:34', '2014-03-23 19:10:24'),
 (27, 54, '3rd book', 0, '3', 'outward', 6, 'in_person', 'active', '2014-03-23 17:14:08', '2014-03-23 19:10:51'),
 (27, 55, '4th book', 0, '4', 'outward', 6, 'email', 'active', '2014-03-23 17:18:13', '2014-03-23 22:40:36'),
-(28, 56, 'asdf', 0, 'asdf', 'inward', 6, 'in_person', 'active', '2014-03-23 17:30:44', '2014-03-23 22:41:06');
+(28, 56, 'asdf', 0, 'asdf', 'inward', 6, 'in_person', 'active', '2014-03-23 17:30:44', '2014-03-23 22:41:06'),
+(29, 57, '', 0, '', 'inward', 0, '', 'active', '2014-03-30 01:08:39', '0000-00-00 00:00:00'),
+(30, 58, 'asdf', 0, 'T51', 'inward', 6, 'in_person', 'active', '2014-03-30 16:30:18', '2014-03-30 16:30:47'),
+(30, 59, 'cash book', 0, 'T51', 'inward', 6, 'in_person', 'active', '2014-03-30 16:30:18', '2014-03-30 16:30:47'),
+(31, 60, 'adsf', 0, 'T5', 'inward', 6, 'in_person', 'deleted', '2014-03-30 16:31:36', '2014-03-30 17:33:28'),
+(31, 61, 'qwr', 0, 'T52', 'inward', 6, 'in_person', 'deleted', '2014-03-30 16:49:42', '2014-03-30 17:32:47'),
+(31, 62, 'iuio', 0, 'T51', 'inward', 9, 'email', 'active', '2014-03-30 17:32:47', '2014-03-30 17:33:19'),
+(32, 63, '', 0, '', 'inward', 0, '', 'active', '2014-03-30 17:45:12', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -140,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `doc_trans` (
   `trans_type` enum('inward','outward','create','edit','delete') NOT NULL,
   `create_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=194 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=214 ;
 
 --
 -- Dumping data for table `doc_trans`
@@ -279,7 +287,27 @@ INSERT INTO `doc_trans` (`id`, `register_id`, `doc_id`, `emp_id`, `reg_status`, 
 (190, 28, 56, 9, 'inward', '2014-03-23 22:41:06', 'inward', '2014-03-23 22:41:06'),
 (191, 27, 52, 9, 'inward', '2014-03-23 22:42:51', 'inward', '2014-03-23 22:42:51'),
 (192, 20, 34, 9, 'outward', '2014-03-23 22:43:11', 'outward', '2014-03-23 22:43:11'),
-(193, 21, 35, 9, 'outward', '2014-03-23 22:43:53', 'outward', '2014-03-23 22:43:53');
+(193, 21, 35, 9, 'outward', '2014-03-23 22:43:53', 'outward', '2014-03-23 22:43:53'),
+(194, 29, 57, 9, 'inward', '2014-03-30 01:08:39', 'create', '2014-03-30 01:08:39'),
+(195, 30, 58, 9, 'inward', '2014-03-30 16:30:18', 'create', '2014-03-30 16:30:18'),
+(196, 30, 59, 9, 'inward', '2014-03-30 16:30:18', 'create', '2014-03-30 16:30:18'),
+(197, 30, 59, 9, 'inward', '2014-03-30 16:30:31', 'edit', '2014-03-30 16:30:31'),
+(198, 30, 58, 9, 'inward', '2014-03-30 16:30:47', 'edit', '2014-03-30 16:30:47'),
+(199, 30, 59, 9, 'inward', '2014-03-30 16:30:47', 'edit', '2014-03-30 16:30:47'),
+(200, 31, 60, 9, 'inward', '2014-03-30 16:31:36', 'create', '2014-03-30 16:31:36'),
+(201, 31, 60, 9, 'inward', '2014-03-30 16:32:20', 'edit', '2014-03-30 16:32:20'),
+(202, 31, 60, 9, 'inward', '2014-03-30 16:38:56', 'edit', '2014-03-30 16:38:56'),
+(203, 31, 60, 9, 'inward', '2014-03-30 16:39:01', 'edit', '2014-03-30 16:39:01'),
+(204, 31, 60, 9, 'inward', '2014-03-30 16:39:09', 'edit', '2014-03-30 16:39:09'),
+(205, 31, 60, 9, 'inward', '2014-03-30 16:39:36', 'edit', '2014-03-30 16:39:36'),
+(206, 31, 60, 9, 'inward', '2014-03-30 16:41:37', 'edit', '2014-03-30 16:41:37'),
+(207, 31, 61, 9, 'inward', '2014-03-30 16:49:42', 'create', '2014-03-30 16:49:42'),
+(208, 31, 62, 9, 'inward', '2014-03-30 17:32:47', 'create', '2014-03-30 17:32:47'),
+(209, 31, 61, 9, 'inward', '2014-03-30 17:32:47', 'delete', '2014-03-30 17:32:47'),
+(210, 31, 62, 9, 'inward', '2014-03-30 17:33:13', 'edit', '2014-03-30 17:33:13'),
+(211, 31, 62, 9, 'inward', '2014-03-30 17:33:19', 'edit', '2014-03-30 17:33:19'),
+(212, 31, 60, 9, 'inward', '2014-03-30 17:33:28', 'delete', '2014-03-30 17:33:28'),
+(213, 32, 63, 9, 'inward', '2014-03-30 17:45:12', 'create', '2014-03-30 17:45:12');
 
 -- --------------------------------------------------------
 
@@ -290,9 +318,7 @@ INSERT INTO `doc_trans` (`id`, `register_id`, `doc_id`, `emp_id`, `reg_status`, 
 CREATE TABLE IF NOT EXISTS `employees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(5) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `full_name` varchar(100) NOT NULL,
+  `full_name` varchar(50) NOT NULL,
   `login` varchar(8) NOT NULL,
   `password` varchar(50) NOT NULL,
   `role_id` int(11) NOT NULL,
@@ -304,18 +330,19 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `title`, `first_name`, `last_name`, `full_name`, `login`, `password`, `role_id`, `phone`, `email`, `address`, `create_date`, `update_date`, `status`) VALUES
-(6, 'Ms', 'Hima Ram', 'R B', 'Hima Ram R B', 'himaram', '1a1dc91c907325c69271ddf0c944bc72', 1, '9840618113', 'hima_ram@sram.com', 'KK Nagar, Chennai', '2013-05-13 17:17:17', '2013-07-18 20:26:39', 'active'),
-(7, 'Mr', 'Ram', 'S', 'Ram S', 'sram', '1a1dc91c907325c69271ddf0c944bc72', 1, '9876543211', 'sram@sram.com', 'kknagar, chennai', '2013-05-16 10:32:56', '2013-05-16 10:32:56', 'active'),
-(9, 'Mr', 'Rishi Shankar', 'Rengasamy', 'Rishi Shankar Rengasamy', 'rishi', '1a1dc91c907325c69271ddf0c944bc72', 1, '9876544331', 'rishi@gmail.com', 'Bangalore', '2013-05-26 14:55:30', '2013-07-19 01:18:23', 'active'),
-(10, 'Mr', 'Dilip', 'K', 'Dilip K', 'dilip', '1a1dc91c907325c69271ddf0c944bc72', 4, '9876543211', 'dilip@test.com', 'Chennai', '2013-07-16 19:39:54', '2013-07-19 01:28:10', 'active'),
-(12, 'Mrs', 'M', 'Sowmya', 'M Sowmya', 'sowmya', '1a1dc91c907325c69271ddf0c944bc72', 3, '9894210539', 'sowmya@sram.com', 'Chennai', '2013-07-17 12:03:20', '2013-07-17 12:03:20', 'active');
+INSERT INTO `employees` (`id`, `title`, `full_name`, `login`, `password`, `role_id`, `phone`, `email`, `address`, `create_date`, `update_date`, `status`) VALUES
+(6, 'Ms', 'HimaRam R B', 'himaram', '1a1dc91c907325c69271ddf0c944bc72', 1, '9840618113', 'hima_ram@sram.com', 'KK Nagar, Chennai', '2013-05-13 17:17:17', '2013-07-18 20:26:39', 'active'),
+(7, 'Mr', 'Ramalingam S', 'sram', '1a1dc91c907325c69271ddf0c944bc72', 1, '9876543211', 'sram@sram.com', 'kknagar, chennai', '2013-05-16 10:32:56', '2013-05-16 10:32:56', 'active'),
+(9, 'Mr', 'Rishi Shankar Rengasamy', 'rishi', '1a1dc91c907325c69271ddf0c944bc72', 1, '9876543210', 'rishi@gmail.com', 'Bangalore', '2013-05-26 14:55:30', '2014-03-30 15:40:45', 'active'),
+(10, 'Mr', 'Dilip K', 'dilip', '1a1dc91c907325c69271ddf0c944bc72', 4, '9876543211', 'dilip@test.com', 'Chennai', '2013-07-16 19:39:54', '2013-07-19 01:28:10', 'active'),
+(12, 'Mrs', 'Sowmya M', 'sowmya', '1a1dc91c907325c69271ddf0c944bc72', 3, '9894210539', 'sowmya@sram.com', 'Chennai', '2013-07-17 12:03:20', '2013-07-17 12:03:20', 'active'),
+(13, 'Mr', 'Test', 'test', '1a1dc91c907325c69271ddf0c944bc72', 1, '', '', '', '2014-03-30 13:48:06', '2014-03-30 13:48:06', 'active');
 
 -- --------------------------------------------------------
 
@@ -339,14 +366,16 @@ CREATE TABLE IF NOT EXISTS `itrs` (
   `update_date` datetime NOT NULL,
   PRIMARY KEY (`itr_id`),
   UNIQUE KEY `itr_id` (`itr_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `itrs`
 --
 
 INSERT INTO `itrs` (`itr_id`, `task_id`, `client_id`, `date_of_uploading`, `assessment_year`, `filed_by`, `date_of_mailing`, `date_of_acknowledgement`, `date_of_billing`, `bill_amount`, `remarks`, `create_date`, `update_date`) VALUES
-(4, 22, 17, '0000-00-00', '2013-2014', 6, '0000-00-00', '0000-00-00', '0000-00-00', 0, '23-03-2014 : himaram : ITR Uploaded<br>23-03-2014 : himaram : ITR Mailed<br>', '2014-03-23 12:52:39', '2014-03-23 12:52:44');
+(5, 27, 19, '0000-00-00', '2013-2014', 9, '2014-03-30', '0000-00-00', '0000-00-00', 0, '30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>', '2014-03-30 15:41:58', '2014-03-30 16:21:45'),
+(6, 26, 17, '2014-03-30', '2013-2014', 9, '2014-03-30', '0000-00-00', '2014-03-30', 1000, '30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>30-03-2014 : rishi : ITR Finalized<br>', '2014-03-30 15:59:50', '2014-03-30 16:19:20'),
+(7, 25, 17, '2014-03-30', '2014-2015', 9, '2014-03-30', '0000-00-00', '0000-00-00', 0, '30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>', '2014-03-30 16:28:28', '2014-03-30 16:28:31');
 
 -- --------------------------------------------------------
 
@@ -361,9 +390,9 @@ CREATE TABLE IF NOT EXISTS `registers` (
   `create_date` datetime NOT NULL,
   `update_date` datetime NOT NULL,
   `status` enum('inward','outward','in_out') NOT NULL,
-  `type` enum('books','tds','it','st','others') NOT NULL,
+  `type` enum('books','tds','it','st','intimation','vat','others') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
 
 --
 -- Dumping data for table `registers`
@@ -379,7 +408,11 @@ INSERT INTO `registers` (`id`, `client_id`, `fin_yr`, `create_date`, `update_dat
 (25, 17, '', '2014-03-23 16:28:10', '2014-03-23 16:28:10', 'inward', 'others'),
 (26, 18, '', '2014-03-23 17:02:00', '2014-03-23 17:06:09', 'inward', 'others'),
 (27, 17, '', '2014-03-23 17:06:51', '2014-03-23 22:42:51', 'in_out', 'books'),
-(28, 18, '', '2014-03-23 17:30:44', '2014-03-23 22:41:06', 'inward', 'books');
+(28, 18, '', '2014-03-23 17:30:44', '2014-03-23 22:41:06', 'inward', 'books'),
+(29, 19, '', '2014-03-30 01:08:39', '2014-03-30 01:08:39', 'inward', 'books'),
+(30, 19, '', '2014-03-30 16:30:18', '2014-03-30 16:30:47', 'inward', 'books'),
+(31, 19, '', '2014-03-30 16:31:36', '2014-03-30 17:34:06', 'inward', 'others'),
+(32, 18, '', '2014-03-30 17:45:12', '2014-03-30 17:59:12', 'inward', 'others');
 
 -- --------------------------------------------------------
 
@@ -414,10 +447,10 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `emp_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `type` enum('tds','itr','st','accounting','audit','other') NOT NULL,
+  `type` enum('tds','itr','st','accounting','audit','intimation','vat','other') NOT NULL,
   `comments` text NOT NULL,
   `client_id` int(11) NOT NULL,
-  `priority` enum('high','low','medium') NOT NULL DEFAULT 'medium',
+  `priority` enum('high','medium','low') NOT NULL DEFAULT 'medium',
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `due_date` date NOT NULL,
@@ -426,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `update_date` datetime NOT NULL,
   `status` enum('new','re-assigned','pending','query','completed','finalized') NOT NULL DEFAULT 'new',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `tasks`
@@ -436,11 +469,15 @@ INSERT INTO `tasks` (`id`, `emp_id`, `title`, `type`, `comments`, `client_id`, `
 (19, 9, 'test', 'audit', '22-03-2014 : rishi : test<br>22-03-2014 : rishi : asdf<br>', 17, 'medium', '2014-03-22', '0000-00-00', '2014-03-22', 9, '2014-03-22 14:11:11', '2014-03-22 14:11:33', 'new'),
 (20, 12, 'TDS payment', 'tds', '23-03-2014 : sowmya : Completed<br>', 17, 'medium', '2014-03-24', '2014-03-23', '2014-03-26', 6, '2014-03-23 12:44:30', '2014-03-23 12:45:20', 'completed'),
 (21, 10, 'asdasd', 'st', '23-03-2014 : sowmya : sdsdf<br>23-03-2014 : himaram : Reassign to<br>', 16, 'high', '2014-03-26', '0000-00-00', '2014-03-27', 12, '2014-03-23 12:47:09', '2014-03-23 12:49:21', 're-assigned'),
-(22, 6, 'asdasd', 'itr', '23-03-2014 : sowmya : asd<br>23-03-2014 : himaram : sdasd<br>23/03/2014 : himaram : sdfsdf<br>23-03-2014 : himaram : ITR Uploaded<br>23-03-2014 : himaram : ITR Mailed<br>', 17, 'medium', '2014-03-27', '2014-03-23', '2014-03-28', 12, '2014-03-23 12:48:41', '2014-03-23 12:52:44', 'completed'),
-(23, 6, 'adsf', 'other', '', -1, 'medium', '2014-03-23', '0000-00-00', '2014-03-23', 9, '2014-03-23 23:18:54', '2014-03-23 23:18:54', 'new'),
-(24, 6, 'asdf', 'other', '', -1, 'medium', '2014-03-23', '0000-00-00', '2014-03-23', 9, '2014-03-23 23:19:44', '2014-03-23 23:19:44', 'new'),
-(25, 9, 'asdf', 'other', '', -1, 'medium', '2014-03-23', '0000-00-00', '2014-03-23', 9, '2014-03-23 23:20:07', '2014-03-23 23:20:07', 'new'),
-(26, 9, 'asdf', 'other', '', 17, 'medium', '0000-00-00', '0000-00-00', '0000-00-00', 9, '2014-03-23 23:22:52', '2014-03-23 23:22:52', 'new');
+(22, 6, 'asdasd', 'tds', '23-03-2014 : sowmya : asd<br>23-03-2014 : himaram : sdasd<br>23/03/2014 : himaram : sdfsdf<br>23-03-2014 : himaram : ITR Uploaded<br>23-03-2014 : himaram : ITR Mailed<br>', 17, 'medium', '2014-03-27', '2014-03-23', '2014-03-28', 12, '2014-03-23 12:48:41', '2014-03-23 12:52:44', 'completed'),
+(23, 6, 'adsf', 'other', '', 17, 'medium', '2014-03-23', '0000-00-00', '2014-03-23', 9, '2014-03-23 23:18:54', '2014-03-23 23:18:54', 'new'),
+(24, 6, 'asdf', 'other', '', 17, 'medium', '2014-03-23', '0000-00-00', '2014-03-23', 9, '2014-03-23 23:19:44', '2014-03-23 23:19:44', 'new'),
+(25, 9, 'asdf', 'itr', '30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>', 17, 'medium', '2014-03-23', '2014-03-30', '2014-03-23', 9, '2014-03-23 23:20:07', '2014-03-30 16:28:31', 'completed'),
+(26, 9, 'asdf', 'itr', '30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>30-03-2014 : rishi : ITR Finalized<br>', 17, 'medium', '0000-00-00', '2014-03-30', '0000-00-00', 9, '2014-03-23 23:22:52', '2014-03-30 16:19:20', 'finalized'),
+(27, 9, 'qwert', 'itr', '30-03-2014 : rishi : asdf<br>30-03-2014 : rishi : ITR Uploaded<br>30-03-2014 : rishi : ITR Mailed<br>', 19, 'medium', '2014-03-31', '2014-03-30', '2014-03-31', 9, '2014-03-30 00:36:32', '2014-03-30 16:21:45', 'completed'),
+(28, 9, 'asdf', 'intimation', '30-03-2014 : rishi : asdf<br>', 17, 'high', '2014-03-30', '0000-00-00', '2014-03-31', 9, '2014-03-30 20:49:56', '2014-03-30 20:49:56', 'new'),
+(29, 9, 'qwer11', 'other', '30-03-2014 : rishi : qwer<br>', 17, 'low', '2014-03-30', '0000-00-00', '2014-03-31', 9, '2014-03-30 20:50:18', '2014-03-30 20:54:53', 'new'),
+(30, 9, 'medium', 'other', '', 17, 'medium', '2014-03-30', '0000-00-00', '2014-03-31', 9, '2014-03-30 20:55:11', '2014-03-30 20:55:11', 'new');
 
 -- --------------------------------------------------------
 
@@ -480,6 +517,17 @@ CREATE TABLE IF NOT EXISTS `task_query` (
 
 INSERT INTO `task_query` (`task_id`, `id`, `raised_by`, `requested_to`, `status`, `task_status`, `created_by`, `create_date`, `update_date`) VALUES
 (22, 40, 6, 12, 'closed', 'new', 6, '2014-03-23 12:49:52', '2014-03-23 12:51:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `task_types`
+--
+
+CREATE TABLE IF NOT EXISTS `task_types` (
+  `id` int(11) NOT NULL,
+  `type` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
