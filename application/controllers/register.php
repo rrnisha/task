@@ -55,7 +55,7 @@ class Register extends CI_Controller {
             
             // Validating..
             if ($this->form_validation->run() == TRUE) {
-                $this->Register_model1->insert();
+                $this->Register_model->insert();
                 $_POST['register_id'] = $this->db->insert_id();
                 for($i=0;$i<count($_POST["particulars"]);$i++) {
 	                $_POST['trans_type'] = 'create';
