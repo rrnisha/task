@@ -1,4 +1,4 @@
-_3_qurt/* Essentials */
+/* Essentials */
 
 html, div, map, dt, isindex, form, header, aside, section, section, article, footer {  
     display: block;  
@@ -196,7 +196,7 @@ aside#sidebar {
 width: 13%;
 background: #E0E0E3 url(../img/sidebar.png) repeat;
 float: left;
-min-height: 900px;
+min-height: 500px;
 margin-top: -4px;
 }
 
@@ -371,7 +371,7 @@ text-decoration: underline;
 }
 
 #sidebar footer {
-margin-top: 20%;
+/*margin-top: 20%; */
 }
 
 
@@ -463,14 +463,14 @@ float: left;
 }
 
 .width_quarter_task {
-width: 29%;
+width: 36%;
 margin-right: 0;
 float: left;
 
 }
 
 .width_3_quarter_task {
-width: 63%;
+width: 56%;
 margin-right: 0;
 float: left;
 
@@ -653,7 +653,7 @@ float: left;
 
 #main .module header h3.tasks_tabs_involved {
 display: block;
-width: 30%;
+width: 5%;
 float: left;
 }
 
@@ -755,7 +755,7 @@ float: left;
 }
 .task_list{
 height: 370px;
-overflow-x:hidden;
+overflow-x:auto;
 overflow-y:auto;    
 }
 

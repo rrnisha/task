@@ -307,8 +307,6 @@
     }
 </script>
 <section id="main" class="column">
-<!--    <div class="clear"></div>-->
-    <!-- <h4 class="alert_info">Tasks</h4> -->
     <article class="module width_full">
         <header>
             <h3 class="tasks_tabs_involved">Tasks</h3>

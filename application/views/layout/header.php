@@ -97,9 +97,6 @@
                 ?>
                 <!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
             </div>
-<!--            <div class="breadcrumbs_container">-->
-<!--                <article class="breadcrumbs"><a href="#">Home</a> <div class="breadcrumb_divider"></div> <a class="current">Task</a></article>-->
-<!--            </div>-->
         </section><!-- end of secondary bar -->
 
         <aside id="sidebar" class="column">
@@ -114,32 +111,23 @@
             <h3>Task</h3>
             <ul class="toggle">
                 <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task/create">New Task</a></li>
-                <!-- <li class="icn_edit_article"><a href="#">List Tasks</a></li>-->
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/task/">List Tasks</a></li>
-                <!-- <li class="icn_tags"><a href="#">Tags</a></li> -->
             </ul>
             <h3>Registry</h3>
             <ul class="toggle">
                 <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/register/create">New Register</a></li>
-                <!-- <li class="icn_edit_article"><a href="#">List Tasks</a></li>-->
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/register/lists">List Registers</a></li>
-                <!-- <li class="icn_tags"><a href="#">Tags</a></li> -->
             </ul>
             <h3>Employee</h3>
             <ul class="toggle">
                 <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
                 <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
-                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/employee/profile/<?php
-                    if (isset($_SESSION['emp_id'])) {
-                        echo $_SESSION['emp_id'];
-                    }
-                    ?>">My Profile</a></li>
+                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/employee/profile/<?php if (isset($_SESSION['emp_id'])) { echo $_SESSION['emp_id']; } ?>">My Profile</a></li>
             </ul>
             <h3>Client</h3>
             <ul class="toggle">
                 <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/client/create">New Client</a></li>
                 <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/client/lists">List Clients</a></li>
-<!--                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/client/index/4">Client Dashboard</a></li>-->
             </ul>
             <h3>Report</h3>
             <ul class="toggle">
@@ -154,20 +142,10 @@
                 <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
                 <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li>
             </ul>
-            <!--<h3>Media</h3>
-            <ul class="toggle">
-                    <li class="icn_folder"><a href="#">File Manager</a></li>
-                    <li class="icn_photo"><a href="#">Gallery</a></li>
-                    <li class="icn_audio"><a href="#">Audio</a></li>
-                    <li class="icn_video"><a href="#">Video</a></li>
-            </ul>-->
             <h3>Admin</h3>
             <ul class="toggle">
-                <!-- <li class="icn_settings"><a href="#">Options</a></li>
-                <li class="icn_security"><a href="#">Security</a></li> -->
                 <li class="icn_jump_back"><a href="<?php echo base_url(); ?>index.php/employee/logout">Logout</a></li>
             </ul>
-
             <footer>
                 <hr />
                 <p><strong>Copyright &copy; 2013</strong></p>
