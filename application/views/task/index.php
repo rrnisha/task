@@ -927,32 +927,6 @@
                         ?>
                         <p>Details for Task #<strong><?php echo $tasks[0]->id; ?> - <?php echo $tasks[0]->title; ?></strong></p>
                         <table class="tablesorter" cellspacing="0">
-<!--                             <tr> -->
-<!--                                 <td  class="required"> -->
-<!--                                     Start Date -->
-<!--                                 </td> -->
-<!--                                 <td> -->
-                                    <?php echo $tasks[0]->start_date ?>
-<!--                                 </td> -->
-<!--                             </tr> -->
-                                
-<!--                             <tr> -->
-<!--                                 <td  class="required"> -->
-<!--                                     Due Date -->
-<!--                                 </td> -->
-<!--                                 <td> -->
-                                    <?php echo $tasks[0]->due_date ?>
-<!--                                 </td> -->
-<!--                             </tr> -->
-<!--                             <tr> -->
-<!--                                 <td> -->
-<!--                                     End Date -->
-<!--                                 </td> -->
-<!--                                 <td> -->
-                                    <?php echo $tasks[0]->end_date ?>
-<!--                                 </td> -->
-<!--                             </tr> -->
-                            
 							<thead>
 								<tr>
 									<th class="required" rowspan="1">Start Date</th>
