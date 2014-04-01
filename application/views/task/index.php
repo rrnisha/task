@@ -309,7 +309,7 @@
 <section id="main" class="column">
 <!--    <div class="clear"></div>-->
     <!-- <h4 class="alert_info">Tasks</h4> -->
-    <article class="module width_3_quarter_task">
+    <article class="module width_full">
         <header>
             <h3 class="tasks_tabs_involved">Tasks</h3>
             <ul class="tabs">                        
@@ -856,7 +856,10 @@
             </div>        
     </article>
 
-    <article class="module width_quarter_task">
+
+    <div class="clear"></div>
+    
+    <article class="module width_3_quarter_task">
         <header>
             <h3 class="tabs_involved">Task Remarks</h3>
         </header>
@@ -903,9 +906,8 @@
             </footer>            
         </div>        
     </article>
-
-    <div class="clear"></div>
-    <article class="module width_full">
+    
+    <article class="module width_quarter_task">
         <header>
             <h3 class="tabs_involved">Task Details</h3>
         </header>
@@ -925,27 +927,52 @@
                         ?>
                         <p>Details for Task #<strong><?php echo $tasks[0]->id; ?> - <?php echo $tasks[0]->title; ?></strong></p>
                         <table class="tablesorter" cellspacing="0">
-                            <tr>
-                                <td  class="required">
-                                    Start Date
-                                </td>
-                                <td>
+<!--                             <tr> -->
+<!--                                 <td  class="required"> -->
+<!--                                     Start Date -->
+<!--                                 </td> -->
+<!--                                 <td> -->
                                     <?php echo $tasks[0]->start_date ?>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td  class="required">
-                                    Due Date
-                                </td>
-                                <td>
+<!--                                 </td> -->
+<!--                             </tr> -->
+                                
+<!--                             <tr> -->
+<!--                                 <td  class="required"> -->
+<!--                                     Due Date -->
+<!--                                 </td> -->
+<!--                                 <td> -->
                                     <?php echo $tasks[0]->due_date ?>
-                                </td>
-                                <td>
-                                    End Date
-                                </td>
-                                <td>
+<!--                                 </td> -->
+<!--                             </tr> -->
+<!--                             <tr> -->
+<!--                                 <td> -->
+<!--                                     End Date -->
+<!--                                 </td> -->
+<!--                                 <td> -->
                                     <?php echo $tasks[0]->end_date ?>
-                                </td>
-                            </tr>
+<!--                                 </td> -->
+<!--                             </tr> -->
+                            
+							<thead>
+								<tr>
+									<th class="required" rowspan="1">Start Date</th>
+									<th class="required" rowspan="1">Due Date</th>
+									<th rowspan="1">End Date</th>                                    
+								</tr>
+							</thead>
+							<tbody>
+							 	<tr>
+									<td>
+							            <?php echo $tasks[0]->start_date?>
+							        </td>
+									<td>
+							            <?php echo $tasks[0]->due_date?>
+							        </td>
+									<td>
+							            <?php echo $tasks[0]->end_date ?>
+							        </td>
+								</tr>
+							</tbody>                            
                         <?php 
                         } 
                         ?>

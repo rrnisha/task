@@ -28,30 +28,28 @@ class Register extends CI_Controller {
     public function create() {
         $data = array();
         $data['values'] = array();
-        $data['values']['particulars'] = '';
+//         $data['values']['particulars'] = '';
         $data['values']['client_id'] = '';
         $data['values']['by_employee'] = '';
         $data['values']['mode_of_receipt'] = 'in_person';
-        $data['values']['tag'] = '';
+//         $data['values']['tag'] = '';
         $data['values']['status'] = 'inward';
         $data['values']['type'] = 'others';
 
-        print_r($_POST);
+//         print_r($_POST);
         if (isset($_POST['create']) && $_POST['create'] == 'Create') {
             $data['values'] = $_POST;
             // Loading form validation library
             $this->load->library('form_validation');
 
+            // Setting validation rules
             $this->form_validation->set_rules('client_id', 'Client', 'callback_dropdown_id_check');
             $this->form_validation->set_rules('status', 'Status', 'required');
             $this->form_validation->set_rules('type', 'Type', 'required');
-//             Setting validation rules
-            for($i=0;$i<count($_POST["particulars"]);$i++) {
-            	$this->form_validation->set_rules('particulars[]', 'Particulars', 'required');
-                $this->form_validation->set_rules('by_employee[]', 'Received/Surrender By Employee', 'callback_dropdown_id_check');
-                $this->form_validation->set_rules('mode_of_receipt[]', 'Mode of Receipt', 'callback_dropdown_id_check');
-                $this->form_validation->set_rules('tag[]', 'Tag', 'required');
-            }
+            $this->form_validation->set_rules('particulars[]', 'Particulars', 'required');
+            $this->form_validation->set_rules('by_employee[]', 'Received/Surrender By Employee', 'callback_dropdown_id_check');
+            $this->form_validation->set_rules('mode_of_receipt[]', 'Mode of Receipt', 'callback_dropdown_id_check');
+            $this->form_validation->set_rules('tag[]', 'Tag', 'required');
             
             // Validating..
             if ($this->form_validation->run() == TRUE) {
@@ -71,7 +69,7 @@ class Register extends CI_Controller {
             	$data['values']['tag'] = '';
             }
         }
-        print_r('validation not done');
+//         print_r('validation not done');
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
         
@@ -118,12 +116,28 @@ class Register extends CI_Controller {
     		return TRUE;
     	}
     }
+
+    public function dropdown_id_array_check($arr)
+    {
+    	foreach ($arr as $str) {
+	    	if ($str == '-1')
+	    	{
+	    		$this->form_validation->set_message('dropdown_id_check', 'Please select a valid value');
+	    		return FALSE;
+	    	}
+	    	else
+	    	{
+	    		continue;
+	    	}
+    	}
+    	return TRUE;
+    }
         
     public function edit() {
         $data = array();
         if (isset($_POST['edit']) && $_POST['edit'] == 'Ok') {
         	$_POST['status'] = $_POST['status_value'];
-        	print_r($_POST);
+//         	print_r($_POST);
         	print("Count : "+count($_POST["particulars"]));
         	
             $data['values'] = array();
@@ -499,7 +513,7 @@ class Register extends CI_Controller {
     }
 
     public function inwardDoc() {
-    	print_r($_POST);
+//     	print_r($_POST);
         if (isset($_POST['doc_id']) && $_POST['doc_id']) {
             $_POST['status'] = 'inward';
             $doc_cnt_query = $this->Register_model->get_documents_count($_POST['register_id']);

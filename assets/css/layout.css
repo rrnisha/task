@@ -10,7 +10,7 @@ margin: 0;
 padding: 0;
 font-family: "Cambria", "Times New Roman", "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
 background: #F8F8F8;
-font-size: 13px;
+font-size: 15px;
 }
 
 .clear {
@@ -206,7 +206,8 @@ outline: none;
 background: url(../img/sidebar_divider.png) repeat-x;
 display: block;
 width: 100%;
-height: 2px;}
+height: 2px;
+}
 
 
 /* Search */
@@ -260,7 +261,7 @@ color: #666666;
 color: #1F1F20;
 text-transform: uppercase;
 text-shadow: 0 1px 0 #fff;
-font-size: 13px;
+font-size: 15px;
 margin: 10px 0 10px 6%;
 display: block;
 float: left;
@@ -269,7 +270,7 @@ width: 90%;
 
 .toggleLink {
 color: #999999;
-font-size: 10px;
+font-size: 13px;
 text-decoration: none;
 display: block;
 float: right;
@@ -397,7 +398,7 @@ margin-top: -2px;
 color: #1F1F20;
 text-transform: uppercase;
 text-shadow: 0 1px 0 #fff;
-font-size: 13px;
+font-size: 15px;
 margin: 8px 20px;
 }
 
@@ -441,7 +442,8 @@ background: #F1F1F4 url(../img/module_footer_bg.png) repeat-x;
 
 .module_content {
 margin: 10px 20px;
-color: #666;}
+color: #666;
+}
 
 /* Module Widths */
 
@@ -461,15 +463,17 @@ float: left;
 }
 
 .width_quarter_task {
-width: 19%;
+width: 29%;
 margin-right: 0;
 float: left;
+
 }
 
 .width_3_quarter_task {
-width: 73%;
+width: 63%;
 margin-right: 0;
 float: left;
+
 }
 
 .width_quarter {
@@ -559,7 +563,7 @@ margin-right: 10px;
 .tablesorter {
 width: 100%;
 margin: -5px 0 0 0;
-font-size: 13px;
+font-size: 15px;
 }
 
 .tablesorter td{
@@ -816,12 +820,13 @@ overflow-y:hidden;
 }
 
 .task_details{
-height: 100px;
+height: 177px;
 overflow-x:hidden;
 overflow-y:auto;    
 }
+
 .message_list {
-height: 335px;
+height: 145px;
 overflow-x: auto;
 overflow-y: auto;
 }
@@ -967,7 +972,7 @@ margin: 8px 0px;
 color: #666666;
 text-transform: uppercase;
 text-shadow: 0 1px 0 #fff;
-font-size: 13px;
+font-size: 15px;
 margin: 8px 0px;
 }
 
@@ -1047,10 +1052,10 @@ border: 1px solid #79C20D;
 color: #32510F;
 padding: 10px 0;
 text-indent: 40px;
-font-size: 14px;}
+font-size: 13px;}
 
 
-.tablerow { width: 100%; margin: 0 0 0 0; font-size: 13px;}
+.tablerow { width: 100%; margin: 0 0 0 0; font-size: 15px;}
 
 .tablerow td{ margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc; }
 

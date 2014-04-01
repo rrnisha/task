@@ -393,7 +393,7 @@
     </article>
     <article class="module width_quarter">
         <header>
-            <h3 class="tabs_involved">Document Transactions</h3>
+            <h3 class="tabs_involved">Transactions</h3>
         </header>
         <div class="tab_container">
             <div class="document_list">
@@ -404,7 +404,7 @@
                                 <th rowspan="1">No</th>
                                 <th rowspan="1">Doc Id</th>
                                 <th rowspan="1">Emp</th>
-                                <th rowspan="1">Reg Status</th> 
+<!--                                 <th rowspan="1">Reg Status</th>  -->
                                 <th rowspan="1">Trans Date</th>
                                 <th rowspan="1">Trans Type</th>
                             </tr>
@@ -417,7 +417,7 @@
 	                                    <td><?php echo $i; ?></td>
 	                                    <td><?php echo $tr->doc_id; ?></td>
 	                                    <td><?php echo $tr->emp; ?></td>
-	                                    <td><?php echo $tr->reg_status; ?></td>
+	                                    <!-- <td><?php echo $tr->reg_status; ?></td> -->
 	                                    <td><?php echo $tr->trans_date; ?></td>
 	                                    <td><?php echo $tr->trans_type; ?></td>
 	                                </tr>
