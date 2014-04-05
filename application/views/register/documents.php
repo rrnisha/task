@@ -1,6 +1,8 @@
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.blockui.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		$(".tablesorter").tablesorter();
+		
 	    $('.outwardDocument').click(function() {
 	        var hrefFields = $(this).attr('href').split("#");
 	      	var registerId = hrefFields[1];

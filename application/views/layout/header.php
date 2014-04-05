@@ -37,12 +37,6 @@
                 $(".tablesorter").tablesorter();
             }
             );
-            $(document).ready(function() {
-
-                //On Click Event
-
-
-            });
         </script>
         <script type="text/javascript">
             $(function() {
