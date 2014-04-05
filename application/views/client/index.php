@@ -481,7 +481,7 @@
             <h3 class="tabs_involved">Task Remarks</h3>
         </header>
         <div class="tab_container">
-            <div class="message_list">
+            <div class="client_message_list">
                 <div class="module_content">
                     <div class="message" id="show_remarks">
 <!--                        <p>Post remarks for selected task</p>
@@ -536,7 +536,7 @@
 
     <article class="module width_half">
         <header>
-            <h3 class="tabs_involved">Client Inward Documents</h3>
+            <h3 class="tabs_involved">Inward Documents</h3>
         </header>
             <div class="tab_container">
                 <div class="client_document_list">
@@ -577,7 +577,7 @@
     </article>
     <article class="module width_half">
         <header>
-            <h3 class="tabs_involved">Client Outward Documents</h3>
+            <h3 class="tabs_involved">Outward Documents</h3>
         </header>
             <div class="tab_container">
                 <div class="client_document_list">

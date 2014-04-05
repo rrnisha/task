@@ -135,14 +135,20 @@
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/report/task">Tasks</a></li>
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/chart/index">Charts</a></li>
             </ul>
-            <h3>Misc</h3>
-            <ul class="toggle">
-                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/fy/create">New Fin Year</a></li>
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/fy/lists">List Fin Year</a></li>
-                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
-                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li>
-            </ul>
-            <h3>Admin</h3>
+            <?php
+            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
+			?>
+				<h3>Misc</h3>
+				<ul class="toggle">
+				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/fy/create">New Fin Year</a></li>
+				<li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/fy/lists">List Fin Year</a></li>
+				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
+				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li>
+				</ul>
+            <?php
+            }
+            ?>            
+            <h3>User</h3>
             <ul class="toggle">
                 <li class="icn_jump_back"><a href="<?php echo base_url(); ?>index.php/employee/logout">Logout</a></li>
             </ul>

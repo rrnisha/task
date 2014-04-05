@@ -5,8 +5,8 @@
                 <th rowspan="1">Doc Id</th>
                 <th rowspan="1">Emp</th>
 <!--                 <th rowspan="1">Reg Status</th>  -->
-                <th rowspan="1">Trans Date</th>
-                <th rowspan="1">Trans Type</th> 
+                <th rowspan="1">Date</th>
+                <th rowspan="1">Type</th> 
             </tr>
         </thead>
         <tbody>                            

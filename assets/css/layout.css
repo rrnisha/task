@@ -754,7 +754,7 @@ color: #666666;
 float: left;
 }
 .task_list{
-height: 370px;
+height: 390px;
 overflow-x:auto;
 overflow-y:auto;    
 }
@@ -823,6 +823,12 @@ overflow-y:hidden;
 height: 177px;
 overflow-x:hidden;
 overflow-y:auto;    
+}
+
+.client_message_list {
+height: 372px;
+overflow-x: auto;
+overflow-y: auto;
 }
 
 .message_list {

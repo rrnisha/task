@@ -189,7 +189,7 @@ class Client extends CI_Controller {
         $cnt_query = $this->Task_model->get_count_client($client_id, $status);
         $cnt_res = $cnt_query->result();
         $config['total_rows'] = $cnt_res[0]->cnt;
-        $config['per_page'] = 5;        
+        $config['per_page'] = 9;        
         $config['uri_segment'] = 4;
 
         $this->pagination->initialize($config);

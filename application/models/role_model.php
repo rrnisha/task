@@ -9,7 +9,7 @@ class Role_model extends CI_Model{
         return $query;
     }    
     function get_all(){
-        $query = $this->db->query('SELECT * FROM roles');
+        $query = $this->db->query('SELECT * FROM roles WHERE id>=1');
         
         return $query;
     }

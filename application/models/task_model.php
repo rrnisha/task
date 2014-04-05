@@ -75,7 +75,8 @@ class Task_model extends CI_Model {
 
             $ext_sql .= ' AND status = \'' . $status . '\'';
         } elseif ($status == 'all') {
-            $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
+            $ext_sql .= ' AND status <> \'finalized\''; 
+            		//. ' AND status <> \'finalized\'';
         }
         $ext_sql .= ' AND client_id ='.$client_id . ' ORDER by update_date desc, status';
         $query = $this->db->select('* FROM tasks' . $ext_sql)->limit($num, $offset);
