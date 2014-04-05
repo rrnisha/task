@@ -29,11 +29,11 @@ function printDiv( divId, filename ){
 				</textarea>
 			</div>
 			<div>
-            <textarea readonly style="resize:none; width: 300px; height: 100px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">SRAM AND CO
+            <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">SRAM AND CO
 #63, East Vanniar Street
 West KK Nagar, Chennai 600078
 Phone: 91-44-23643710</textarea>
-            <div id="logo">
+            <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
               <img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" alt="logo" />
             </div>
 			</div>
@@ -45,7 +45,7 @@ Phone: 91-44-23643710</textarea>
 echo $line;
 ?> <?php } ?></textarea>-->
 	
-	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 40px; width: 200px; float: right;">
+	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
 	                <tr>
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Register #</td>
 	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php echo $register->id; ?></textarea></td>
