@@ -812,7 +812,7 @@
 	                                                    <td><a href="#<?php echo $task->id; ?>#<?php echo $task->client_id; ?>#<?php echo $task->client_name; ?>" class="uploadITR">U<img src="<?php echo base_url(); ?>/assets/img/upload_doc.png"/></a></td>
 	                                                <?php } 
 	                                                elseif ($task->itr_id <> '' & $task->status <> 'completed') { ?>
-	                                                    <td><a href="#<?php echo $task->id; ?>#<?php echo $task->client_id; ?>#<?php echo $task->client_name; ?>#<?php echo $task->itr_id; ?>#<?php echo $task->assessment_year; ?>" class="mailITR">M<img src="<?php echo base_url(); ?>/assets/img/new/Email App.png"/></a></td>
+	                                                    <td><a href="#<?php echo $task->id; ?>#<?php echo $task->client_id; ?>#<?php echo $task->client_name; ?>#<?php echo $task->itr_id; ?>#<?php echo $task->assessment_year; ?>" class="mailITR">P<img src="<?php echo base_url(); ?>/assets/img/new/Email App.png"/></a></td>
 	                                                <?php }
 	                                            }
 	                                            elseif ($task->status <> 'completed') { ?>
