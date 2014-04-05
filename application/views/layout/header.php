@@ -71,7 +71,9 @@
 
         <header id="header">
             <hgroup>
-                <h1 class="site_title"><a href="index.html">Company</a></h1>
+                <h1 class="site_title">
+                	<a href="<?php echo base_url(); ?>index.php/">S.RAM &amp; CO</a>
+               	</h1>
                 <?php
                 if (isset($_SESSION['emp_id'])) {
                     ?>

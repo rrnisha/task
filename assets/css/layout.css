@@ -62,13 +62,13 @@ text-decoration: none;
 header#header h2.section_title {
 text-align: center;
 text-indent: 4.5%;
-width: 68%;
+width: 74%;
 background: url(../img/header_shadow.png) no-repeat left top;
 }
 
 .btn_view_site {
-float: left;
-width: 9%;
+float: right;
+width: 8%;
 }
 
 .btn_view_site a {
