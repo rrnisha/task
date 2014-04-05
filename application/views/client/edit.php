@@ -54,7 +54,7 @@ $(document).ready(function() {
                     <input type="text" style="width:180px" name="phone_office2" value="<?php echo $client->phone_office2; ?>"/>
                 </fieldset>                 
                 <fieldset>
-                    <label>Email Id</label>
+                    <label class="required_can_null" <?php if (form_error('email') !='') echo 'style="color:red;font-style:normal"'; ?>>Email Id</label>
                     <input type="text" name="email" value="<?php echo $client->email; ?>"/>
                 </fieldset>
                 <fieldset>

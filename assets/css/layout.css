@@ -42,7 +42,7 @@ background: #222222 url(../img/header_bg.png) repeat-x;
 header#header h1.site_title, header#header h2.section_title {
 float: left;
 margin: 0;
-font-size: 22px;
+font-size: 20px;
 display: block;
 width: 13%;
 height: 55px;
@@ -68,7 +68,7 @@ background: url(../img/header_shadow.png) no-repeat left top;
 
 .btn_view_site {
 float: right;
-width: 8%;
+width: 9%;
 }
 
 .btn_view_site a {
@@ -838,6 +838,7 @@ overflow-y: auto;
 }
 
 .required:after { content:" * "; color:orange; }
+.required_can_null:after { content:" # "; color:orange; }
 .required_table:after { content:"*"; color:orange; } 
 
 /* New/Edit Article Module */
@@ -1053,10 +1054,10 @@ margin-top: 20px;
 -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
-background: #E2F6C5 url(../img/icn_alert_success.png) no-repeat;
+background: #F1F1F4 url(../img/icn_alert_success.png) no-repeat;
 background-position: 10px 10px;
-border: 1px solid #79C20D;
-color: #32510F;
+border: 1px solid #9BA0AF;
+color: #1F1F20;
 padding: 10px 0;
 text-indent: 40px;
 font-size: 13px;}

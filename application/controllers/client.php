@@ -54,7 +54,7 @@ class Client extends CI_Controller {
             $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'trim|required|xss_clean'); //|callback_mobile_regex_match
 //             $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');
             $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');
-//             $this->form_validation->set_rules('email', 'Email', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'callback_email_regex_match');
 //             $this->form_validation->set_rules('address', 'Address', 'required');
 //             $this->form_validation->set_rules('client_type', 'Type', 'required');
             $this->form_validation->set_rules('dob', 'Date of Birth/Incorporation', 'required');
@@ -73,6 +73,20 @@ class Client extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
+    public function email_regex_match($email) {
+    	if ($email=='') {
+    		return TRUE;
+    	} else {
+    		if (preg_match('/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/', $email)) {
+    			return TRUE;
+    		} else {
+    			$this->form_validation->set_message('email_regex_match', 'Please enter a valid email');
+    			return FALSE;
+    		}
+    		
+    	}
+    }
+    
     public function mobile_regex_match($str)
     {
     	if (preg_match('/^\d{*}$/', $str)) {
@@ -122,6 +136,7 @@ class Client extends CI_Controller {
            $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');    
            $this->form_validation->set_rules('client_type', 'Client Type', 'required');
            $this->form_validation->set_rules('dob', 'Date of Birth/Incorporation', 'required');
+           $this->form_validation->set_rules('email', 'Email', 'callback_email_regex_match');
            $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');    
            $this->form_validation->set_rules('file_id', 'File Id', 'required');    
             // Validating..

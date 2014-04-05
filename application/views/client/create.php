@@ -50,8 +50,8 @@ $(document).ready(function() {
                         <label style="float:absolute; width:60px">Office</label>
                         <input type="text" style="width:180px" name="phone_office2" value="<?php echo $values['phone_office2']; ?>"/>
                     </fieldset>        
-                    <fieldset>
-                        <label>Email Id</label>
+                    <fieldset> 
+                        <label class="required_can_null" <?php if (form_error('email') !='') echo 'style="color:red;font-style:normal"'; ?>>Email Id</label>
                         <input type="text" name="email" value="<?php echo $values['email']; ?>"/>
                     </fieldset>
                 	<fieldset>
