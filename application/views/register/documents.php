@@ -151,7 +151,7 @@
             ?>
             <tr>
             	<td><?php echo $document->doc_id; ?></td>
-                <td><?php echo $document->particulars; ?></td>
+                <td style="width: 300px"><?php echo $document->particulars; ?></td>
                 <td><?php echo $document->tag; ?></td> 
                 <?php if ($document->status == 'inward') { ?>
                 	<td><label style="visibility:hidden">1</label><img src="<?php echo base_url(); ?>/assets/img/new/Inward.png"/></td>

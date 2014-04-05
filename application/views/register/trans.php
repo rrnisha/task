@@ -1,8 +1,8 @@
     <table class="tablesorter" cellspacing="0"> 
         <thead> 
             <tr>
-                <th rowspan="1">No</th>
-                <th rowspan="1">Doc Id</th>
+<!--                 <th rowspan="1">No</th> -->
+                <th rowspan="1">Doc#</th>
                 <th rowspan="1">Emp</th>
 <!--                 <th rowspan="1">Reg Status</th>  -->
                 <th rowspan="1">Date</th>
@@ -12,7 +12,7 @@
         <tbody>                            
             <?php $i =1; foreach ($trans as $tr) { ?>
                 <tr>
-                    <td><?php echo $i; ?></td>
+                    <!-- <td><?php echo $i; ?></td> -->
                     <td><?php echo $tr->doc_id; ?></td>
                     <td><?php echo $tr->emp; ?></td>
                     <!--  <td><?php echo $tr->reg_status; ?></td> -->

@@ -7,12 +7,12 @@ $(document).ready(function() {
 });
 function addParticularsRow(){
 	$(".particularsRow:last").after('<tr class="particularsRow"><td><a onclick="removeParticularsRow(this)"><img src="<?php echo base_url(); ?>/assets/img/delete.png"/></a></td>'
-			+'<td><fieldset><input type="text" name="particulars[]" value="<?php echo set_value('particulars[]'); ?>" /></fieldset></td>'
+			+'<td><fieldset><input style="width:300px;" type="text" name="particulars[]" value="<?php echo set_value('particulars[]'); ?>" /></fieldset></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('by_employee[]', $employees, $values['by_employee']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('mode_of_receipt[]', $mode_receipt, $values['mode_of_receipt']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
-			+'<td><fieldset><input style="width:200px;" type="text" name="tag[]" value="<?php echo set_value('tag[]'); ?>" "/></fieldset></td>'
+			+'<td><fieldset><input style="width:100px;" type="text" name="tag[]" value="<?php echo set_value('tag[]'); ?>" "/></fieldset></td>'
 			+'<td><a onclick="addParticularsRow()"><img src="<?php echo base_url(); ?>/assets/img/add.png"/></a></td></tr>');
 }
 
@@ -78,7 +78,7 @@ function removeParticularsRow(r){
 									</a>
 								</td>
 								<td>
-									<fieldset><input type="text" name="particulars[]" value="<?php echo set_value('particulars[]'); ?>" /></fieldset>
+									<fieldset><input type="text" style="width:300px;" name="particulars[]" value="<?php echo set_value('particulars[]'); ?>" /></fieldset>
 								</td>
 								<td>
 									<?php echo form_dropdown('by_employee[]', $employees, $values['by_employee']); ?>
@@ -87,7 +87,7 @@ function removeParticularsRow(r){
 									<?php echo form_dropdown('mode_of_receipt[]', $mode_receipt, $values['mode_of_receipt']); ?>
 								</td>
 								<td>
-									<fieldset><input type="text" style="width:200px;" name="tag[]" value="<?php echo set_value('tag[]'); ?>" /></fieldset>
+									<fieldset><input type="text" style="width:100px;" name="tag[]" value="<?php echo set_value('tag[]'); ?>" /></fieldset>
 								</td>
 								<td>
 									<a onclick="addParticularsRow()">

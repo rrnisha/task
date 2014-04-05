@@ -401,8 +401,8 @@
                     <table class="tablesorter" cellspacing="0"> 
                         <thead> 
                             <tr>
-                                <th rowspan="1">No</th>
-                                <th rowspan="1">Doc Id</th>
+<!--                                 <th rowspan="1">No</th> -->
+                                <th rowspan="1">Doc#</th>
                                 <th rowspan="1">Emp</th>
 <!--                                 <th rowspan="1">Reg Status</th>  -->
                                 <th rowspan="1">Date</th>
@@ -414,7 +414,7 @@
 			                    <?php $transaction = $registers[0]->trans; ?>
 	                            <?php $i = 1; foreach ($transaction as $tr) { ?>
 	                                <tr>
-	                                    <td><?php echo $i; ?></td>
+	                                    <!-- <td><?php echo $i; ?></td> -->
 	                                    <td><?php echo $tr->doc_id; ?></td>
 	                                    <td><?php echo $tr->emp; ?></td>
 	                                    <!-- <td><?php echo $tr->reg_status; ?></td> -->
@@ -469,7 +469,7 @@
                                     ?>
                                     <tr>
                                         <td><?php echo $particular->doc_id; ?></td>
-                                        <td><?php echo $particular->particulars; ?></td> 
+                                        <td style="width: 300px"><?php echo $particular->particulars; ?></td> 
                                         <td><?php echo $particular->tag; ?></td>
                                         <?php if ($particular->status == 'inward') { ?>
                                             <td><label style="visibility:hidden">1</label><img src="<?php echo base_url(); ?>/assets/img/new/Inward.png"/></td>

@@ -15,13 +15,13 @@ function addParticularsRow(r){
 	i = rc;
 	$(".particularsRow:last").after('<tr class="particularsRow">'
 			+'<td><a onclick="removeParticulars('+i+',this)"><img src="<?php echo base_url(); ?>/assets/img/delete.png"/></a></td>'
-			+'<td><fieldset><input type="text" name="particulars[]" value="" onchange="markParticularsChanged('+i+')"/></fieldset></td>'
+			+'<td><fieldset><input style="width:300px;" type="text" name="particulars[]" value="" onchange="markParticularsChanged('+i+')"/></fieldset></td>'
 //			+'<td><fieldset><input style="width:100px;" type="text" name="quantity[]" value="" onchange="markParticularsChanged('+i+')"/></fieldset></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('by_employee[]', $employees); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
 			+'<td>'
 			+'<?php $select = form_dropdown('mode_of_receipt[]', $mode_receipt); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
-			+'<td><fieldset><input style="width:200px;" type="text" name="tag[]" value="" onchange="markParticularsChanged('+i+')"/></fieldset></td>'
+			+'<td><fieldset><input style="width:100px;" type="text" name="tag[]" value="" onchange="markParticularsChanged('+i+')"/></fieldset></td>'
 			+'<td><a onclick="addParticularsRow(this)"><img src="<?php echo base_url(); ?>/assets/img/add.png"/></a></td></tr>');
 	$(".docHiddenParticulars:last").after('<tr class="docHiddenParticulars">'
 			+'<td></td>'
@@ -82,7 +82,7 @@ function removeParticulars(id,r){
                     <input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
                     <input type="hidden" id="rowCount" name="rowCount" value="<?php echo count($particulars); ?>"></input>
                     <input type="hidden" id="particularsDeleted" name="particularsDeleted" value=""></input>
-                    <input type="text" id="edit_start_date" name="edit_start_date" value="<?php echo $edit_start_date ?>"></input>
+                    <input type="hidden" id="edit_start_date" name="edit_start_date" value="<?php echo $edit_start_date ?>"></input>
                     <fieldset>
                         <label>Client</label>
                         <?php echo form_dropdown('client_id', $clients, $register->client_id); ?>
@@ -108,11 +108,11 @@ function removeParticulars(id,r){
 						<thead>
 						<tr>
 							<th></th>
-							<th>Particulars</th>
+							<th class="required" <?php if (form_error('particulars[]') !='') echo 'style="color:red;font-style:normal"'; ?>>Particulars</th>
 <!--							<th>Quantity</th>-->
-							<th>By Employee</th>
-							<th>Mode of Receipt</th>
-							<th>Tag</th>
+							<th class="required" <?php if (form_error('by_employee[]') !='') echo 'style="color:red;font-style:normal"'; ?>>By Employee</th>
+							<th class="required" <?php if (form_error('mode_of_receipt[]') !='') echo 'style="color:red;font-style:normal"'; ?>>Mode of Receipt</th>
+							<th class="required" <?php if (form_error('tag[]') !='') echo 'style="color:red;font-style:normal"'; ?>>Tag</th>
 							<th></th>
 						</tr>
 						</thead>
@@ -126,7 +126,7 @@ function removeParticulars(id,r){
 									</a>
 								</td>
 								<td>
-									<fieldset><input type="text" name="particulars[]" value="<?php echo $particular->particulars; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>
+									<fieldset><input style="width:300px;" type="text" name="particulars[]" value="<?php echo $particular->particulars; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>
 								</td>
 <!--								<td>-->
 <!--									<fieldset><input style="width:100px;" type="text" name="quantity[]" value="<?php echo $particular->quantity; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>-->
@@ -138,7 +138,7 @@ function removeParticulars(id,r){
 									<?php $js = 'onchange="markParticularsChanged('.$i.')"'; echo form_dropdown('mode_of_receipt[]', $mode_receipt, $particular->mode_of_receipt, $js); ?>	
 								</td>
 								<td>
-									<fieldset><input type="text" style="width:200px;" name="tag[]" value="<?php echo $particular->tag; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>
+									<fieldset><input type="text" style="width:100px;" name="tag[]" value="<?php echo $particular->tag; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>
 								</td>
 								<td>
 									<a onclick="addParticularsRow(this)">

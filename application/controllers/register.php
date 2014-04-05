@@ -170,7 +170,7 @@ class Register extends CI_Controller {
     public function tomedia($registerId, $flag, $edit_start_date='') {
         $register_query = $this->Register_model->get($registerId);
         $doc_res = $register_query->result();
-        $doc_res[0]->create_date = mdate('%d-%m-%Y', strtotime($doc_res[0]->create_date));
+        $doc_res[0]->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($doc_res[0]->create_date));
         $data['register'] = $doc_res[0];
 		$data['current_date'] = now();
 		$data['flag'] = $flag;
@@ -188,7 +188,7 @@ class Register extends CI_Controller {
 			}
 		}
         foreach ($documents_query->result() as $row) {
-        	$row->create_date = mdate('%d-%m-%Y', strtotime($row->create_date));
+        	$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
             $data['particulars'][] = $row;
         }
         
@@ -441,7 +441,7 @@ class Register extends CI_Controller {
             $res = $doc_trans_query->result();
             
             foreach ($doc_trans_query->result() as $trans_row) {
-            	$trans_row->trans_date = mdate('%d-%m-%Y', strtotime($trans_row->trans_date));
+            	$trans_row->trans_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($trans_row->trans_date));
                 $emp_name_query = $this->Employee_model->get_name($trans_row->emp_id);
                 $emp_name_result = $emp_name_query->result();
                 $trans_row->emp = $emp_name_result[0]->login;
@@ -600,7 +600,7 @@ class Register extends CI_Controller {
         $res = $doc_trans_query->result();
         $data['trans'] = array();
         foreach ($doc_trans_query->result() as $row) {
-        	$row->trans_date = mdate('%d-%m-%Y', strtotime($row->trans_date));
+        	$row->trans_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->trans_date));
             $emp_name_query = $this->Employee_model->get_name($row->emp_id);
             $emp_name_result = $emp_name_query->result();
             $row->emp = $emp_name_result[0]->login;

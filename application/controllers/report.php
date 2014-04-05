@@ -66,7 +66,7 @@ class Report extends CI_Controller {
     }
     
     public function task_report_results($status='all') {
-    	print_r($_POST);
+//     	print_r($_POST);
     	$data = array();
         $data['status'] = $_POST['status'];
 
