@@ -809,7 +809,7 @@ overflow-y:auto;
 
 .client_list{
 height: 465px;
-overflow-x:hidden;
+overflow-x:auto;
 overflow-y:auto;    
 }
 
@@ -837,7 +837,8 @@ overflow-x: auto;
 overflow-y: auto;
 }
 
-.required:after { content:" * "; color:orange; } 
+.required:after { content:" * "; color:orange; }
+.required_table:after { content:"*"; color:orange; } 
 
 /* New/Edit Article Module */
 

@@ -36,9 +36,11 @@ class Client_model extends CI_Model{
         $this->full_name = mysql_real_escape_string($_POST['fullname']);
         $this->client_type = mysql_real_escape_string($_POST['client_type']);
         $this->phone_mobile = mysql_real_escape_string($_POST['phone_mobile']);
-//         $this->phone_home = mysql_real_escape_string($_POST['phone_home']);
         $this->phone_office = mysql_real_escape_string($_POST['phone_office']);
-
+        $this->phone_mobile2 = mysql_real_escape_string($_POST['phone_mobile2']);
+        $this->phone_office2 = mysql_real_escape_string($_POST['phone_office2']);
+        
+        $this->dob = mysql_real_escape_string($_POST['dob']);
         $this->email = mysql_real_escape_string($_POST['email']);
         $this->address = mysql_real_escape_string($_POST['address']);
         $this->pan_tan = mysql_real_escape_string($_POST['pan_tan']);

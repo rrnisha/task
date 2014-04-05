@@ -13,6 +13,7 @@ class Client extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->database();
+        $this->load->helper('date');
         $this->load->helper(array('url', 'form'));
         $this->load->model('Client_model');
         $this->load->model('Role_model');
@@ -33,8 +34,11 @@ class Client extends CI_Controller {
         $data['values']['fullname'] = '';
         $data['values']['phone_mobile'] = '';
         $data['values']['phone_office'] = '';
+        $data['values']['phone_mobile2'] = '';
+        $data['values']['phone_office2'] = '';
         $data['values']['client_type'] = 'company';
         $data['values']['email'] = '';
+        $data['values']['dob'] = '';
         $data['values']['address'] = '';
         $data['values']['pan_tan'] = '';
         $data['values']['genius_id'] = '';
@@ -47,12 +51,13 @@ class Client extends CI_Controller {
             // Setting validation rules
             $this->form_validation->set_rules('title', 'Title', 'required');
             $this->form_validation->set_rules('fullname', 'Name', 'required');
-            $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');
+            $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'trim|required|xss_clean'); //|callback_mobile_regex_match
 //             $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');
-            $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'required');
+            $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');
 //             $this->form_validation->set_rules('email', 'Email', 'required');
 //             $this->form_validation->set_rules('address', 'Address', 'required');
 //             $this->form_validation->set_rules('client_type', 'Type', 'required');
+            $this->form_validation->set_rules('dob', 'Date of Birth/Incorporation', 'required');
             $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');
             $this->form_validation->set_rules('file_id', 'File Id', 'required');
 
@@ -68,6 +73,26 @@ class Client extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
+    public function mobile_regex_match($str)
+    {
+    	if (preg_match('/^\d{*}$/', $str)) {
+    		return TRUE;
+    	} else {
+    		$this->form_validation->set_message('pan_regex_match', 'Please enter a valid pan number');
+    		return FALSE;
+    	}
+    }
+    
+    public function pan_regex_match($str)
+    {
+      if (preg_match('/^[A-Z]{5}\d{4}[A-Z]{1}$/', $str)) {
+    	return TRUE;
+	  } else {
+	  	$this->form_validation->set_message('pan_regex_match', 'Please enter a valid pan number');
+	    return FALSE;
+	  }
+    }
+    
     public function edit() {
 
         $data = array();
@@ -78,7 +103,10 @@ class Client extends CI_Controller {
             $data['values']['full_name'] = $_POST['full_name'] ;
             $data['values']['phone_mobile'] = $_POST['phone_mobile'];
             $data['values']['phone_office'] = $_POST['phone_office'];
+            $data['values']['phone_mobile2'] = $_POST['phone_mobile2'];
+            $data['values']['phone_office2'] = $_POST['phone_office2'];
             $data['values']['client_type'] = $_POST['client_type'];
+            $data['values']['dob'] = $_POST['dob'];
             $data['values']['email'] = $_POST['email'];
             $data['values']['address'] = $_POST['address'];
             $data['values']['pan_tan'] = $_POST['pan_tan'];
@@ -91,13 +119,14 @@ class Client extends CI_Controller {
            $this->form_validation->set_rules('title', 'Title', 'required');    
            $this->form_validation->set_rules('full_name', 'Name', 'required');    
            $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');    
-           $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'required');    
+           $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');    
            $this->form_validation->set_rules('client_type', 'Client Type', 'required');
+           $this->form_validation->set_rules('dob', 'Date of Birth/Incorporation', 'required');
            $this->form_validation->set_rules('genius_id', 'Genius Id', 'required');    
            $this->form_validation->set_rules('file_id', 'File Id', 'required');    
             // Validating..
            if ($this->form_validation->run() == TRUE ) {
-           		print_r("Validation passed");
+           		$data['values']['dob'] = $this->changeDateFormat($_POST['dob']);
 	       		$this->Client_model->edit($data['values']);
 	            redirect('/client/lists?msg=clientEditSuccess');
            } 
@@ -114,6 +143,8 @@ class Client extends CI_Controller {
     public function get($clientId) {
         $client_query = $this->Client_model->get($clientId);
         $res = $client_query->result();
+        if ($res[0]->dob!="0000-00-00") 
+        	$res[0]->dob = mdate('%d-%m-%Y', strtotime($res[0]->dob));
         $data['client'] = $res[0];
         $this->load->view('layout/header');
         $this->load->view('client/edit', $data);
@@ -154,6 +185,8 @@ class Client extends CI_Controller {
         
         $data['clients'] = array();
         foreach ($client_query->result() as $row) {
+        	if ($row->dob!="0000-00-00")
+        		$row->dob = mdate('%d-%m-%Y', strtotime($row->dob));
             $data['clients'][] = $row;
         }
 
@@ -283,4 +316,12 @@ class Client extends CI_Controller {
         exit;
     }
 
+    // UTILITY FUNCTION
+    public function changeDateFormat($date)
+    {
+    	if ($date == '') return '';
+    	$dateArr = explode('-',$date);
+    	$ret_date = $dateArr[2].'-'.$dateArr[1].'-'.$dateArr[0];
+    	return $ret_date;
+    }    
 }

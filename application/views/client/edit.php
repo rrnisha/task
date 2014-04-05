@@ -1,3 +1,11 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#pan_tan').keyup(function(){
+	    this.value = this.value.toUpperCase();
+	});
+	$("#dob" ).datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
+});
+</script>
 <section id="main" class="column">
     <article class="module width_full">
         <header><h3>Edit Client</h3></header>
@@ -32,16 +40,27 @@
                     <input type="text" name="pan_tan" value="<?php echo $client->pan_tan; ?>"/>
                 </fieldset>
                 <fieldset>
-                	<label>Phone</label>                        
-                    <label class="required" <?php if (form_error('phone_mobile') !='') echo 'style="color:red;font-style:normal"'; ?> style="width:60px">Mobile</label>
+                	<label>Phone 1</label>                        
+                    <label class="required" <?php if (form_error('phone_mobile') !='') echo 'style="color:red;font-style:normal"'; ?> style="width:70px">Mobile</label>
                     <input type="text" style="width:180px; float:left" name="phone_mobile" value="<?php echo $client->phone_mobile; ?>"/>
                     <label style="float:absolute; width:60px">Office</label>
                     <input type="text" style="width:180px" name="phone_office" value="<?php echo $client->phone_office; ?>"/>
                 </fieldset>                 
                 <fieldset>
+                	<label>Phone 2</label>                        
+                    <label style="width:70px">Mobile</label>
+                    <input type="text" style="width:180px; float:left" name="phone_mobile2" value="<?php echo $client->phone_mobile2; ?>"/>
+                    <label style="float:absolute; width:60px">Office</label>
+                    <input type="text" style="width:180px" name="phone_office2" value="<?php echo $client->phone_office2; ?>"/>
+                </fieldset>                 
+                <fieldset>
                     <label>Email Id</label>
                     <input type="text" name="email" value="<?php echo $client->email; ?>"/>
                 </fieldset>
+                <fieldset>
+                	<label class="required" <?php if (form_error('dob') !='') echo 'style="color:red;font-style:normal"'; ?>>DOB/Incorporation</label>
+                    <input id="dob" name="dob" value="<?php echo $client->dob; ?>" autocomplete="off" style="width:17%;float:left;"/>
+                </fieldset>                
                 <fieldset>
                     <label class="required" <?php if (form_error('genius_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Genius Id</label>
                     <input type="text" name="genius_id" value="<?php echo $client->genius_id; ?>"/>

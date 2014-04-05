@@ -169,17 +169,18 @@
                         <table class="tablesorter" cellspacing="0"> 
                             <thead> 
                                 <tr>
-                                    <th class="required" rowspan="1">File</th>                                    
-                                    <th class="required" rowspan="1">Title</th>
-                                    <th class="required" rowspan="1">Full Name</th> 
-                                    <th class="required" rowspan="1">Type</th>
-                                    <th class="required" rowspan="1">Mobile</th>
-                                    <th rowspan="1">Office</th>
+                                    <th class="required_table" rowspan="1">File</th>                                    
+                                    <th class="required_table" rowspan="1">Title</th>
+                                    <th class="required_table" rowspan="1">Name</th>
+                                    <th class="required_table" rowspan="1">DOB</th> 
+<!--                                     <th class="required_table" rowspan="1">Type</th> -->
+                                    <th class="required_table" rowspan="1" colspan="2" style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC; text-align:center;">Mobile</th>
+                                    <th rowspan="1" colspan="2" style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC; text-align:center;">Office</th>
                                     <th rowspan="1">eMail</th>
-                                    <th class="required" rowspan="1">PAN/TAN</th>
+                                    <th class="required_table" rowspan="1">PAN/TAN</th>
                                     <th rowspan="1">Address</th>
-                                    <th class="required" rowspan="1">Genius Id</th>
-                                    <th  rowspan="1" colspan="2">Action</th>
+                                    <th class="required_table" rowspan="1">Genius#</th>
+                                    <th  rowspan="1" colspan="2" style="text-align:center;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -187,16 +188,20 @@
                                 $i = 1;
                                 foreach ($clients as $client) {
                                     ?>
-                                    <tr>
+                                    <tr <?php if($client->client_type=="company") { echo 'style="color:teal;"'; } ?>>
                                         <td><?php echo $client->file_id; ?></td>                                        
                                         <td><?php echo $client->title; ?></td> 
                                         <td><?php echo $client->full_name; ?></td>
-                                        <td><?php echo $client->client_type; ?></td>
-                                        <td><?php echo $client->phone_mobile; ?></td>
-                                        <td><?php echo $client->phone_office; ?></td>
-                                        <td><?php echo $client->email; ?></td>
+                                        <td><?php echo $client->dob; ?></td>
+                                        <!-- <td>< ?php echo $client->client_type; ?></td>  -->
+                                        <td style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC"><?php echo $client->phone_mobile; ?></td>
+                                        <td><?php if ($client->phone_mobile2!='') { echo $client->phone_mobile2; } else { echo '--NA--'; } ?></td>
+                                        <td style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC"><?php if ($client->phone_office!='') { echo $client->phone_office; } else { echo '--NA--'; } ?></td>
+                                        <td style="border-right:1px dotted #CCCCCC"><?php if ($client->phone_office2!='') { echo $client->phone_office2; } else { echo '--NA--'; } ?></td>
+                                        <td><?php if ($client->email!='') { echo $client->email; } else { echo '--NA--'; } ?></td>
                                         <td><?php echo $client->pan_tan; ?></td>
-                                        <td><?php echo $client->address; ?></td>
+                                        
+                                        <td><?php if ($client->address!='') { echo $client->address; } else { echo '--NA--'; } ?></td>
                                         <td><?php echo $client->genius_id; ?></td>
 
                                         <!--<td><?php echo $client->status; ?></td>-->

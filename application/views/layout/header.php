@@ -120,12 +120,6 @@
                 <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/register/create">New Register</a></li>
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/register/lists">List Registers</a></li>
             </ul>
-            <h3>Employee</h3>
-            <ul class="toggle">
-                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
-                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
-                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/employee/profile/<?php if (isset($_SESSION['emp_id'])) { echo $_SESSION['emp_id']; } ?>">My Profile</a></li>
-            </ul>
             <h3>Client</h3>
             <ul class="toggle">
                 <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/client/create">New Client</a></li>
@@ -136,6 +130,12 @@
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/itr/lists">ITR</a></li>
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/report/task">Tasks</a></li>
                 <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/chart/index">Charts</a></li>
+            </ul>
+            <h3>Employee</h3>
+            <ul class="toggle">
+                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
+                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
+                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/employee/profile/<?php if (isset($_SESSION['emp_id'])) { echo $_SESSION['emp_id']; } ?>">My Profile</a></li>
             </ul>
             <?php
             if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
