@@ -140,6 +140,8 @@
 				<li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/fy/lists">List Fin Year</a></li>
 				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
 				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li>
+				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/create">New Type</a></li>
+				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/lists">List Type</a></li>
 				</ul>
             <?php
             }

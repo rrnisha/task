@@ -13,11 +13,11 @@
 	                    <input type="radio" name="title" value="Mrs" <?php if ($employee->title == 'Mrs') { ?>checked<?php } ?>/> Mrs
                     </fieldset>
                     <fieldset>
-                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Name</label>
+                        <label class="required" <?php if (form_error('full_name') !='') echo 'style="color:red;font-style:normal"'; ?> >Name</label>
                         <input type="text" name="full_name" value="<?php echo $employee->full_name; ?>"/>
                     </fieldset>
                     <fieldset>
-                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Login Name</label>
+                        <label class="required" <?php if (form_error('login') !='') echo 'style="color:red;font-style:normal"'; ?> >Login Name</label>
                         <input type="text" name="login" value="<?php echo $employee->login; ?>"/>
                     </fieldset>
 <!--                    <fieldset>-->
@@ -37,7 +37,7 @@
                         <textarea name="address" cols="40"><?php echo $employee->address; ?></textarea>
                     </fieldset>        
                     <fieldset>
-                        <label class="required" <?php if (form_error('title') !='') echo 'style="color:red;font-style:normal"'; ?> >Roles</label>
+                        <label class="required" <?php if (form_error('role_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Roles</label>
                         <?php echo form_dropdown('role_id', $roles, $employee->role_id); ?>
                     </fieldset>
                     <footer>
