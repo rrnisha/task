@@ -104,6 +104,18 @@ echo $line;
 					</tbody>
 				</table>
 			</div>
+			<div style="clear:both"></div>
+			<div>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        			<?php echo $_SESSION['emp_name']; ?></textarea>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        	       	For SRAM AND CO</textarea>
+			</div>
 		</div>
 		<footer>
 			<div class="submit_link">

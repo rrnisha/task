@@ -87,7 +87,7 @@
                 <?php
                 if (isset($_SESSION['emp_id'])) {
                     ?>
-                    <p><?php echo $_SESSION['emp_name']; ?></p>
+						<a href="<?php echo base_url(); ?>index.php/employee/profile/<?php if (isset($_SESSION['emp_id'])) { echo $_SESSION['emp_id']; } ?>"><p><?php echo $_SESSION['emp_name']; ?></p></a>                    
                     <?php
                 }
                 ?>
@@ -96,44 +96,49 @@
         </section><!-- end of secondary bar -->
 
         <aside id="sidebar" class="column">
-            <form class="quick_search" id="frmSearchClient" onsubmit="return false;" >
-                <div class="ui-widget">
-                    <input type="hidden" name="client_id" id="client_id" value=""/>
-                    <input type="text" id="client_search" name="search"  value=""> 
-                    <input type="submit" name="search_submit" id="search_submit" class="btn_search" onclick="search_client()"/>
-                </div>                
-            </form>
-            <hr/>
-            <h3>Task</h3>
-            <ul class="toggle">
-                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task/create">New Task</a></li>
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/task/">List Tasks</a></li>
-            </ul>
-            <h3>Registry</h3>
-            <ul class="toggle">
-                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/register/create">New Register</a></li>
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/register/lists">List Registers</a></li>
-            </ul>
-            <h3>Client</h3>
-            <ul class="toggle">
-                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/client/create">New Client</a></li>
-                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/client/lists">List Clients</a></li>
-            </ul>
-            <h3>Report</h3>
-            <ul class="toggle">
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/itr/lists">ITR</a></li>
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/report/task">Tasks</a></li>
-                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/chart/index">Charts</a></li>
-            </ul>
-            <h3>Employee</h3>
-            <ul class="toggle">
-                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
-                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
-                <li class="icn_profile"><a href="<?php echo base_url(); ?>index.php/employee/profile/<?php if (isset($_SESSION['emp_id'])) { echo $_SESSION['emp_id']; } ?>">My Profile</a></li>
-            </ul>
+            <?php
+            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']!=0) {
+			?>
+	            <form class="quick_search" id="frmSearchClient" onsubmit="return false;" >
+	                <div class="ui-widget">
+	                    <input type="hidden" name="client_id" id="client_id" value=""/>
+	                    <input type="text" id="client_search" name="search"  value=""> 
+	                    <input type="submit" name="search_submit" id="search_submit" class="btn_search" onclick="search_client()"/>
+	                </div>                
+	            </form>
+	            <hr/>
+	            <h3>Task</h3>
+	            <ul class="toggle">
+	                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task/create">New Task</a></li>
+	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/task/">List Tasks</a></li>
+	            </ul>
+	            <h3>Registry</h3>
+	            <ul class="toggle">
+	                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/register/create">New Register</a></li>
+	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/register/lists">List Registers</a></li>
+	            </ul>
+	            <h3>Client</h3>
+	            <ul class="toggle">
+	                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/client/create">New Client</a></li>
+	                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/client/lists">List Clients</a></li>
+	            </ul>
+	            <h3>Report</h3>
+	            <ul class="toggle">
+	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/itr/lists">ITR</a></li>
+	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/report/task">Tasks</a></li>
+	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/chart/index">Charts</a></li>
+	            </ul>
+            <?php
+            }
+            ?>            
             <?php
             if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
 			?>
+	            <h3>Employee</h3>
+	            <ul class="toggle">
+	                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
+	                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
+	            </ul>
 				<h3>Misc</h3>
 				<ul class="toggle">
 				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/fy/create">New Fin Year</a></li>

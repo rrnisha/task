@@ -55,7 +55,7 @@ $(document).ready(function() {
                         <input type="text" name="email" value="<?php echo $values['email']; ?>"/>
                     </fieldset>
                 	<fieldset>
-                    	<label class="required" <?php if (form_error('dob') !='') echo 'style="color:red;font-style:normal"'; ?>>DOB/Incorporation</label>
+                    	<label class="required" <?php if (form_error('dob') !='') echo 'style="color:red;font-style:normal"'; ?>>DOB/DOI</label>
                     	<input id="dob" name="dob" value="<?php echo set_value('dob'); ?>" autocomplete="off" style="width:17%;float:left;"/>
                 	</fieldset>
                     <fieldset>
