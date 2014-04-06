@@ -12,6 +12,7 @@ class Report extends CI_Controller {
         $this->load->helper('date');
         $this->session->requireLogin();
         $this->load->model('Task_model');
+        $this->load->model('Task_type_model');
         $this->load->model('Year_model');
         $this->load->model('Itr_model');
         $this->load->model('Client_model');
@@ -23,7 +24,7 @@ class Report extends CI_Controller {
         $data['values'] = array();
         $data['values']['emp_id'] = '';
         $data['values']['client_id'] = '';
-        $data['values']['type'] = 'all';
+        $data['values']['type'] = '';
         $data['values']['priority'] = 'all';
         $data['values']['status'] = 'all';
         $data['values']['quarter'] = 'all';
@@ -32,6 +33,28 @@ class Report extends CI_Controller {
         $data['values']['fy'] = '';
         $data['values']['sel_fy'] = 'N';
         
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        $type = array();
+        $type['name'] = "type";
+        $type['id'] = "type";
+        $type['value'] = "all";
+        $type['ui_desc'] = "All";
+        $type['checked'] = TRUE;
+        $data['types'][0] = $type;
+        
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+       		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+                
         // Get all employees
         $employee_query = $this->Employee_model->get_active();        
         $data['employees'] = array();

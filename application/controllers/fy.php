@@ -40,6 +40,13 @@ class Fy extends CI_Controller {
             
             // Validating..
             if ($this->form_validation->run() == TRUE) {
+            	if ($_POST['curr_fy'] == 'on') {
+            		$query = $this->Year_model->get_curr_year();
+            		$row = $query->result();
+            		print_r($row);
+            		$this->Year_model->reset_prev_curr_year($row[0]->id);
+            	}
+            	 
                 $this->Year_model->insert();
                 redirect('/fy/lists?msg=finyearaddedsuccess');
             }

@@ -62,18 +62,6 @@
             }
         });
     }
-
-    function filter_by_client() {
-        $.get("<?php echo base_url(); ?>index.php/client/lists", $("#frmFilterClient").serialize())
-                .done(function(data) {
-            var result = data.split('|||');
-            if (result[1] == 'success') {
-                window.location.href = "<?php echo base_url(); ?>index.php/client/lists/";
-            }else if(result[1] == 'failure'){
-                window.location.href = "<?php echo base_url(); ?>index.php/client/lists/?msg=clientNotFound";
-            }
-        });
-    }      
 </script>
 
 <section id="main" class="column">
@@ -111,6 +99,8 @@
                 <h4 class="alert_success">Client delete Successful</h4> 
             <?php } elseif ($msg == 'activateClientSuccess') { ?> 
                 <h4 class="alert_success">Client activation Successful</h4> 
+            <?php } elseif ($msg == 'clientNotFound') { ?> 
+                <h4 class="alert_error">Client Not Found</h4> 
             <?php } ?>
 
             <br></br>

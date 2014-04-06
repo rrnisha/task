@@ -16,6 +16,11 @@ class Year_model extends CI_Model {
         return $query;
     }
 
+    function reset_prev_curr_year($id) {
+    	$query = $this->db->query("UPDATE years SET is_curr_year='N' WHERE id=".$id);
+    	return $query;
+    }
+    
     function get_by_year($fy) {
         $query = $this->db->query('SELECT * FROM years WHERE fin_year =\''.$fy.'\' order by from_year');
         return $query;
@@ -34,8 +39,9 @@ class Year_model extends CI_Model {
         $this->assessment_year = $fy.'-'.$ty;
         $this->fin_year = mysql_real_escape_string($_POST['from_year']).'-'.mysql_real_escape_string($_POST['to_year']);
         
-        if ($_POST['curr_fy'] == 'on')
+        if ($_POST['curr_fy'] == 'on') {
         	$this->is_curr_year = 'Y';
+        }
         else
         	$this->is_curr_year = 'N';
 

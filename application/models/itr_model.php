@@ -18,6 +18,12 @@ class Itr_model extends CI_Model {
         return $query;
     }
 
+    function get_by_client($client_id, $num, $offset) {
+    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' order by itr_id desc')->limit($num, $offset);
+    	$query = $this->db->get();
+    	return $query;
+    }
+    
     function get($task_id) {
         $query = $this->db->query('SELECT * FROM itrs WHERE task_id =' . $task_id);
         return $query;

@@ -160,18 +160,18 @@
 			    	</fieldset>
 	                <fieldset>
 	                    <label>Type</label>
-	                    <input type="radio" name="type" value="all" <?php if ($filter_type_id == 'all') { ?>checked<?php } ?> onclick="filterByType('all')"/> All
-	                    <input type="radio" name="type" value="tds" <?php if ($filter_type_id == 'tds') { ?>checked<?php } ?> onclick="filterByType('tds')" /> TDS
-	                    <input type="radio" name="type" value="it" <?php if ($filter_type_id == 'it') { ?>checked<?php } ?> onclick="filterByType('it')" /> IT
-	                    <input type="radio" name="type" value="st" <?php if ($filter_type_id == 'st') { ?>checked<?php } ?> onclick="filterByType('st')" /> Service Tax
-	                    <input type="radio" name="type" value="books" <?php if ($filter_type_id == 'books') { ?>checked<?php } ?> onclick="filterByType('books')" /> Account Books
-	                    <input type="radio" name="type" value="intimation" <?php if ($filter_type_id == 'intimation') { ?>checked<?php } ?> onclick="filterByType('intimation')" /> Intimation
-	                    <input type="radio" name="type" value="vat" <?php if ($filter_type_id == 'vat') { ?>checked<?php } ?> onclick="filterByType('vat')" /> VAT
-	                    <input type="radio" name="type" value="others" <?php if ($filter_type_id == 'others') { ?>checked<?php } ?> onclick="filterByType('others')" /> Others&nbsp;
+                    	<?php foreach ($types as $type) { ?>
+                    		<?php 
+                    			$js = 'onclick="filterByType(\''.$type['value'].'\')"';
+                    			echo form_radio($type['name'], $type['value'], $type['checked'], $js); 
+                    			echo ' '.$type['ui_desc'].' ';
+                    		?>
+                    	<?php } ?>
 		                <input type="hidden" name="filter_type_id" id="filter_type_id" value="<?php echo $filter_type_id; ?>"/>
 						<input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
 						<a href="<?php echo base_url(); ?>index.php/register/lists"><input type="button" name="reset" value="Reset"/></a>
-	                </fieldset>   			    	
+	                </fieldset> 
+	                
 		        </form>
 		    </div>
 	    </div>

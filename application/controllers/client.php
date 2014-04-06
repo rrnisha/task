@@ -172,14 +172,17 @@ class Client extends CI_Controller {
         
         $client_id = isset($_POST['filter_client_id']) ? $_POST['filter_client_id'] : '';;
         if ($page == 'filter'){
+        	if (isset($_POST['filter_client_id']) && $_POST['filter_client_id']=='') {
+        		$client_id = -1;
+        	}
         	$data['filter_client_id']=$client_id;
         	$data['filter_client_search']=isset($_POST['filter_client_search']) ? $_POST['filter_client_search'] : '';
+        	$data['msg'] = isset($_POST['msg']) ? $_POST['msg'] : '';
         }else {
         	$data['filter_client_id']='';
         	$data['filter_client_search']='';
+        	$data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
         }
-        
-        $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
         $this->load->library('pagination');
         
         if ($client_id == ''){
@@ -199,15 +202,23 @@ class Client extends CI_Controller {
         	$client_query = $this->Client_model->get($client_id);
         
         $data['clients'] = array();
-        foreach ($client_query->result() as $row) {
-        	if ($row->dob!="0000-00-00")
-        		$row->dob = mdate('%d-%m-%Y', strtotime($row->dob));
-            $data['clients'][] = $row;
+        if (count($client_query->result())==0) {
+	        $this->load->view('layout/header');
+	        $data['msg'] = 'clientNotFound';
+	        $this->load->view('client/list', $data);
+	        $this->load->view('layout/footer');
+        	
+        } else {
+	        foreach ($client_query->result() as $row) {
+	        	if ($row->dob!="0000-00-00")
+	        		$row->dob = mdate('%d-%m-%Y', strtotime($row->dob));
+	            $data['clients'][] = $row;
+	        }
+	
+	        $this->load->view('layout/header');
+	        $this->load->view('client/list', $data);
+	        $this->load->view('layout/footer');
         }
-
-        $this->load->view('layout/header');
-        $this->load->view('client/list', $data);
-        $this->load->view('layout/footer');
     }
 
     public function search_index() {

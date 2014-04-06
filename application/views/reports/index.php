@@ -2,15 +2,6 @@
 <script type="text/javascript" src="<?php echo base_url() ?>assets/js/select2.js"></script>
 
  <script>
- var preload_data = [
-{ id: 'user0', text: 'ALL'}
-, { id: 'user1', text: 'Jane Doe'}
-, { id: 'user2', text: 'John Doe'}
-, { id: 'user3', text: 'Robert Paulson'}
-, { id: 'user5', text: 'Spongebob Squarepants'}
-, { id: 'user6', text: 'PLANET BOB' }
-, { id: 'user7', text: 'Inigo Montoya' }
-];
 	$(document).ready(function() { 
 		$("#client_select").select2({});
 
@@ -94,18 +85,15 @@
 	                    <input type="radio" name="status" value="complete" <?php if ($values['status'] == 'audit') { ?>checked<?php } ?>/> Completed
 	                    <input type="radio" name="status" value="finalized" <?php if ($values['status'] == 'other') { ?>checked<?php } ?>/> Finalized
 	                </fieldset>
-	                <fieldset>
-	                    <label>Type</label>
-	                    <input type="radio" name="type" value="all" <?php if ($values['type'] == 'all') { ?>checked<?php } ?>/> All
-	                    <input type="radio" name="type" value="tds" <?php if ($values['type'] == 'tds') { ?>checked<?php } ?>/> TDS
-	                    <input type="radio" name="type" value="itr" <?php if ($values['type'] == 'itr') { ?>checked<?php } ?>/> ITR
-	                    <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
-	                    <input type="radio" name="type" value="accounting" <?php if ($values['type'] == 'accounting') { ?>checked<?php } ?>/> Accounting
-	                    <input type="radio" name="type" value="audit" <?php if ($values['type'] == 'audit') { ?>checked<?php } ?>/> Audit
-	                    <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
-	                    <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
-	                    <input type="radio" name="type" value="other" <?php if ($values['type'] == 'other') { ?>checked<?php } ?>/> Other
-	                </fieldset>
+                	<fieldset>
+                    	<label>Type</label>
+                    	<?php foreach ($types as $type) { ?>
+                    		<?php 
+                    			echo form_radio($type); 
+                    			echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                    		?>
+                    	<?php } ?>
+                	</fieldset>
 	                <fieldset>
 	                    <label>Priority</label>
 	                    <input type="radio" name="priority" value="all" <?php if ($values['priority'] == 'all') { ?>checked<?php } ?>/> All

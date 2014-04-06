@@ -93,16 +93,15 @@ function removeParticulars(id,r){
                         <input type="radio" name="status" value="outward" disabled <?php if ($register->status == 'outward') { ?>checked<?php } ?>/> Outward
                         <input type="radio" name="status" value="in_out" disabled <?php if ($register->status == 'in_out') { ?>checked<?php } ?>/> InOut
                     </fieldset>                    
-	                <fieldset>
-	                    <label>Type</label>
-	                    <input type="radio" name="type" value="tds" <?php if ($register->type == 'tds') { ?>checked<?php } ?>/> TDS
-	                    <input type="radio" name="type" value="it" <?php if ($register->type == 'it') { ?>checked<?php } ?>/> IT
-	                    <input type="radio" name="type" value="st" <?php if ($register->type == 'st') { ?>checked<?php } ?>/> Service Tax
-	                    <input type="radio" name="type" value="books" <?php if ($register->type == 'books') { ?>checked<?php } ?>/> Account Books
-	                	<input type="radio" name="type" value="intimation" <?php if ($register->type == 'intimation') { ?>checked<?php } ?>/> Intimation
-	                	<input type="radio" name="type" value="vat" <?php if ($register->type == 'vat') { ?>checked<?php } ?>/> VAT
-	                    <input type="radio" name="type" value="others" <?php if ($register->type == 'others') { ?>checked<?php } ?>/> Other
-	                </fieldset>    
+                	<fieldset>
+                    	<label class="required" <?php if (form_error('type') !='') echo 'style="color:red;font-style:normal"'; ?> >Type</label>
+                    	<?php foreach ($types as $type) { ?>
+                    		<?php 
+                    			echo form_radio($type); 
+                    			echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                    		?>
+                    	<?php } ?>
+                	</fieldset>    
                     <input type="hidden" name="status_value" value="<?php if ($register->status == 'inward') { echo "inward"; } else if ($register->status == 'outward') { echo "outward"; } else if ($register->status == 'in_out') { echo "in_out"; } ?>" />
 	                <table id="particularsTable" class="tablerow" cellspacing="0">
 						<thead>

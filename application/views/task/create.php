@@ -19,16 +19,14 @@
                     <input type="text" name="title" value="<?php echo set_value('title'); ?>"/>
                 </fieldset>
                 <fieldset>
-                    <label class="required">Type</label>
-                    <input type="radio" name="type" value="tds" <?php if ($values['type'] == 'tds') { ?>checked<?php } ?>/> TDS
-                    <input type="radio" name="type" value="itr" <?php if ($values['type'] == 'itr') { ?>checked<?php } ?>/> ITR
-                    <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
-                    <input type="radio" name="type" value="accounting" <?php if ($values['type'] == 'accounting') { ?>checked<?php } ?>/> Accounting
-                    <input type="radio" name="type" value="audit" <?php if ($values['type'] == 'audit') { ?>checked<?php } ?>/> Audit
-	                <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
-	                <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
-                    <input type="radio" name="type" value="other" <?php if ($values['type'] == 'other') { ?>checked<?php } ?>/> Other
-                </fieldset>
+                    <label class="required" <?php if (form_error('type') !='') echo 'style="color:red;font-style:normal"'; ?> >Type</label>
+                    <?php foreach ($types as $type) { ?>
+                    	<?php 
+                    		echo form_radio($type); 
+                    		echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                    	?>
+                    <?php } ?>
+                </fieldset>                
                 <fieldset>
                     <label class="required">Priority</label>
                     <input type="radio" name="priority" value="high" <?php if ($values['priority'] == 'high') { ?>checked<?php } ?>/> High

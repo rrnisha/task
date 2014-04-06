@@ -12,6 +12,7 @@ class Task extends CI_Controller {
         $this->load->helper('date');
         $this->session->requireLogin();
         $this->load->model('Task_model');
+        $this->load->model('Task_type_model');
         $this->load->model('Task_Query_model');
         $this->load->model('Year_model');
         $this->load->model('Itr_model');
@@ -264,7 +265,7 @@ class Task extends CI_Controller {
 
         $data['values'] = array();
         $data['values']['title'] = '';
-        $data['values']['type'] = 'other';
+        $data['values']['type'] = '';
         $data['values']['client_id'] = '';
         $data['values']['emp_id'] = '';
         $data['values']['priority'] = 'medium';
@@ -304,7 +305,23 @@ class Task extends CI_Controller {
                 redirect('/task/index?msg=success');
             }
         }
-
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	if ($res->type=='other')
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+        
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
 
@@ -431,7 +448,24 @@ class Task extends CI_Controller {
         $task_query = $this->Task_model->get($taskId);
         $res = $task_query->result();
         $data['task'] = $res[0];
-            
+        
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	if ($res->type==$data['task']->type)
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+        
         $this->load->view('layout/header');
         $this->load->view('task/edit', $data);
         $this->load->view('layout/footer');

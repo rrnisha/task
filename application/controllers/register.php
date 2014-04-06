@@ -20,6 +20,7 @@ class Register extends CI_Controller {
         $this->load->model('Document_Transaction_model');
         $this->load->model('Client_model');
         $this->load->model('Employee_model');
+        $this->load->model('Task_type_model');
         $this->load->library('session');
         $this->session->requireLogin();
         $this->load->helper('date');
@@ -34,11 +35,12 @@ class Register extends CI_Controller {
         $data['values']['mode_of_receipt'] = 'in_person';
 //         $data['values']['tag'] = '';
         $data['values']['status'] = 'inward';
-        $data['values']['type'] = 'others';
+        $data['values']['type'] = '';
 
-//         print_r($_POST);
+        
         if (isset($_POST['create']) && $_POST['create'] == 'Create') {
             $data['values'] = $_POST;
+            print_r($_POST);
             // Loading form validation library
             $this->load->library('form_validation');
 
@@ -69,7 +71,24 @@ class Register extends CI_Controller {
             	$data['values']['tag'] = '';
             }
         }
-//         print_r('validation not done');
+
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	if ($res->type=='other')
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+        
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
         
@@ -244,6 +263,23 @@ class Register extends CI_Controller {
         $documents_query = $this->Document_model->get($registerId);
         $data['particulars'] = $documents_query->result();
         
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	if ($res->type==$data['register']->type)
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+                
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
 
@@ -337,6 +373,28 @@ class Register extends CI_Controller {
             $data['registers'][] = $row;
         }
 
+        // Get all task_type
+        $data['types'] = array();
+        $type = array();
+        $type['name'] = "type";
+        $type['id'] = "type";
+        $type['value'] = "all";
+        $type['ui_desc'] = "All";
+        $type['checked'] = TRUE;
+        $data['types'][0] = $type;
+                
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+       		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+                
         // Get all employees
         $employee_query = $this->Employee_model->get_active();
 
@@ -451,6 +509,28 @@ class Register extends CI_Controller {
             $data['registers'][] = $row;
         }
 
+        // Get all task_type
+        $data['types'] = array();
+        $type = array();
+        $type['name'] = "type";
+        $type['id'] = "type";
+        $type['value'] = "all";
+        $type['ui_desc'] = "All";
+        $type['checked'] = TRUE;
+        $data['types'][0] = $type;
+        
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+                
         // Get all employees
         $employee_query = $this->Employee_model->get_active();
 

@@ -23,10 +23,25 @@ class Itr extends CI_Controller {
         $this->load->helper('date');
     }
 
-    public function lists() {
+    public function lists($page='itr') {
         $data = array();
         $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
 
+        $data['page'] = $page;
+        $client_id = isset($_POST['filter_client_id']) ? $_POST['filter_client_id'] : '';;
+        if ($page == 'filter'){
+        	if (isset($_POST['filter_client_id']) && $_POST['filter_client_id']=='') {
+        		$client_id = -1;
+        	}
+        	$data['filter_client_id']=$client_id;
+        	$data['filter_client_search']=isset($_POST['filter_client_search']) ? $_POST['filter_client_search'] : '';
+        	$data['msg'] = isset($_POST['msg']) ? $_POST['msg'] : '';
+        }else {
+        	$data['filter_client_id']='';
+        	$data['filter_client_search']='';
+        	$client_id = '';
+        }
+                
         $this->load->library('pagination');
 
         $config['base_url'] = base_url() . 'index.php/itr/lists/';
@@ -38,24 +53,35 @@ class Itr extends CI_Controller {
 
         $this->pagination->initialize($config);
 
-        $itr_query = $this->Itr_model->get_all($config['per_page'], $this->uri->segment(3));
-
         $data['itrs'] = array();
-        foreach ($itr_query->result() as $row) {
-            $client_query = $this->Client_model->get($row->client_id);
-            $client_result = $client_query->result();
-            $row->client_name = $client_result[0]->full_name;
-
-            $filed_emp_name_query = $this->Employee_model->get_name($row->filed_by);
-            $filed_emp_name_result = $filed_emp_name_query->result();
-            $row->filed_by_name = $filed_emp_name_result[0]->login;
-
-            $data['itrs'][] = $row;
+        if ($client_id==-1) {
+        	$this->load->view('layout/header');
+        	$data['msg'] = 'clientNotFound';
+        	$this->load->view('itr/list', $data);
+        	$this->load->view('layout/footer');
+        } else {
+	        
+	        if ($client_id=='') {
+	        	$itr_query = $this->Itr_model->get_all($config['per_page'], $this->uri->segment(3));
+	        } else if ($client_id!=-1) {
+	        	$itr_query = $this->Itr_model->get_by_client($client_id, $config['per_page'], $this->uri->segment(3));
+	        } 
+	        foreach ($itr_query->result() as $row) {
+	            $client_query = $this->Client_model->get($row->client_id);
+	            $client_result = $client_query->result();
+	            $row->client_name = $client_result[0]->full_name;
+	
+	            $filed_emp_name_query = $this->Employee_model->get_name($row->filed_by);
+	            $filed_emp_name_result = $filed_emp_name_query->result();
+	            $row->filed_by_name = $filed_emp_name_result[0]->login;
+	
+	            $data['itrs'][] = $row;
+	        }
+	
+	        $this->load->view('layout/header');
+	        $this->load->view('itr/list', $data);
+	        $this->load->view('layout/footer');
         }
-
-        $this->load->view('layout/header');
-        $this->load->view('itr/list', $data);
-        $this->load->view('layout/footer');
     }
     
     public function add_remark() {

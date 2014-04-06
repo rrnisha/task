@@ -42,16 +42,15 @@ function removeParticularsRow(r){
                         <label class="required" <?php if (form_error('client_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Client</label>
                         <?php $js = 'id="client_select"'; echo form_dropdown('client_id', $clients, $values['client_id'], $js); ?>
                     </fieldset>
-	                <fieldset>
-	                    <label>Type</label>
-	                    <input type="radio" name="type" value="tds" <?php if ($values['type'] == 'tds') { ?>checked<?php } ?>/> TDS
-	                    <input type="radio" name="type" value="it" <?php if ($values['type'] == 'it') { ?>checked<?php } ?>/> IT
-	                    <input type="radio" name="type" value="st" <?php if ($values['type'] == 'st') { ?>checked<?php } ?>/> Service Tax
-	                    <input type="radio" name="type" value="books" <?php if ($values['type'] == 'books') { ?>checked<?php } ?>/> Account Books
-	                    <input type="radio" name="type" value="intimation" <?php if ($values['type'] == 'intimation') { ?>checked<?php } ?>/> Intimation
-	                    <input type="radio" name="type" value="vat" <?php if ($values['type'] == 'vat') { ?>checked<?php } ?>/> VAT
-	                    <input type="radio" name="type" value="others" <?php if ($values['type'] == 'others') { ?>checked<?php } ?>/> Other
-	                </fieldset>                            
+                	<fieldset>		
+                    	<label class="required" <?php if (form_error('type') !='') echo 'style="color:red;font-style:normal"'; ?> >Type</label>
+                    	<?php foreach ($types as $type) { ?>
+                    		<?php 
+                    			echo form_radio($type); 
+                    			echo ' '.$type['ui_desc'].' ';
+                    		?>
+                    	<?php } ?>
+                	</fieldset>	                                         
                     <fieldset>
                         <label>Status</label>
                         <input type="radio" name="status" value="inward" <?php if ($values['status'] == 'inward') { ?>checked<?php } ?>/> Inward

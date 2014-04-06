@@ -13,17 +13,14 @@
                     <input type="text" name="title" value="<?php echo $task->title; ?>"/>
                 </fieldset>
                 <fieldset>
-                    <label>Type</label>
-                    <input type="radio" name="type" value="tds" <?php if ($task->type == 'tds') { ?>checked<?php } ?>/> TDS
-                    <input type="radio" name="type" value="itr" <?php if ($task->type == 'itr') { ?>checked<?php } ?>/> ITR
-                    <input type="radio" name="type" value="st" <?php if ($task->type  == 'st') { ?>checked<?php } ?>/> Service Tax
-                    <input type="radio" name="type" value="accounting" <?php if ($task->type  == 'accounting') { ?>checked<?php } ?>/> Accounting
-                    <input type="radio" name="type" value="audit" <?php if ($task->type  == 'audit') { ?>checked<?php } ?>/> Audit    
-	                <input type="radio" name="type" value="intimation" <?php if ($task->type == 'intimation') { ?>checked<?php } ?>/> Intimation
-	                <input type="radio" name="type" value="vat" <?php if ($task->type == 'vat') { ?>checked<?php } ?>/> VAT
-                    
-                    <input type="radio" name="type" value="other" <?php if ($task->type == 'other') { ?>checked<?php } ?>/> Other
-                </fieldset>
+                    <label class="required" <?php if (form_error('type') !='') echo 'style="color:red;font-style:normal"'; ?> >Type</label>
+                    <?php foreach ($types as $type) { ?>
+                    	<?php 
+                    		echo form_radio($type); 
+                    		echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                    	?>
+                    <?php } ?>
+                </fieldset>                
                 <fieldset>
                     <label>Priority</label>
                     <input type="radio" name="priority" value="high" <?php if ($task->priority == 'high') { ?>checked<?php } ?>/> High

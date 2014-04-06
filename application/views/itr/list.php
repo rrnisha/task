@@ -1,4 +1,14 @@
 <script>
+	$(function() {
+	    $("#filter_client_search").autocomplete({
+	        source: "<?php echo base_url(); ?>index.php/task/get_client",
+	        minLength: 1,
+	        select: function(event, ui) {
+	            $('#filter_client_id').val(ui.item.id)
+	        }
+	    });
+	});
+	
     function submitRemark() {
         var itrId = document.getElementById("selected_itr_id").value;
         document.getElementById("sr_itr_id").value = itrId;
@@ -25,15 +35,36 @@
     }
 </script>
 <section id="main" class="column">
-
+    <article class="module width_full">
+	    <div id="filterlink">
+			<header>
+		    	<h3 class="tabs_involved">Filters</h3>
+		    </header>
+	    </div>
+		<div id="filters">
+		    <div class="module_content" >
+				<form id="frmFilterClient" method="post" action="<?php echo base_url(); ?>index.php/itr/lists/filter">
+			    	<fieldset>
+			    		<label>By Client</label>
+			    		<input type="text" id="filter_client_search" name="filter_client_search"  value="<?php echo $filter_client_search; ?>">
+						<input type="hidden" name="filter_client_id" id="filter_client_id" value="<?php echo $filter_client_id; ?>"/>
+						<input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
+						<a href="<?php echo base_url(); ?>index.php/itr/lists">Reset Filter</a>
+			    	</fieldset>
+		        </form>
+		    </div>
+	    </div>
+	</article>
     <article class="module width_3_quarter">
         <header>
             <h3 class="tabs_involved">ITRs</h3>
         </header>
 
-        <!-- <h4 class="alert_error"><?php echo validation_errors(); ?></h4> -->
-
-        <div style="clear:both;" id="list">
+       <div style="clear:both;" id="list">
+            <?php if ($msg == 'clientNotFound') { ?> 
+                <h4 class="alert_error">Client Not Found</h4> 
+            <?php } ?>
+            
             <div class="tab_container">
                 <div class="itr_list">
                     <div id="tab1" class="tab_content">
