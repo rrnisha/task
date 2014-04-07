@@ -371,7 +371,7 @@
                                         <td><?php echo $register->client_name; ?></td>
                                         <td><?php echo strtoupper($register->type); ?></td>
 
-                                        <td><a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/print/"><img src="<?php echo base_url(); ?>/assets/img/printer_green 32_32.png"/></a></td>
+                                        <td><a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/print/novalue/"><img src="<?php echo base_url(); ?>/assets/img/printer_green 32_32.png"/></a></td>
                                         <td><a href="<?php echo base_url(); ?>index.php/register/get/<?php echo $register->id; ?>"><img src="<?php echo base_url(); ?>/assets/img/pencil.png"/></a></td>
                                         <?php if ($register->status == 'inward') { ?>
                                             <td><a href="#<?php echo $register->id; ?>" class="outwardRegister">O</a></td>

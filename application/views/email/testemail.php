@@ -1,11 +1,4 @@
 <?php
-//$subject="Test mail";
-//$to="r.rishishankar@gmail.com";
-//$body="This is a test mail";
-//if (mail($to,$subject,$body))
-//echo "Mail sent successfully!";
-//else
-//echo"Mail not sent!";
 ?>
 		<div id="printRegister" class="module_content">
 			<input type="hidden" name="id" value="13"></input>

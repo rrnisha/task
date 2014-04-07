@@ -497,19 +497,20 @@ class Task extends CI_Controller {
         $this->load->view('task/reports', $data);
     }    
     
+    // Setup SMTP/authentication information stated below in sendmail.ini
 	public function email() {
         $data = array();
 
         $this->load->library('email');
 
 		$config['protocol'] = 'sendmail';
-		$config['mailpath'] = 'D:\xampp\sendmail\sendmail.exe -t';
+		$config['mailpath'] = 'C:\xampp\sendmail\sendmail.exe -t';
 		$config['mailtype'] = 'html'; 
 		
-		$config['smtp_host'] = 'smtp.gmail.com'; 
-		$config['smtp_port'] = 587; 
-		$config['smtp_user'] = 'rindirani1956@gmail.com'; 
-		$config['smtp_pass'] = 'rindirani1956'; 
+// 		$config['smtp_host'] = 'ssl://smtp.gmail.com'; 
+// 		$config['smtp_port'] = 465; 
+// 		$config['smtp_user'] = 'sramandco@gmail.com'; 
+// 		$config['smtp_pass'] = 'sram@123'; 
 		
 		$config['charset'] = 'utf8';
 		$config['crlf'] = '\r\n';
@@ -518,15 +519,15 @@ class Task extends CI_Controller {
 		
 		$this->email->initialize($config);
 		
-		$this->email->from('rindirani1956@gmail.com', 'Test Task Mail Impl');
+		$this->email->from('sramandco@gmail.com', 'SRAM AND CO');
 		$this->email->to('r.rishishankar@gmail.com');
 		$this->email->subject('Email Test');
-		$this->email->message('Testing the email class.');
-//		$this->email->message($this->load->view('email/testemail', $data, true));
+// 		$this->email->message('Testing the email class.');
+		$this->email->message($this->load->view('email/testemail', $data, true));
 		
 		$this->email->send();
 		
-		echo $this->email->print_debugger();
+// 		echo $this->email->print_debugger();
 //        $this->load->view('email/testemail', $data);
     }   
 

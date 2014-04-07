@@ -1,25 +1,6 @@
-<script type="text/javascript">
-function printDiv( divId, filename ){
-//    w=window.open('','print div','height=600,width=600');
-	w=window.open();
-//    w.document.write('<html>\n'
-//    	    +' <head>\n'
-//    	    +' <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/print.css" type="text/css" media="screen"/>\n '
-//    	    +' </head>\n'
-//    	    +' <body> <div class="module_content">\n');
-    w.document.write($('#'+divId).html());
-    w.document.write('\n</div>\n</body>\n</html>');
-    w.document.title = filename;
-    w.print();
-    w.close();
-}
-</script>
 <section id="main" class="column">
 	<article class="module width_full">
-		<header>
-			<h3>Email/Print Document</h3>
-		</header>
-		<div id="printRegister" class="module_content">
+		<div id="emailRegister" class="module_content">
 			<input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
 			<div>
 				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
@@ -117,13 +98,6 @@ echo $line;
 	        	       	For SRAM AND CO</textarea>
 			</div>
 		</div>
-		<footer>
-			<div class="submit_link">
-				<input type="submit" name="print" value="Print" onclick="printDiv('printRegister', 'Document Register Receipt <?php echo $register->id; ?>')"></input>
-				<a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/print/<?php echo $edit_start_date; ?>/email"><input type="button" name="eMail" value="eMail"/></a>
-				<a href="<?php echo base_url(); ?>index.php/register/get/<?php echo $register->id; ?>"><input type="button" name="cancel" value="Edit"/></a>
-			</div>
-		</footer>
 	</article>
 </section>
 

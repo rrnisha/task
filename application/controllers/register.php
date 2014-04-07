@@ -22,6 +22,7 @@ class Register extends CI_Controller {
         $this->load->model('Employee_model');
         $this->load->model('Task_type_model');
         $this->load->library('session');
+        $this->load->library('email');
         $this->session->requireLogin();
         $this->load->helper('date');
     }
@@ -186,16 +187,17 @@ class Register extends CI_Controller {
         }
     }
 
-    public function tomedia($registerId, $flag, $edit_start_date='') {
+    public function tomedia($registerId, $flag, $edit_start_date='', $media='print') {
         $register_query = $this->Register_model->get($registerId);
         $doc_res = $register_query->result();
         $doc_res[0]->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($doc_res[0]->create_date));
         $data['register'] = $doc_res[0];
 		$data['current_date'] = now();
 		$data['flag'] = $flag;
-
+		$data['edit_start_date'] = $edit_start_date;
+		
 		$data['particulars']=array();
-		if ($edit_start_date=='') {
+		if ($edit_start_date=='' || $edit_start_date=='novalue') {
 			$documents_query = $this->Document_model->get($registerId);
 		} else {
 			if ($flag == 'outwardDoc') {
@@ -250,10 +252,38 @@ class Register extends CI_Controller {
         $data['mode_receipt']['post'] = 'post';
         $data['mode_receipt']['other'] = 'other';
         
-        $this->load->view('layout/header');
-        $this->load->view('register/print', $data);
-        $this->load->view('layout/footer');
-    }
+        if ($media=='print') {
+	        $this->load->view('layout/header');
+	        $this->load->view('register/print', $data);
+	        $this->load->view('layout/footer');
+        } else if ($media=='email') {
+			$config['protocol'] = 'sendmail';
+			$config['mailpath'] = 'C:\xampp\sendmail\sendmail.exe -t';
+			$config['mailtype'] = 'html'; 
+			
+			$config['charset'] = 'utf8';
+			$config['crlf'] = '\r\n';
+			$config['newline'] = '\r\n';
+			$config['wordwrap'] = FALSE;
+			
+			$this->email->initialize($config);
+			
+			$this->email->from('sramandco@gmail.com', 'SRAM AND CO');
+			// Pick email id from client based on register
+			$this->email->to('r.rishishankar@gmail.com');
+			$this->email->subject('Invoice');
+			// Fix testemail??? 
+			$this->load->view('layout/header');
+			$this->email->message($this->load->view('register/email', $data, true));
+			// TODO : A landing page after email
+			$this->load->view('register/success');
+			$this->load->view('layout/footer');
+			
+			$this->email->send();
+// 			echo $this->email->print_debugger();
+        }
+  	
+     }
     
     public function get($registerId) {
         $register_query = $this->Register_model->get($registerId);
