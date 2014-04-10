@@ -21,6 +21,7 @@ function printDiv( divId, filename ){
 		</header>
 		<div id="printRegister" class="module_content">
 			<input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
+			<input type="hidden" name="email" value="<?php echo $register->email; ?>"></input>
 			<div>
 				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
 <?php if ($flag == 'print' || $flag == 'edit' || $flag == 'create'){ echo 'INWARD INVOICE';  ?><?php } ?>
@@ -40,7 +41,7 @@ Phone: 91-44-23643710</textarea>
 			<div style="clear:both"></div>
 				
 			<div>
-	            <textarea style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n" ?></textarea>  
+	            <textarea style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n"; ?></textarea>  
 <!--<?php $addLine = explode(',', $register->address); foreach ($addLine as $line) {
 echo $line;
 ?> <?php } ?></textarea>-->

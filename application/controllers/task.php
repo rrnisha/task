@@ -18,6 +18,7 @@ class Task extends CI_Controller {
         $this->load->model('Itr_model');
         $this->load->model('Client_model');
         $this->load->model('Employee_model');
+        $this->load->model('Role_model');
     }
 
     public function add_remark() {
@@ -361,87 +362,114 @@ class Task extends CI_Controller {
         $data = array();
         $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
 
-        $data['status'] = $status;
-
-        $this->load->library('pagination');
-
-        $config['base_url'] = base_url() . 'index.php/task/index/' . $status;
-        $cnt_query = $this->Task_model->get_count($status);
-        $cnt_res = $cnt_query->result();
-        $config['total_rows'] = $cnt_res[0]->cnt;
-        $config['per_page'] = 10;        
-        $config['uri_segment'] = 4;
-
-        $this->pagination->initialize($config);
-
-        $task_query = $this->Task_model->get_all($config['per_page'], $this->uri->segment(4), $status);
-        $data['tasks'] = array();
-        foreach ($task_query->result() as $row) {
-            $client_query = $this->Client_model->get($row->client_id);
-            $client_result = $client_query->result();
-            $row->client_name = '';
-            if (count($client_result) >= 1) {
-            	$row->client_name = $client_result[0]->full_name;
-            }
-
-            $emp_name_query = $this->Employee_model->get_name($row->emp_id);
-            $emp_name_result = $emp_name_query->result();
-            $row->emp_name = $emp_name_result[0]->login;
-
-            if ($row->type == 'itr') {
-                $itr_query = $this->Itr_model->get($row->id);
-                $itr_result = $itr_query->result();
-                if (count($itr_result) == 1) {
-                    $row->itr_id = $itr_result[0]->itr_id;
-                    $row->assessment_year = $itr_result[0]->assessment_year;
-                }
-                else {
-                    $row->itr_id = '';
-                    $row->assessment_year = '';
-                }
-            }
-            
-            $row->start_date = mdate('%d-%m-%Y', strtotime($row->start_date));
-            $row->due_date = mdate('%d-%m-%Y', strtotime($row->due_date));
-            if ($row->end_date != '0000-00-00')
-            	$row->end_date = mdate('%d-%m-%Y', strtotime($row->end_date));
-            else
-            	$row->end_date = '00-00-0000';
-            
-            $data['tasks'][] = $row;
+        if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
+        	$this->session->requireLogin();
+        	$this->load->library('pagination');
+        	
+//         	$config['base_url'] = base_url() . 'index.php/employee/lists/';
+        	$cnt_query = $this->Employee_model->get_all_count();
+        	$cnt_res = $cnt_query->result();
+        	$config['total_rows'] = $cnt_res[0]->cnt;
+        	$config['per_page'] = 10;
+        	$config['uri_segment'] = 3;
+        	
+        	$this->pagination->initialize($config);
+        	
+        	$employee_query = $this->Employee_model->get_all($config['per_page'], $this->uri->segment(3));
+        	
+        	$data['employees'] = array();
+        	foreach($employee_query->result() as $row){
+        		$role_query = $this->Role_model->get($row->role_id);
+        		$role_result = $role_query->result();
+        		$row->role = $role_result[0]->role;
+        		$data['employees'][] = $row;
+        	}        	
+        	$this->load->view('layout/header');
+        	$this->load->view('employee/list', $data);
+        	$this->load->view('layout/footer');        	
+        } else {
+	        $data['status'] = $status;
+	
+	        $this->load->library('pagination');
+	
+	        $config['base_url'] = base_url() . 'index.php/task/index/' . $status;
+	        $cnt_query = $this->Task_model->get_count($status);
+	        $cnt_res = $cnt_query->result();
+	        $config['total_rows'] = $cnt_res[0]->cnt;
+	        $config['per_page'] = 10;        
+	        $config['uri_segment'] = 4;
+	
+	        $this->pagination->initialize($config);
+	
+	        $task_query = $this->Task_model->get_all($config['per_page'], $this->uri->segment(4), $status);
+	        $data['tasks'] = array();
+	        foreach ($task_query->result() as $row) {
+	            $client_query = $this->Client_model->get($row->client_id);
+	            $client_result = $client_query->result();
+	            $row->client_name = '';
+	            if (count($client_result) >= 1) {
+	            	$row->client_name = $client_result[0]->full_name;
+	            }
+	
+	            $emp_name_query = $this->Employee_model->get_name($row->emp_id);
+	            $emp_name_result = $emp_name_query->result();
+	            $row->emp_name = $emp_name_result[0]->login;
+	
+	            if ($row->type == 'itr') {
+	                $itr_query = $this->Itr_model->get($row->id);
+	                $itr_result = $itr_query->result();
+	                if (count($itr_result) == 1) {
+	                    $row->itr_id = $itr_result[0]->itr_id;
+	                    $row->assessment_year = $itr_result[0]->assessment_year;
+	                }
+	                else {
+	                    $row->itr_id = '';
+	                    $row->assessment_year = '';
+	                }
+	            }
+	            
+	            $row->start_date = mdate('%d-%m-%Y', strtotime($row->start_date));
+	            $row->due_date = mdate('%d-%m-%Y', strtotime($row->due_date));
+	            if ($row->end_date != '0000-00-00')
+	            	$row->end_date = mdate('%d-%m-%Y', strtotime($row->end_date));
+	            else
+	            	$row->end_date = '00-00-0000';
+	            
+	            $data['tasks'][] = $row;
+	        }
+	
+	        // Get all other employees than the logged employee
+	        $emp_query = $this->Employee_model->get_others();
+	
+	        $data['employees'] = array();
+	        foreach ($emp_query->result() as $res) {
+	            $data['employees'][$res->id] = $res->login;
+	        }
+	
+	        // Get all other employees than the logged employee
+	        $emp_active_query = $this->Employee_model->get_active();
+	
+	        $data['all_employees'] = array();
+	        foreach ($emp_active_query->result() as $res) {
+	            $data['all_employees'][$res->id] = $res->login;
+	        }
+	        
+	        $data['assessment_year'] = array();
+	        $fy_curr_yr_query = $this->Year_model->get_curr_year();
+	        foreach ($fy_curr_yr_query->result() as $res) {
+	        	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
+	        }
+	        
+	        $fy_query = $this->Year_model->get();
+	        foreach ($fy_query->result() as $res) {
+	        	if ($res->is_curr_year == 'N') {
+	            	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
+	        	}
+	        }        
+	        $this->load->view('layout/header');
+	        $this->load->view('task/index', $data);
+	        $this->load->view('layout/footer');
         }
-
-        // Get all other employees than the logged employee
-        $emp_query = $this->Employee_model->get_others();
-
-        $data['employees'] = array();
-        foreach ($emp_query->result() as $res) {
-            $data['employees'][$res->id] = $res->login;
-        }
-
-        // Get all other employees than the logged employee
-        $emp_active_query = $this->Employee_model->get_active();
-
-        $data['all_employees'] = array();
-        foreach ($emp_active_query->result() as $res) {
-            $data['all_employees'][$res->id] = $res->login;
-        }
-        
-        $data['assessment_year'] = array();
-        $fy_curr_yr_query = $this->Year_model->get_curr_year();
-        foreach ($fy_curr_yr_query->result() as $res) {
-        	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
-        }
-        
-        $fy_query = $this->Year_model->get();
-        foreach ($fy_query->result() as $res) {
-        	if ($res->is_curr_year == 'N') {
-            	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
-        	}
-        }        
-        $this->load->view('layout/header');
-        $this->load->view('task/index', $data);
-        $this->load->view('layout/footer');
     }
 
     public function get($taskId) {

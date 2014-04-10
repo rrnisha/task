@@ -3,11 +3,11 @@
 		<div id="emailRegister" class="module_content">
 			<input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
 			<div>
-				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
+				<p readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
 <?php if ($flag == 'print' || $flag == 'edit' || $flag == 'create'){ echo 'INWARD INVOICE';  ?><?php } ?>
 <?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE' ?><?php } ?>
 <?php if ($flag == 'outwardDoc' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
-				</textarea>
+				</p>
 			</div>
 			<div>
             <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">SRAM AND CO
@@ -15,13 +15,16 @@
 West KK Nagar, Chennai 600078
 Phone: 91-44-23643710</textarea>
             <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
-              <img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" alt="logo" />
+<!--               <img id="image" src="logo.png" alt="logo" /> -->
+            	<p readonly style="height: 40px; width: 100%; margin: 20px 0; text-align: center; color: black; font: bold 25px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 2px; padding: 18px 0px; border: 0 none; overflow: hidden; resize: none;">
+            	SRAM AND CO
+            	</p>
             </div>
 			</div>
 			<div style="clear:both"></div>
 				
 			<div>
-	            <textarea style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n" ?></textarea>  
+	            <p style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n" ?></p>  
 <!--<?php $addLine = explode(',', $register->address); foreach ($addLine as $line) {
 echo $line;
 ?> <?php } ?></textarea>-->
@@ -29,12 +32,12 @@ echo $line;
 	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
 	                <tr>
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Register #</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php echo $register->id; ?></textarea></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php echo $register->id; ?></td>
 	                </tr>
 	                <tr>
 	
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php echo $register->create_date; ?> </textarea></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php echo $register->create_date; ?></td>
 	                </tr>
 	            </table>
 			
@@ -92,10 +95,10 @@ echo $line;
 				<br>
 				<br>
 				<br>
-	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        			<?php echo $_SESSION['emp_name']; ?></textarea>
-	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        	       	For SRAM AND CO</textarea>
+	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        			<?php echo $_SESSION['emp_name']; ?></p>
+	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        	       	For SRAM AND CO</p>
 			</div>
 		</div>
 	</article>

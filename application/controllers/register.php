@@ -218,9 +218,11 @@ class Register extends CI_Controller {
             $client_result = $client_query->result();
             $row->client_name = '';
             $row->address = '';
+            $row->client_email = '';
             if (count($client_result) >=1 ) {
             	$row->client_name = $client_result[0]->full_name;
             	$row->address = $client_result[0]->address;
+            	$row->email = $client_result[0]->email;
             }
             
             $data['registers'][] = $row;
@@ -257,30 +259,24 @@ class Register extends CI_Controller {
 	        $this->load->view('register/print', $data);
 	        $this->load->view('layout/footer');
         } else if ($media=='email') {
-			$config['protocol'] = 'sendmail';
-			$config['mailpath'] = 'C:\xampp\sendmail\sendmail.exe -t';
-			$config['mailtype'] = 'html'; 
-			
-			$config['charset'] = 'utf8';
-			$config['crlf'] = '\r\n';
-			$config['newline'] = '\r\n';
-			$config['wordwrap'] = FALSE;
-			
-			$this->email->initialize($config);
+			if ($client_result[0]->email=='') {
+				$this->load->view('layout/header');
+				$this->load->view('register/error');
+				$this->load->view('layout/footer');
+			}
+// 			$this->email->initialize($config);
 			
 			$this->email->from('sramandco@gmail.com', 'SRAM AND CO');
-			// Pick email id from client based on register
-			$this->email->to('r.rishishankar@gmail.com');
+// 			$this->email->attach(getcwd() . '/assets/img/'.'logo.png');
+			$this->email->to($client_result[0]->email);
 			$this->email->subject('Invoice');
-			// Fix testemail??? 
-			$this->load->view('layout/header');
-			$this->email->message($this->load->view('register/email', $data, true));
-			// TODO : A landing page after email
-			$this->load->view('register/success');
-			$this->load->view('layout/footer');
 			
+			$this->email->message($this->load->view('register/email', $data, true));
 			$this->email->send();
 // 			echo $this->email->print_debugger();
+			$this->load->view('layout/header');
+			$this->load->view('register/success');
+			$this->load->view('layout/footer');
         }
   	
      }
