@@ -4,7 +4,7 @@ class Document_model extends CI_Model{
         parent::__construct();
     }
     function get($id){
-        $query = $this->db->query('SELECT * FROM documents WHERE register_id='.$id.' and row_status="'.'active'.'" ORDER BY register_id asc');
+        $query = $this->db->query('SELECT * FROM documents WHERE register_id='.$id.' and row_status="'.'active'.'" ORDER BY doc_id asc');
         
         return $query;
     }    

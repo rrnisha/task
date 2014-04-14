@@ -3,7 +3,8 @@
         <meta charset="utf-8"/>
         <title>Task/Document Management</title>
 
-        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/layout.css" type="text/css" media="screen" />
+        <link id="size-stylesheet" rel="stylesheet" media="screen" href="<?php echo base_url(); ?>assets/css/layout-800x600.css" type="text/css" />
+        
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/jquery-ui.css" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/jquery-ui.css" />
 		<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/select2.css" />
@@ -28,22 +29,29 @@
                         //return false;
                     }
                 });
-            });
-        </script>
 
-        <script type="text/javascript">
-            $(document).ready(function()
-            {
+                adjustStyle($(this).width());
+                $(window).resize(function() {
+                    adjustStyle($(this).width());
+                });
+
+                $('.column').equalHeight();
+            });
+            $(document).ready(function() {
                 $(".tablesorter").tablesorter();
             }
             );
-        </script>
-        <script type="text/javascript">
-            $(function() {
-                $('.column').equalHeight();
-            });
-        </script>
-        <script>
+
+	        function adjustStyle(width) {
+	            width = parseInt(width);
+	            alert(width);
+	            if (width < 1024) {
+	                $("#size-stylesheet").attr("href", "<?php echo base_url(); ?>assets/css/layout-800x600.css");
+	            } else if ((width >= 1024)) {
+	                $("#size-stylesheet").attr("href", "<?php echo base_url(); ?>assets/css/layout-1024x768.css");
+	            } 
+	        }
+        
             function search_client() {
                 $.post("<?php echo base_url(); ?>index.php/client/search_index/", $("#frmSearchClient").serialize())
                         .done(function(data) {
@@ -57,10 +65,7 @@
                 });
             }
         </script>
-        
     </head>
-
-
     <body>
 
         <header id="header">

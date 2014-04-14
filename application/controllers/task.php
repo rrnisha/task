@@ -26,7 +26,7 @@ class Task extends CI_Controller {
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
             
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $remark = $date.' : '. $res[0]->login . ' : ' . $_POST['remarks'] . "<br>";
 
             $this->Task_model->addRemark($remark, $_POST['sr_task_id']);
@@ -51,7 +51,7 @@ class Task extends CI_Controller {
         if (isset($_POST['query']) && $_POST['query'] && isset($_POST['task_id']) && $_POST['task_id'] && isset($_POST['emp_id']) && $_POST['emp_id']) {
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $query = $date.' : '. $res[0]->login . ' : ' . $_POST['query'] . "<br>";
             
             $user_query = $this->Task_model->getTaskStatus($_POST['task_id']);
@@ -77,7 +77,7 @@ class Task extends CI_Controller {
         if (isset($_POST['query']) && $_POST['query'] && isset($_POST['task_id']) && $_POST['task_id']) {
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $query = $date.' : '. $res[0]->login . ' : ' . $_POST['query'] . "<br>";
 
             $user_query = $this->Task_Query_model->getQuery($_POST['task_id'], $_SESSION['emp_id']);
@@ -136,7 +136,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $reassign_comment = $date.' : '. $res[0]->login . ' : ' . $_POST['reAssignComment'] . "<br>";
 
             $this->Task_model->reAssign($reassign_comment, $_POST['task_id'], $_POST['emp_id']);
@@ -150,7 +150,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $closeTaskComment = $date.' : '. $res[0]->login . ' : ' . $_POST['closeTaskComment'] . "<br>";
 
             $this->Task_model->closeTask($closeTaskComment, $_POST['task_id']);
@@ -165,7 +165,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $uploadITRComment = $date.' : '. $res[0]->login . ' : ' . $_POST['uploadITRComment'] . "<br>";
 
             $this->Task_model->createITR($uploadITRComment, $_POST['task_id']);
@@ -184,7 +184,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $finalizeTaskComment = $date.' : '. $res[0]->login . ' : ' . $_POST['finalizeTaskComment'] . "<br>";
 
             $this->Task_model->finalizeTask($finalizeTaskComment, $_POST['task_id']);
@@ -198,7 +198,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $mailITRComment = $date.' : '. $res[0]->login . ' : ' . $_POST['mailITRComment'] . "<br>";
 
             $this->Task_model->mailITR($mailITRComment, $_POST['task_id']);
@@ -217,7 +217,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $finalizeITRTaskComment = $date.' : '. $res[0]->login . ' : ' . $_POST['finalizeITRTaskComment'] . "<br>";
 
             $this->Task_model->finalizeTask($finalizeITRTaskComment, $_POST['task_id']);
@@ -236,7 +236,7 @@ class Task extends CI_Controller {
 
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $pendingTaskComment = $date.' : '. $res[0]->login . ' : ' . $_POST['pendingTaskComment'] . "<br>";
 
             $this->Task_model->pending($pendingTaskComment, $_POST['task_id']);
@@ -291,7 +291,7 @@ class Task extends CI_Controller {
             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
             $res = $user_query->result();
 
-            $date = date('d-m-Y', gmt_to_local(now(),'UP45'));
+            $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
             $comment =  '';
             if ($_POST['remarks'] != '')
             $comment = $date.' : '. $res[0]->login . ' : ' . $_POST['remarks'] . "<br>";

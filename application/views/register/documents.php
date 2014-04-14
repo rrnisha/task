@@ -163,9 +163,9 @@
                 <td><?php echo $document->by_employee_name; ?></td>
                 <td><?php echo $document->mode_of_receipt; ?></td>
                 <?php if ($document->status == 'inward') { ?>
-                	<td><a href="#<?php echo $document->register_id; ?>#<?php echo $document->doc_id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',FALSE)) ?>" class="outwardDocument">O</a></td>
+                	<td><a href="#<?php echo $document->register_id; ?>#<?php echo $document->doc_id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',TRUE)) ?>" class="outwardDocument">O</a></td>
 				<?php } else { ?>
-                	<td><a href="#<?php echo $document->register_id; ?>#<?php echo $document->doc_id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',FALSE)) ?>" class="inwardDocument">I</a></td>
+                	<td><a href="#<?php echo $document->register_id; ?>#<?php echo $document->doc_id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',TRUE)) ?>" class="inwardDocument">I</a></td>
 				<?php } ?>
 			</tr>
             <?php

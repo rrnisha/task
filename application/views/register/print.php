@@ -1,6 +1,7 @@
 <script type="text/javascript">
 function printDiv( divId, filename ){
 //    w=window.open('','print div','height=600,width=600');
+	persistInvoice();
 	w=window.open();
 //    w.document.write('<html>\n'
 //    	    +' <head>\n'
@@ -12,6 +13,10 @@ function printDiv( divId, filename ){
     w.document.title = filename;
     w.print();
     w.close();
+}
+
+function persistInvoice() {
+	
 }
 </script>
 <section id="main" class="column">

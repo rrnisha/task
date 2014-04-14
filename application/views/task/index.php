@@ -320,11 +320,10 @@
                 <li <?php if ($status == 'completed') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/completed/">Completed</a></li>
                 <li <?php if ($status == 'finalized') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/finalized/">Finalized</a></li>
                 <li <?php if ($status == 'created') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/created/">Created</a></li> 
-            </ul>
+            </ul>            
         </header>
-
-        <div id="content" >
-            <div id="success">
+	
+        <div id="success">
                 <?php if ($msg == 'success') { ?> 
                     <h4 class="alert_success">Task created Successfully</h4> 
                 <?php } elseif ($msg == 'addQuerySuccess') { ?> 
@@ -350,7 +349,6 @@
                 <?php } elseif ($msg == 'clientNotFound') { ?> 
                     <h4 class="alert_warning">Client Not Available</h4> 
                 <?php } ?>                
-<!--                <h4 id="addRemarkStatus" class="alert_success" style="display:none">Remark added Successfully</h4>-->
             </div>
             <div id="add_remark" style="display:none">
                 <h3 id="sub_heading" style="float:left;margin-left: 5px;">Remarks</h3>
@@ -713,7 +711,7 @@
 
             <div class="tab_container">
                 <div class="task_list">
-                    <div id="tab1" class="tab_content">
+                    <div id="tab1">
                         <div>
                             <?php echo $this->pagination->create_links(); ?>
                         </div>

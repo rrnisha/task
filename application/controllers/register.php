@@ -209,7 +209,12 @@ class Register extends CI_Controller {
 			}
 		}
         foreach ($documents_query->result() as $row) {
-        	$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+        	$update_date = mdate('%d-%m-%Y', strtotime($row->update_date));
+        	if ($row->update_date == "0000-00-00 00:00:00") {
+        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+        	} else {
+        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->update_date));
+        	}
             $data['particulars'][] = $row;
         }
         
@@ -333,7 +338,7 @@ class Register extends CI_Controller {
         $data['mode_receipt']['post'] = 'post';
         $data['mode_receipt']['other'] = 'other';
 
-        $data['edit_start_date'] =  mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),"UP35",FALSE)); 
+        $data['edit_start_date'] =  mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),"UP45",TRUE)); 
         $this->load->view('layout/header');
         $this->load->view('register/edit', $data);
         $this->load->view('layout/footer');
