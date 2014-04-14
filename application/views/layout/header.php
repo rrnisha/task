@@ -44,7 +44,6 @@
 
 	        function adjustStyle(width) {
 	            width = parseInt(width);
-	            alert(width);
 	            if (width < 1024) {
 	                $("#size-stylesheet").attr("href", "<?php echo base_url(); ?>assets/css/layout-800x600.css");
 	            } else if ((width >= 1024)) {
@@ -117,7 +116,7 @@
 	                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task/create">New Task</a></li>
 	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/task/">List Tasks</a></li>
 	            </ul>
-	            <h3>Registry</h3>
+	            <h3>Register</h3>
 	            <ul class="toggle">
 	                <li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/register/create">New Register</a></li>
 	                <li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/register/lists">List Registers</a></li>

@@ -478,7 +478,7 @@
 
     <article class="module width_quarter">
         <header>
-            <h3 class="tabs_involved">Task Remarks</h3>
+            <h3 class="tabs_involved">Remarks</h3>
         </header>
         <div class="tab_container">
             <div class="client_message_list">
