@@ -32,7 +32,7 @@ class Task_model extends CI_Model {
             if ($status == 'query')
             	$ext_sql .= ' AND id in (SELECT task_id FROM `task_query` WHERE (raised_by ='.$_SESSION['emp_id'].' or requested_to='.$_SESSION['emp_id'].') AND status = \'open\')';
         	else if ($status == 'tofinalize')
-        		$ext_sql .= ' AND status = \'' . 'completed' . '\'';
+        		$ext_sql .= ' AND status = \'' . 'completed' . '\' AND type in (SELECT type from `type_owners` WHERE emp_id='.$_SESSION['emp_id'].')';
             else if ($status != 'created')
         		$ext_sql .= ' AND status = \'' . $status . '\'';
         	if ($status == 'created')

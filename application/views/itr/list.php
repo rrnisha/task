@@ -90,7 +90,7 @@
                             <th rowspan="1">Posting Date</th>
                             <th rowspan="1">Bill Date</th> 
 <!--                             <th rowspan="1">Ack Date</th> -->
-                            <?php if ($_SESSION['emp_role_id']==1 || $_SESSION['emp_role_id']==2) { ?>
+                            <?php if ($_SESSION['emp_role_id']==2) { ?>
                             	<th rowspan="1">Amt</th>
                             <?php } ?>
                             </thead>
@@ -112,7 +112,7 @@
                                         <td><?php echo $itr->date_of_mailing; ?></td>
                                         <td><?php echo $itr->date_of_billing; ?></td>
                                         <!--<td><  ?php echo $itr->date_of_acknowledgement; ?></td>-->
-                                        <?php if ($_SESSION['emp_role_id']==1 || $_SESSION['emp_role_id']==2) { ?>
+                                        <?php if ($_SESSION['emp_role_id']==2) { ?>
                                         	<td><?php echo $itr->bill_amount; ?></td>
                                         <?php } ?>
                                     </tr>

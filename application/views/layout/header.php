@@ -97,7 +97,7 @@
 
         <aside id="sidebar" class="column">
             <?php
-            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']!=0) {
+            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']!=1) {
 			?>
 	            <form class="quick_search" id="frmSearchClient" onsubmit="return false;" >
 	                <div class="ui-widget">
@@ -132,7 +132,7 @@
             }
             ?>            
             <?php
-            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
+            if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==1) {
 			?>
 	            <h3>Employee</h3>
 	            <ul class="toggle">

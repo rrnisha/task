@@ -65,8 +65,7 @@ class Employee_model extends CI_Model{
         
         $this->db->set('create_date', 'NOW()', FALSE);
         $this->db->set('update_date', 'NOW()', FALSE);
-        
-        print_r($this);
+                
         // Inserting..
         $this->db->insert('employees', $this)  or die($this->db->_error_message());
         

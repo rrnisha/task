@@ -312,9 +312,7 @@
             <h3 class="tasks_tabs_involved">Tasks</h3>
             <ul class="tabs">                        
                 <li <?php if ($status == 'all') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/all/">My Tasks</a></li>
-                <?php if ($_SESSION['emp_role_id']==1 || $_SESSION['emp_role_id']==2) { ?>
-                	<li <?php if ($status == 'tofinalize') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/tofinalize/">To Finalize</a></li> 
-                <?php } ?>
+               	<li <?php if ($status == 'tofinalize') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/tofinalize/">To Finalize</a></li> 
                 <li <?php if ($status == 'new') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/new/">New</a></li>
                 <li <?php if ($status == 're-assigned') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/re-assigned/">ReAssigned</a></li>
                 <li <?php if ($status == 'query') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/query/">Query</a></li>
@@ -827,16 +825,13 @@
 	                                                    <td><a href="#<?php echo $task->id; ?>" class="closeTask">C<img src="<?php echo base_url(); ?>/assets/img/icons/completed.jpg"/></a></td>
 	                                            <?php } } ?>
 	                                            
-	                                            <!-- TODO : For Manager - Finalize -->
-	                                            <?php if ($_SESSION['emp_role_id']==1 || $_SESSION['emp_role_id']==2) { ?>                
-	                                            	<?php if ($status == 'tofinalize') { ?> 
-	                                                	<?php if ($task->type == 'itr' && $task->itr_id <> '' ) { ?>
-	                                                	<td><a href="#<?php echo $task->id; ?>#<?php echo $task->client_id; ?>#<?php echo $task->client_name; ?>#<?php echo $task->itr_id; ?>#<?php echo $task->assessment_year; ?>" class="finalizeITRTask">FI<img src="<?php echo base_url(); ?>/assets/img/icons/Approval.jpg"/></a></td>
-	                                                	<?php } else { ?>
-	                                                	<td><a href="#<?php echo $task->id; ?>" class="finalizeTask">F<img src="<?php echo base_url(); ?>/assets/img/icons/Approval.jpg"/></a></td>
-	                                            		<?php } ?>
-	                                            	<?php } ?>
-	                                            <?php } ?>
+                                            	<?php if ($status == 'tofinalize') { ?> 
+                                                	<?php if ($task->type == 'itr' && $task->itr_id <> '' ) { ?>
+                                                	<td><a href="#<?php echo $task->id; ?>#<?php echo $task->client_id; ?>#<?php echo $task->client_name; ?>#<?php echo $task->itr_id; ?>#<?php echo $task->assessment_year; ?>" class="finalizeITRTask">FI<img src="<?php echo base_url(); ?>/assets/img/icons/Approval.jpg"/></a></td>
+                                                	<?php } else { ?>
+                                                	<td><a href="#<?php echo $task->id; ?>" class="finalizeTask">F<img src="<?php echo base_url(); ?>/assets/img/icons/Approval.jpg"/></a></td>
+                                            		<?php } ?>
+                                            	<?php } ?>
 	                                            <?php if ($status == 'finalized') { ?>
 	                                                <td></td>
 	                                            <?php } ?>

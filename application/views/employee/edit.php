@@ -40,6 +40,15 @@
                         <label class="required" <?php if (form_error('role_id') !='') echo 'style="color:red;font-style:normal"'; ?> >Roles</label>
                         <?php echo form_dropdown('role_id', $roles, $employee->role_id); ?>
                     </fieldset>
+                	<fieldset>
+                    	<label class="required" <?php if (form_error('type') !='') echo 'style="color:red;font-style:normal"'; ?> >Onwership</label>
+                    	<?php foreach ($types as $type) { ?>
+                    		<?php 
+                    			echo form_checkbox($type); 
+                    			echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                    		?>
+                    	<?php } ?>
+                	</fieldset>                    
                     <footer>
                         <div class="submit_link">
                             <input type="submit" name="edit" value="Ok"/>

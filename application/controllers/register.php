@@ -263,7 +263,7 @@ class Register extends CI_Controller {
 				$this->load->view('layout/header');
 				$this->load->view('register/error');
 				$this->load->view('layout/footer');
-			}
+			} else {
 // 			$this->email->initialize($config);
 			
 			$this->email->from('sramandco@gmail.com', 'SRAM AND CO');
@@ -277,6 +277,7 @@ class Register extends CI_Controller {
 			$this->load->view('layout/header');
 			$this->load->view('register/success');
 			$this->load->view('layout/footer');
+			}
         }
   	
      }

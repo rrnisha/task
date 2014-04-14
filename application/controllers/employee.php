@@ -10,7 +10,9 @@ class Employee extends CI_Controller {
         parent::__construct();   
         $this->load->database();
         $this->load->helper(array('url','form'));
-        $this->load->model('Employee_model'); 
+        $this->load->model('Employee_model');
+        $this->load->model('Task_type_model');
+        $this->load->model('Type_owner_model');
         $this->load->model('Role_model');
         $this->load->library('session');
     }
@@ -136,13 +138,33 @@ class Employee extends CI_Controller {
 		            if ($this->form_validation->run() == TRUE ){     
 		            	$this->db->set('create_date', 'NOW()', FALSE);
 		            	$this->db->set('update_date', 'NOW()', FALSE);          
-						$this->Employee_model->insert();
+						$emp_id = $this->Employee_model->insert();
+						foreach ($_POST['type'] as $type) {
+							$this->Type_owner_model->insert($type, $emp_id);							 
+						}
 		               	redirect('/employee/lists?msg=createEmpSuccess');
 		            }        			
         		}
         	}
         }    
 
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type[]";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	if ($res->type=='other')
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }
+                
         // Get all roles
         $role_query = $this->Role_model->get_all();
 
@@ -217,6 +239,10 @@ class Employee extends CI_Controller {
            if ($this->form_validation->run() == TRUE ){
 				$this->db->set('update_date', 'NOW()', FALSE);
 	            $this->Employee_model->edit($data['values']);
+	            $this->Type_owner_model->deleteAll($_POST['id']);
+	            foreach ($_POST['type'] as $type) {
+	            	$this->Type_owner_model->insert($type, $_POST['id']);
+	            }
 	            redirect('/employee/lists?msg=editEmpSuccess');
            }
         }    
@@ -247,6 +273,24 @@ class Employee extends CI_Controller {
         foreach($role_query->result() as $res){
             $data['roles'][$res->id] = $res->role;
         }    
+        
+        // Get all task_type
+        $task_type_query = $this->Task_type_model->get_all_active();
+        
+        $data['types'] = array();
+        foreach ($task_type_query->result() as $res) {
+        	$type = array();
+        	$type['name'] = "type[]";
+        	$type['id'] = "type";
+        	$type['value'] = $res->type;
+        	$type['ui_desc'] = $res->type_ui_desc;
+        	$query = $this->Type_owner_model->get($res->type, $empId);
+        	if (count($query->result())==1)
+        		$type['checked'] = TRUE;
+        	else
+        		$type['checked'] = FALSE;
+        	$data['types'][$res->id] = $type;
+        }        
         
         $this->load->view('layout/header');
         $this->load->view('employee/edit',$data);

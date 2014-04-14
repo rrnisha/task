@@ -362,7 +362,7 @@ class Task extends CI_Controller {
         $data = array();
         $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
 
-        if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==0) {
+        if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==1) {
         	$this->session->requireLogin();
         	$this->load->library('pagination');
         	
