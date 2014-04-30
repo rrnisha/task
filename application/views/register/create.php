@@ -56,7 +56,7 @@ function removeParticularsRow(r){
                         <input type="radio" name="status" value="inward" <?php if ($values['status'] == 'inward') { ?>checked<?php } ?>/> Inward
 <!--                        <input type="radio" name="status" value="outward" <?php if ($values['status'] == 'outward') { ?>checked<?php } ?>/> Outward-->
                     </fieldset>
-					<table id="particularsTable" class="tablerow" cellspacing="0">
+					<table id="particularsTable" class="tablerow" cellspacing="0" style="width:70%">
 						<thead>
 						<tr>
 							<th></th>

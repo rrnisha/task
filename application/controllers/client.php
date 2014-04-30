@@ -40,7 +40,7 @@ class Client extends CI_Controller {
         $data['values']['email'] = '';
         $data['values']['dob'] = '';
         $data['values']['address'] = '';
-        $data['values']['pan_tan'] = '';
+        $data['values']['pan'] = '';
         $data['values']['genius_id'] = '';
         $data['values']['file_id'] = '';
 
@@ -53,7 +53,7 @@ class Client extends CI_Controller {
             $this->form_validation->set_rules('fullname', 'Name', 'required');
             $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'trim|required|xss_clean'); //|callback_mobile_regex_match
 //             $this->form_validation->set_rules('phone_office', 'Office Phone No', 'required');
-            $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');
+            $this->form_validation->set_rules('pan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');
             $this->form_validation->set_rules('email', 'Email', 'callback_email_regex_match');
 //             $this->form_validation->set_rules('address', 'Address', 'required');
 //             $this->form_validation->set_rules('client_type', 'Type', 'required');
@@ -123,7 +123,7 @@ class Client extends CI_Controller {
             $data['values']['dob'] = $_POST['dob'];
             $data['values']['email'] = $_POST['email'];
             $data['values']['address'] = $_POST['address'];
-            $data['values']['pan_tan'] = $_POST['pan_tan'];
+            $data['values']['pan'] = $_POST['pan'];
             $data['values']['genius_id'] = $_POST['genius_id'];
             $data['values']['file_id'] = $_POST['file_id'];
 
@@ -133,7 +133,7 @@ class Client extends CI_Controller {
            $this->form_validation->set_rules('title', 'Title', 'required');    
            $this->form_validation->set_rules('full_name', 'Name', 'required');    
            $this->form_validation->set_rules('phone_mobile', 'Mobile Phone No', 'required');    
-           $this->form_validation->set_rules('pan_tan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');    
+           $this->form_validation->set_rules('pan', 'PAN/TAN', 'trim|required|xss_clean|max_length[10]|callback_pan_regex_match');    
            $this->form_validation->set_rules('client_type', 'Client Type', 'required');
            $this->form_validation->set_rules('dob', 'Date of Birth/Incorporation', 'required');
            $this->form_validation->set_rules('email', 'Email', 'callback_email_regex_match');
@@ -342,11 +342,67 @@ class Client extends CI_Controller {
         exit;
     }
 
+    public function read() {
+    	$data = array();
+    	// Load the spreadsheet reader library
+    	$this->load->library('excel_reader');
+    	 
+    	// Read the spreadsheet via a relative path to the document
+    	// for example $this->excel_reader->read('./uploads/file.xls');
+    	$this->excel_reader->read('C:\xampp\htdocs\tasks_new\application\controllers\client.xls');
+    	 
+    	// Get the contents of the first worksheet
+    	$worksheet = $this->excel_reader->sheets[0];
+    	 
+    	$numRows = $worksheet['numRows']; // ex: 14
+    	$numCols = $worksheet['numCols']; // ex: 4
+    	$cells = $worksheet['cells']; // the 1st row are usually the field's name
+    	 
+    	$data['numrows'] = $numRows;
+    	$data['numcols'] = $numCols;
+    	$data['cells'] = $cells;
+    	 
+    	$this->load->view('layout/header');
+    	$this->load->view('client/read', $data);
+    	$this->load->view('layout/footer');
+    }
+    
+    public function upload() {
+    	$data = array();
+        if (isset($_POST['Upload']) && $_POST['Upload'] == 'Ok') {
+            for($i=0;$i<count($_POST["sno"]);$i++) {
+            	$_POST['type'][$i] = '-';
+            	if (isset($_POST['dob'][$i]) && $_POST['dob'][$i]!='-') {
+            		$_POST['dob'][$i] = $this->changeDateFormatSlash($_POST['dob'][$i]);
+            		$_POST['type'][$i] = 'individual';
+            	}
+            	else if (isset($_POST['doi'][$i]) && $_POST['doi'][$i]!='-') {
+            		$_POST['dob'][$i] = $this->changeDateFormatSlash($_POST['doi'][$i]);
+            		$_POST['type'][$i] = 'company';
+            	}
+            	
+            	$this->Client_model->upload($i);
+            }
+        }
+                
+        $this->load->view('layout/header');
+        $this->load->view('client/read', $data);
+        $this->load->view('layout/footer');
+    }
+        
     // UTILITY FUNCTION
     public function changeDateFormat($date)
     {
     	if ($date == '') return '';
     	$dateArr = explode('-',$date);
+    	$ret_date = $dateArr[2].'-'.$dateArr[1].'-'.$dateArr[0];
+    	return $ret_date;
+    }    
+
+    public function changeDateFormatSlash($date)
+    {
+    	if ($date == '') return '';
+    	$dateArr = explode('/',$date);
     	$ret_date = $dateArr[2].'-'.$dateArr[1].'-'.$dateArr[0];
     	return $ret_date;
     }    

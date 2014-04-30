@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#pan_tan').keyup(function(){
+	$('#pan').keyup(function(){
 	    this.value = this.value.toUpperCase();
 	});
 	$("#dob" ).datepicker({ dateFormat: "dd-mm-yy", changeMonth: true, changeYear: true});
@@ -36,8 +36,8 @@ $(document).ready(function() {
                     <textarea name="address" cols="40"><?php echo $client->address; ?></textarea>
                 </fieldset>        
                 <fieldset>
-                    <label class="required" <?php if (form_error('pan_tan') !='') echo 'style="color:red;font-style:normal"'; ?> >PAN</label>
-                    <input type="text" name="pan_tan" value="<?php echo $client->pan_tan; ?>"/>
+                    <label class="required" <?php if (form_error('pan') !='') echo 'style="color:red;font-style:normal"'; ?> >PAN</label>
+                    <input type="text" name="pan" value="<?php echo $client->pan; ?>"/>
                 </fieldset>
                 <fieldset>
                 	<label>Phone 1</label>                        

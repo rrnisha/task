@@ -185,7 +185,7 @@
                                         <td><?php echo $client->full_name; ?></td>
                                         <td><?php echo $client->phone_mobile; ?></td> 
                                         <td><?php echo $client->email; ?></td>
-                                        <td><?php echo $client->pan_tan; ?></td>
+                                        <td><?php echo $client->pan; ?></td>
                                         <td><?php echo $client->client_type; ?></td>
                                         <td><?php echo $client->genius_id; ?></td>
                                     </tr>

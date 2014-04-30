@@ -559,7 +559,6 @@ class Task extends CI_Controller {
 //        $this->load->view('email/testemail', $data);
     }   
 
-    
     // UTILITY FUNCTION
     public function changeDateFormat($date)
     {
@@ -569,3 +568,4 @@ class Task extends CI_Controller {
 	    return $ret_date; 
     }    
 }
+

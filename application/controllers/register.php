@@ -21,6 +21,8 @@ class Register extends CI_Controller {
         $this->load->model('Client_model');
         $this->load->model('Employee_model');
         $this->load->model('Task_type_model');
+        $this->load->model('Outward_invoice_model');
+        $this->load->model('Inward_invoice_model');
         $this->load->library('session');
         $this->load->library('email');
         $this->session->requireLogin();
@@ -187,7 +189,7 @@ class Register extends CI_Controller {
         }
     }
 
-    public function tomedia($registerId, $flag, $edit_start_date='', $media='print') {
+    public function tomedia($registerId, $inv_id='', $flag, $edit_start_date='', $media='print') {
         $register_query = $this->Register_model->get($registerId);
         $doc_res = $register_query->result();
         $doc_res[0]->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($doc_res[0]->create_date));
@@ -197,6 +199,7 @@ class Register extends CI_Controller {
 		$data['edit_start_date'] = $edit_start_date;
 		
 		$data['particulars']=array();
+		$inv_query;
 		if ($edit_start_date=='' || $edit_start_date=='novalue') {
 			$documents_query = $this->Document_model->get($registerId);
 		} else {
@@ -204,35 +207,56 @@ class Register extends CI_Controller {
 				$documents_query = $this->Document_model->get_update_by_status($registerId, "outward", $edit_start_date);
 			} else if ($flag == 'inwardDoc') {
 				$documents_query = $this->Document_model->get_update_by_status($registerId, "inward", $edit_start_date);
+			} else if ($flag == 'printInwardInv') {
+				$inv_query = $this->Inward_invoice_model->get_by_id($inv_id);
+			} else if ($flag == 'printOutwardInv') {
+				$inv_query = $this->Outward_invoice_model->get_by_id($inv_id);
 			} else {
         		$documents_query = $this->Document_model->get_update($registerId, $edit_start_date);
 			}
 		}
-        foreach ($documents_query->result() as $row) {
-        	$update_date = mdate('%d-%m-%Y', strtotime($row->update_date));
-        	if ($row->update_date == "0000-00-00 00:00:00") {
-        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
-        	} else {
-        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->update_date));
-        	}
-            $data['particulars'][] = $row;
-        }
-        
-        foreach ($register_query->result() as $row) {
-            $client_query = $this->Client_model->get($row->client_id);
-            $client_result = $client_query->result();
-            $row->client_name = '';
-            $row->address = '';
-            $row->client_email = '';
-            if (count($client_result) >=1 ) {
-            	$row->client_name = $client_result[0]->full_name;
-            	$row->address = $client_result[0]->address;
-            	$row->email = $client_result[0]->email;
-            }
-            
-            $data['registers'][] = $row;
-        }
-        
+		
+		$client_name = '';
+		$client_id = '';
+		foreach ($register_query->result() as $row) {
+			$client_query = $this->Client_model->get($row->client_id);
+			$client_id = $row->client_id;
+			$client_result = $client_query->result();
+			$row->client_name = '';
+			$row->address = '';
+			$row->client_email = '';
+			if (count($client_result) >=1 ) {
+				$row->client_name = $client_result[0]->full_name;
+				$client_name = $client_result[0]->full_name;
+				$row->address = $client_result[0]->address;
+				$row->email = $client_result[0]->email;
+			}
+		
+			$data['registers'][] = $row;
+		}
+
+		if ($flag == 'printInwardInv' || $flag == 'printOutwardInv') {
+			foreach ($inv_query->result() as $row) {
+				$data['particulars'][] = $row;
+			}
+		} else {
+	        foreach ($documents_query->result() as $row) {
+	        	if ($row->update_date == "0000-00-00 00:00:00") {
+	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+	        	} else {
+	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->update_date));
+	        	}
+	            $data['particulars'][] = $row;
+	            if ($row->status == 'inward' && $flag != 'printInwardInv') {
+	            	$this->Inward_invoice_model->insert("I001", $doc_res[0]->id, $client_id, $client_name, 
+	            		$_SESSION['emp_id'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            } else if ($row->status == 'outward' && $flag != 'printOutwardInv') {
+	            	$this->Outward_invoice_model->insert("O001", $doc_res[0]->id, $client_id, $client_name,
+	            			$_SESSION['emp_id'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            }
+	        } 
+		}
+		
         // Get all clients
         $client_query = $this->Client_model->get_all_clients();
 
@@ -402,7 +426,27 @@ class Register extends CI_Controller {
                 $row->trans[] = $trans_row;
             }            
             $row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+            
+            $inward_invoices_query = $this->Inward_invoice_model->get_by_reg_id($row->id);
+            if (count($inward_invoices_query) < 1){
+                $row->inward_invoices[] = '';
+            } else {
+            	foreach ($inward_invoices_query->result() as $inward_invoices_row) {
+            		$row->inward_invoices[] = $inward_invoices_row;
+            	}            	
+            }
+            
+            $outward_invoices_query = $this->Outward_invoice_model->get_by_reg_id($row->id);
+            if (count($outward_invoices_query) < 1){
+                $row->outward_invoices[] = '';
+            } else {
+            	foreach ($outward_invoices_query->result() as $outward_invoices_row) {
+            		$row->outward_invoices[] = $outward_invoices_row;
+            	}
+            }
+            
             $data['registers'][] = $row;
+            $data['registers_id'][$row->id] = $row;
         }
 
         // Get all task_type
@@ -740,6 +784,5 @@ class Register extends CI_Controller {
         
         $this->load->view('register/documents', $data);
     }
-    
 }
 

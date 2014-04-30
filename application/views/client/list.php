@@ -178,17 +178,16 @@
                                 foreach ($clients as $client) {
                                     ?>
                                     <tr <?php if($client->client_type=="company") { echo 'style="color:teal;"'; } ?>>
-                                        <td><?php echo $client->file_id; ?></td>                                        
-                                        <td><?php echo $client->title; ?></td> 
+                                        <td><?php if ($client->file_id!='') { echo $client->file_id; } else { echo '--'; } ?></td>                                        
+                                        <td><?php if ($client->title!='') { echo $client->title; } else { echo '--'; } ?></td> 
                                         <td><?php echo $client->full_name; ?></td>
                                         <td><?php echo $client->dob; ?></td>
-                                        <!-- <td>< ?php echo $client->client_type; ?></td>  -->
-                                        <td style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC"><?php echo $client->phone_mobile; ?></td>
+                                        <td style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC"><?php if ($client->phone_mobile!='') { echo $client->phone_mobile; } else { echo '--'; } ?></td>
                                         <td <?php if ($client->phone_mobile2=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->phone_mobile2!='') { echo $client->phone_mobile2; } else { echo '--'; } ?></td>
                                         <td style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC; <?php if ($client->phone_office=='') { echo 'text-align:center;'; } ?>"><?php if ($client->phone_office!='') { echo $client->phone_office; } else { echo '--'; } ?></td>
                                         <td style="border-right:1px dotted #CCCCCC; <?php if ($client->phone_office2=='') { echo 'text-align:center;'; } ?>"><?php if ($client->phone_office2!='') { echo $client->phone_office2; } else { echo '--'; } ?></td>
                                         <td <?php if ($client->email=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->email!='') { echo $client->email; } else { echo '--'; } ?></td>
-                                        <td><?php echo $client->pan_tan; ?></td>
+                                        <td><?php echo $client->pan; ?></td>
                                         
                                         <td <?php if ($client->address=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->address!='') { echo $client->address; } else { echo '--'; } ?></td>
                                         <td><?php echo $client->genius_id; ?></td>
