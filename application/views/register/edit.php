@@ -120,7 +120,8 @@ function removeParticulars(id,r){
 		                    <?php $i=1; foreach ($particulars as $particular) { ?>
 							<tr class="particularsRow">
 								<td>
-									<a onclick="removeParticulars(<?php echo $i; ?>,this)">
+									<!-- <a onclick="removeParticulars(<?php echo $i; ?>,this)"> -->
+									<a>
 										<img src="<?php echo base_url(); ?>/assets/img/delete.png"/>
 									</a>
 								</td>
@@ -140,7 +141,8 @@ function removeParticulars(id,r){
 									<fieldset><input type="text" style="width:100px;" name="tag[]" value="<?php echo $particular->tag; ?>" onchange="markParticularsChanged(<?php echo $i; ?>)"/></fieldset>
 								</td>
 								<td>
-									<a onclick="addParticularsRow(this)">
+									<!-- <a onclick="addParticularsRow(this)"> -->
+									<a>
 										<img src="<?php echo base_url(); ?>/assets/img/add.png"/>
 									</a>
 								</td>

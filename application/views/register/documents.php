@@ -84,7 +84,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/outwardDoc/"+result[3];
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/outwardDoc/"+result[3]+"/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -95,7 +95,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/inwardDoc/"+result[3];
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/inwardDoc/"+result[3]+"/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -106,7 +106,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/outwardRegister";
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/outwardRegister/novalue/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -117,7 +117,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/inwardRegister";
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/inwardRegister/novalue/print/"+<?php echo now() ?>;
             }
         });
     }

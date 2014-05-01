@@ -1,18 +1,6 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.blockui.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.listInvoices').click(function() {
-            var hrefFields = $(this).attr('href').split("#");
-          	var registerId = hrefFields[1];
-          	var documentId = hrefFields[2];
-			$('#invoices_doc_register_id').val(registerId);
-            $('#invoices_doc_id').val(documentId);
-            var edit_start_date = hrefFields[3];
-            $('#invoices_edit_start_date').val(edit_start_date);
-            $.blockUI({message: $('#invoices_document')});
-            return false;
-            //setTimeout($.unblockUI, 2000); 
-        });
         $('.outwardDocument').click(function() {
             var hrefFields = $(this).attr('href').split("#");
           	var registerId = hrefFields[1];
@@ -92,26 +80,14 @@
             $('#show_docs').html(data);
         });
     }
-
-    function listInvoices() {
-        $.post("<?php echo base_url(); ?>index.php/register/listInvoices/", $("#frmlistInvoices").serialize()).done(function(data) {
-            var result = data.split('|||');
-            if (result[1] == 'success')
-            {
-                $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/print/"+result[3];
-            }
-        });
-    }
     
-//  window.location.href = "index.php/register/lists/?msg=inwardDocumentSuccess";
     function outwardDocument() {
         $.post("<?php echo base_url(); ?>index.php/register/outwardDoc/", $("#frmOutwardDocument").serialize()).done(function(data) {
             var result = data.split('|||');
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/outwardDoc/"+result[3];
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/outwardDoc/"+result[3]+"/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -122,7 +98,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/inwardDoc/"+result[3];
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/inwardDoc/"+result[3]+"/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -133,7 +109,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/outwardRegister";
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/outwardRegister/novalue/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -144,7 +120,7 @@
             if (result[1] == 'success')
             {
                 $.unblockUI();
-                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/inwardRegister";
+                window.location.href = "<?php echo base_url(); ?>index.php/register/tomedia/"+result[2]+"/novalue/inwardRegister/novalue/print/"+<?php echo now() ?>;
             }
         });
     }
@@ -163,10 +139,6 @@
 
     function filterByType(type){
     	document.getElementById("filter_type_id").value = type;
-    }
-
-    function getRegId(){
-        return document.getElementById("invoices_doc_register_id");
     }
     
 </script>
@@ -223,84 +195,6 @@
                 <h4 class="alert_success">Inward Document Marked Successfully</h4> 
             <?php } ?>
 
-            <div id="invoices_document" style="display:none">
-                <h3 id="sub_heading" style="float:left;margin-left: 5px;">Register Invoices</h3>
-                <p style="float:right;margin-right: 5px;"><a href="#" onclick="return closeBox();">Close</a></p>
-                <div style="clear:both;" style="height:10%">
-                    <form name="frmlistInvoices" id="frmlistInvoices" onsubmit="return false;">
-                        <table cellpadding="1">
-                        
-                        	<?php 
-                        		$url = base_url().'index.php/task/list.php';
-                        	 
-	                        	$dom = new DOMDocument();
-	                        	$dom->load(file_get_contents($url));
-// 	                        	$dom->validate();
-	                        	$div = $dom->getElementById('invoices_doc_register_id');
-	                        	?>
-	                        	<p>--<?php count($_SESSION); foreach ($_SESSION as $key => $value) echo "$key=$value"; ?>--</p>
-	                        	<?php 
-// 	                        	$attr = $div->getAttribute('value');
-//                         		$rid = document.getElementById("invoices_doc_register_id");
-                        		$rid = 2;
-								$reg = $registers_id[$rid];
-							?>
-							<p>document.getElementById('invoices_doc_register_id').value</p>
-                        	<thead>
-	                            <tr style="cellspacing:10">
-	                                <th>Inward Invoices <?php echo count($reg->inward_invoices)?></th>
-                                	<th>Outward Invoices <?php echo count($reg->outward_invoices)?></th>
-								</tr>
-                        	</thead>
-                        	<tbody>
-								<?php
-								
-								$inward_count = count($reg->inward_invoices);
-								$outward_count = count($reg->outward_invoices);
-								
-								$count = ($inward_count>$outward_count) ? $inward_count : $outward_count; 
-								 
-                        		for ($cnt=0, $in_cnt=0, $out_cnt=0; $cnt<=$count; $cnt++, $in_cnt++, $out_cnt++){
-								?>
-                        		<tr>
-								<td>
-								<?php 
-									if ($in_cnt < $inward_count) {
-								?>
-	                        		<a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $reg->id; ?>/<?php echo $reg->inward_invoices[$in_cnt]->inv_id; ?>/printInwardInv/dummyvalue/"><?php echo $reg->inward_invoices[$in_cnt]->inv_id; ?></a>
-	                        	<?php 
-	                        		} else {
-										echo '';
-									}
-	                        	?>
-	                        	</td>
-								<td>
-								<?php
-									if ($out_cnt < $outward_count) {
-								?>
-	                        		<a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $reg->id; ?>/<?php echo $reg->outward_invoices[$out_cnt]->inv_id; ?>/printOutwardInv/dummyvalue/"><?php echo $reg->outward_invoices[$out_cnt]->inv_id; ?></a>
-	                        	<?php 
-	                        		} else {
-										echo '';
-									}
-	                        	}
-	                        	?>
-	                        	</td>
-	                        	</tr>
-                        	</tbody>
-							<tr>                               
-                                <td>
-                                    <input type="hidden" name="doc_id" id="invoices_doc_id" value=""/>
-                                    <input type="hidden" name="register_id" id="invoices_doc_register_id" value=""/>
-                                    <input type="hidden" name="edit_start_date" id="invoices_edit_start_date" value=""/>
-                                    <input type="button" name="submit_invoicesDoc" value="Register Invoices" onclick="listInvoices();"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>    
-                </div>     
-            </div>
-                        
             <div id="outward_document" style="display:none">
                 <h3 id="sub_heading" style="float:left;margin-left: 5px;">Mark Outward Document</h3>
                 <p style="float:right;margin-right: 5px;"><a href="#" onclick="return closeBox();">Close</a></p>
@@ -476,8 +370,7 @@
                                         <td><?php echo $register->client_name; ?></td>
                                         <td><?php echo strtoupper($register->type); ?></td>
 
-                                        <td><a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/print/novalue/"><img src="<?php echo base_url(); ?>/assets/img/printer_green 32_32.png"/></a></td>
-                                        <td><a href="#<?php echo $registers[0]->id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',TRUE)) ?>" class="listInvoices"><img src="<?php echo base_url(); ?>/assets/img/printer_green 32_32.png"/></a></td>
+                                        <td><a href="<?php echo base_url(); ?>index.php/register/invoice/<?php echo $register->id; ?>"> <img src="<?php echo base_url(); ?>/assets/img/printer_green 32_32.png"/></a></td>
                                         <td><a href="<?php echo base_url(); ?>index.php/register/get/<?php echo $register->id; ?>"><img src="<?php echo base_url(); ?>/assets/img/pencil.png"/></a></td>
                                         <?php if ($register->status == 'inward') { ?>
                                             <td><a href="#<?php echo $register->id; ?>" class="outwardRegister">O</a></td>

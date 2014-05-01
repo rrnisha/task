@@ -23,6 +23,7 @@ class Register extends CI_Controller {
         $this->load->model('Task_type_model');
         $this->load->model('Outward_invoice_model');
         $this->load->model('Inward_invoice_model');
+        $this->load->model('Invoice_sequence_model');
         $this->load->library('session');
         $this->load->library('email');
         $this->session->requireLogin();
@@ -43,7 +44,6 @@ class Register extends CI_Controller {
         
         if (isset($_POST['create']) && $_POST['create'] == 'Create') {
             $data['values'] = $_POST;
-            print_r($_POST);
             // Loading form validation library
             $this->load->library('form_validation');
 
@@ -66,7 +66,7 @@ class Register extends CI_Controller {
 	                $_POST['doc_id'] = $this->db->insert_id();
 	                $this->Document_Transaction_model->insert();
                 }
-                redirect('/register/tomedia/'.$_POST['register_id'].'/create');
+                redirect('/register/tomedia/'.$_POST['register_id'].'/novalue/create/novalue/print/'.now());
             } else {
             	$data['values']['particulars'] = '';
             	$data['values']['by_employee'] = '';
@@ -159,7 +159,6 @@ class Register extends CI_Controller {
         $data = array();
         if (isset($_POST['edit']) && $_POST['edit'] == 'Ok') {
         	$_POST['status'] = $_POST['status_value'];
-//         	print_r($_POST);
         	print("Count : "+count($_POST["particulars"]));
         	
             $data['values'] = array();
@@ -172,7 +171,6 @@ class Register extends CI_Controller {
 //             $this->load->library('form_validation');
 
 //             for($i=0;$i<count($_POST["particulars"]);$i++) {
-//             	print_r("Test");
 //             	$this->form_validation->set_rules('particulars', 'Particulars', 'required');
 //             	$this->form_validation->set_rules('by_employee', 'Received/Surrender By Employee', 'required');
 //             	$this->form_validation->set_rules('mode_of_receipt', 'Mode Of Receipt', 'required');
@@ -184,12 +182,23 @@ class Register extends CI_Controller {
 	            $_POST['register_id'] = $_POST['id'];
 	            $this->Document_model->edit();
 	//            redirect('/register/lists?msg=documentEditSuccess');
-	            redirect('/register/tomedia/'.$_POST['register_id'].'/edit/'.$_POST['edit_start_date']);
+	            redirect('/register/tomedia/'.$_POST['register_id'].'/novalue/edit/'.$_POST['edit_start_date'].'/print/'.now());
 //             }
         }
     }
 
-    public function tomedia($registerId, $inv_id='', $flag, $edit_start_date='', $media='print') {
+    public function tomedia($registerId, $inv_id='', $flag='', $edit_start_date='', $media='print', $session_id='') {
+//     	print_r('--R--');
+//     	print_r($registerId);
+//     	print_r('--I--');
+//     	print_r($inv_id);
+//     	print_r('--F--');
+//     	print_r($flag);
+//     	print_r('--D--');
+//     	print_r($edit_start_date);
+// 		print_r('--M--');
+//     	print_r($media);
+    	
         $register_query = $this->Register_model->get($registerId);
         $doc_res = $register_query->result();
         $doc_res[0]->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($doc_res[0]->create_date));
@@ -199,7 +208,6 @@ class Register extends CI_Controller {
 		$data['edit_start_date'] = $edit_start_date;
 		
 		$data['particulars']=array();
-		$inv_query;
 		if ($edit_start_date=='' || $edit_start_date=='novalue') {
 			$documents_query = $this->Document_model->get($registerId);
 		} else {
@@ -211,6 +219,12 @@ class Register extends CI_Controller {
 				$inv_query = $this->Inward_invoice_model->get_by_id($inv_id);
 			} else if ($flag == 'printOutwardInv') {
 				$inv_query = $this->Outward_invoice_model->get_by_id($inv_id);
+			} else if ((($flag == 'create' || $flag == 'edit' || $flag == 'inwardDoc' || $flag == 'inwardRegister') && $media=='email')) {
+				$inv_query = $this->Inward_invoice_model->get_by_id($inv_id);
+				$flag = 'printInwardInv';
+			} else if ((($flag == 'outwardDoc' || $flag == 'outwardRegister' ) && $media=='email')) {
+				$inv_query = $this->Outward_invoice_model->get_by_id($inv_id);
+				$flag = 'printOutwardInv';
 			} else {
         		$documents_query = $this->Document_model->get_update($registerId, $edit_start_date);
 			}
@@ -235,11 +249,25 @@ class Register extends CI_Controller {
 			$data['registers'][] = $row;
 		}
 
-		if ($flag == 'printInwardInv' || $flag == 'printOutwardInv') {
+		$inv_gen_id = '';
+		$inv_seq_id = '';
+		if (($flag == 'printInwardInv' || $flag == 'printOutwardInv')) {
 			foreach ($inv_query->result() as $row) {
 				$data['particulars'][] = $row;
 			}
 		} else {
+			$inv_no = '';
+			$inv_session_query = $this->Invoice_sequence_model->get_id_by_sessionid($session_id);
+			$inv_session_result = $inv_session_query->result();
+			if (count($inv_session_result) == 1) {
+				$inv_no = $inv_session_result[0]->inv_no;
+			}
+			
+			if ($inv_no == '') {
+				$inv_seq_id = $this->Invoice_sequence_model->insert($session_id);
+			} else {
+				$inv_seq_id = $inv_no;
+			}
 	        foreach ($documents_query->result() as $row) {
 	        	if ($row->update_date == "0000-00-00 00:00:00") {
 	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
@@ -247,42 +275,36 @@ class Register extends CI_Controller {
 	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->update_date));
 	        	}
 	            $data['particulars'][] = $row;
-	            if ($row->status == 'inward' && $flag != 'printInwardInv') {
-	            	$this->Inward_invoice_model->insert("I001", $doc_res[0]->id, $client_id, $client_name, 
-	            		$_SESSION['emp_id'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            
+	            if ($flag=='edit' || ($row->status == 'inward' && $flag != 'printInwardInv')) {
+	            	$inv_gen_id = "I"."_".$doc_res[0]->id."_".$inv_seq_id;
+	            	if ($inv_no == '') {
+	            	$this->Inward_invoice_model->insert($inv_gen_id, $doc_res[0]->id, $client_id, $client_name, 
+	            		$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            	}
 	            } else if ($row->status == 'outward' && $flag != 'printOutwardInv') {
-	            	$this->Outward_invoice_model->insert("O001", $doc_res[0]->id, $client_id, $client_name,
-	            			$_SESSION['emp_id'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            	$inv_gen_id = "O"."_".$doc_res[0]->id."_".$inv_seq_id;
+	            	if ($inv_no == '') {
+	            	$this->Outward_invoice_model->insert($inv_gen_id, $doc_res[0]->id, $client_id, $client_name,
+	            			$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            	}
 	            }
-	        } 
+	        }
 		}
+
+		if ($inv_gen_id!='') 
+			$data['invoice_id'] = $inv_gen_id;
+		else
+			$data['invoice_id'] = $inv_id;
 		
-        // Get all clients
-        $client_query = $this->Client_model->get_all_clients();
-
-        $data['clients'] = array();
-        $data['clients'][''] = '-- Select --';
-        foreach ($client_query->result() as $res) {
-            $data['clients'][$res->id] = $res->full_name;
-        }
-
-        // Get all employees
-        $employee_query = $this->Employee_model->get_active();
-
-        $data['employees'] = array();
-        $data['employees'][''] = '-- Select --';
-        foreach ($employee_query->result() as $res) {
-            $data['employees'][$res->id] = $res->login;
-        }
-
-        $data['mode_receipt'] = array();
-        $data['mode_receipt'][''] = '-- Select --';
-        $data['mode_receipt']['in_person'] = 'in_person';
-        $data['mode_receipt']['email'] = 'email';
-        $data['mode_receipt']['courier'] = 'courier';
-        $data['mode_receipt']['post'] = 'post';
-        $data['mode_receipt']['other'] = 'other';
-        
+		if ($inv_seq_id=='') {
+			$inv_id_arr = explode('_', $data['invoice_id']);
+			$inv_seq_id = $inv_id_arr[2];
+ 		}
+		$inv_date_query = $this->Invoice_sequence_model->get_inv_date($inv_seq_id);
+		$inv_date_result = $inv_date_query->result();
+		$data['invoice_create_date'] = mdate('%d-%m-%Y %H:%i:%s', strtotime($inv_date_result[0]->create_date));
+		
         if ($media=='print') {
 	        $this->load->view('layout/header');
 	        $this->load->view('register/print', $data);
@@ -427,26 +449,7 @@ class Register extends CI_Controller {
             }            
             $row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
             
-            $inward_invoices_query = $this->Inward_invoice_model->get_by_reg_id($row->id);
-            if (count($inward_invoices_query) < 1){
-                $row->inward_invoices[] = '';
-            } else {
-            	foreach ($inward_invoices_query->result() as $inward_invoices_row) {
-            		$row->inward_invoices[] = $inward_invoices_row;
-            	}            	
-            }
-            
-            $outward_invoices_query = $this->Outward_invoice_model->get_by_reg_id($row->id);
-            if (count($outward_invoices_query) < 1){
-                $row->outward_invoices[] = '';
-            } else {
-            	foreach ($outward_invoices_query->result() as $outward_invoices_row) {
-            		$row->outward_invoices[] = $outward_invoices_row;
-            	}
-            }
-            
             $data['registers'][] = $row;
-            $data['registers_id'][$row->id] = $row;
         }
 
         // Get all task_type
@@ -494,6 +497,83 @@ class Register extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
+    public function invoice($reg_id) {
+    	$data = array();
+    
+    	$register_query = $this->Register_model->get($reg_id);
+    
+    	$data['registers'] = array();
+    	foreach ($register_query->result() as $row) {
+    		$client_query = $this->Client_model->get($row->client_id);
+    		$client_result = $client_query->result();
+    		$row->client_name = '';
+    		if (count($client_result) >= 1) {
+    			$row->client_name = $client_result[0]->full_name;
+    		}
+    		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+
+    		$data['inward_invoices'] = array();
+    		$data['inward_invoices_no'] = array();
+    		$inward_invoices_no_query = $this->Inward_invoice_model->get_by_reg_id($row->id);
+    		$inw_cnt = 1;
+    		foreach ($inward_invoices_no_query->result() as $inward_invoices_no_row) {
+    			$data['inward_invoices_no'][] = $inward_invoices_no_row;
+    			
+    			if ($inw_cnt==1) {
+	    			$inward_invoices_query = $this->Inward_invoice_model->get_by_id($inward_invoices_no_row->inv_id);
+	    			foreach ($inward_invoices_query->result() as $inward_invoices_row) {
+	    				$data['inward_invoices'][] = $inward_invoices_row;
+	    			}
+	    			$inw_cnt++;
+    			}
+			}
+
+			$data['outward_invoices'] = array();
+			$data['outward_invoices_no'] = array();
+			$outward_invoices_no_query = $this->Outward_invoice_model->get_by_reg_id($row->id);
+			$outw_cnt = 1;
+			foreach ($outward_invoices_no_query->result() as $outward_invoices_no_row) {
+				$data['outward_invoices_no'][] = $outward_invoices_no_row;
+
+				if ($outw_cnt==1) {
+					$outward_invoices_query = $this->Outward_invoice_model->get_by_id($outward_invoices_no_row->inv_id);
+					foreach ($outward_invoices_query->result() as $outward_invoices_row) {
+						$data['outward_invoices'][] = $outward_invoices_row;
+							
+					}
+					$outw_cnt++;
+				}
+			}
+				
+    		$data['registers'][] = $row;
+    	}
+    
+    	$this->load->view('layout/header');
+    	$this->load->view('register/invoice', $data);
+    	$this->load->view('layout/footer');
+    }
+    
+    public function list_inward_invoices($inv_id) {
+    	
+    	$data['inward_invoices'] = array();
+    		 
+    	$inward_invoices_query = $this->Inward_invoice_model->get_by_id($inv_id);
+    	foreach ($inward_invoices_query->result() as $inward_invoices_row) {
+    		$data['inward_invoices'][] = $inward_invoices_row;
+		}
+    	$this->load->view('register/inward_invoice_details', $data);
+    }
+
+    public function list_outward_invoices($inv_id) {
+    	 
+    	$data['outward_invoices'] = array();
+	 	$outward_invoices_query = $this->Outward_invoice_model->get_by_id($inv_id);
+    	foreach ($outward_invoices_query->result() as $outward_invoices_row) {
+    		$data['outward_invoices'][] = $outward_invoices_row;
+	    }
+    	$this->load->view('register/outward_invoice_details', $data);
+    }
+    
     public function filter() {
         $data = array();
         $data['msg'] = isset($_POST['msg']) ? $_POST['msg'] : '';
@@ -527,9 +607,9 @@ class Register extends CI_Controller {
         if ($client_id == '')
         {
         	if ($type == 'all')
-        		$document_query = $this->Register_model->get_all($config['per_page'], $this->uri->segment(3));
+        		$register_query = $this->Register_model->get_all($config['per_page'], $this->uri->segment(3));
         	else 
-        		$document_query = $this->Register_model->get_all_per_type($type, $config['per_page'], $this->uri->segment(3));
+        		$register_query = $this->Register_model->get_all_per_type($type, $config['per_page'], $this->uri->segment(3));
         }
         else
         	$document_query = $this->Register_model->get_all_per_client_type($client_id, $type, $config['per_page'], $this->uri->segment(3));	
@@ -669,7 +749,6 @@ class Register extends CI_Controller {
     }
 
     public function inwardDoc() {
-//     	print_r($_POST);
         if (isset($_POST['doc_id']) && $_POST['doc_id']) {
             $_POST['status'] = 'inward';
             $doc_cnt_query = $this->Register_model->get_documents_count($_POST['register_id']);
@@ -681,10 +760,6 @@ class Register extends CI_Controller {
 
             $out_status_doc_cnt_query = $this->Register_model->get_status_based_documents_count($_POST['register_id'], 'outward');
             $s_out_cnt_res = $out_status_doc_cnt_query->result();
-            
-//            print_r('total doc count - '.$doc_cnt);
-//            print_r('in doc count - '.$s_in_cnt_res[0]->cnt);
-//            print_r('out doc count - '.$s_out_cnt_res[0]->cnt);
             
             if ($doc_cnt == 1){
             	$this->Register_model->mark_status($_POST['register_id'], $_POST['status']);
