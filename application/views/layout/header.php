@@ -138,21 +138,29 @@
             <?php
             if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==1) {
 			?>
+	            <h3>Company</h3>
+	            <ul class="toggle">
+	                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/company/create">New Company</a></li>
+	                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/company/lists/">List Companies</a></li>
+	            </ul>			
 	            <h3>Employee</h3>
 	            <ul class="toggle">
 	                <li class="icn_add_user"><a href="<?php echo base_url(); ?>index.php/employee/create">New Employee</a></li>
 	                <li class="icn_view_users"><a href="<?php echo base_url(); ?>index.php/employee/lists/">List Employees</a></li>
 	            </ul>
-				<h3>Misc</h3>
+				<h3>Fin Year</h3>
 				<ul class="toggle">
-				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/fy/create">New Fin Year</a></li>
-				<li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/fy/lists">List Fin Year</a></li>
-<!-- 			<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
-				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li> -->
-				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/create">New Type</a></li>
-				<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/lists">List Type</a></li>
+					<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/fy/create">New Fin Year</a></li>
+					<li class="icn_categories"><a href="<?php echo base_url(); ?>index.php/fy/lists">List Fin Year</a></li>
+	<!-- 			<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/create">New SMTP</a></li>
+					<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/smtp/lists">List SMTP</a></li> -->
 				</ul>
-            <?php
+	            <h3>Task Type</h3>
+	            <ul class="toggle">
+					<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/create">New Type</a></li>
+					<li class="icn_new_article"><a href="<?php echo base_url(); ?>index.php/task_type/lists">List Type</a></li>
+	            </ul>
+			<?php
             }
             ?>            
             <h3>User</h3>

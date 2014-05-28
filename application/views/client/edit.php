@@ -72,7 +72,7 @@ $(document).ready(function() {
                 <footer>
                     <div class="submit_link">    
                         <input type="submit" name="edit" value="Ok"/>
-                        <a href="<?php echo base_url(); ?>index.php/client/lists"><input type="button" name="No" value="Back"/></a>
+                        <a href="<?php echo base_url(); ?>index.php/company/lists"><input type="button" name="No" value="Back"/></a>
                     </div>
                 </footer>                     
             </form>    
