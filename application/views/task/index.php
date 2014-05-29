@@ -724,6 +724,7 @@
                                     <th rowspan="1">ID</th>                                    
                                     <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <th class="required" rowspan="1">Owner</th>  <!-- TODO : Only for Super Admin --> <?php } ?>
                                     <th class="required" rowspan="1">Task</th>
+                                    <th class="required" rowspan="1">Company</th>
                                     <th class="required" rowspan="1">Client</th>
                                     <th rowspan="1">Status</th>
                                     <th class="required" rowspan="1">Priority</th>
@@ -746,6 +747,7 @@
                                         <td><?php echo $task->id; ?></td>
                                         <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <td> <?php echo $task->emp_name; ?> </td>  <!-- TODO : Only for Super Admin --> <?php } ?>
                                         <td><?php echo $task->title; ?></td>
+                                        <td><?php echo $task->company_name; ?></td>
                                         <td><?php echo $task->client_name; ?></td>
                                         <?php if ($task->status == 'query') { 
                                         	if ($task->emp_id == $_SESSION['emp_id']) { 

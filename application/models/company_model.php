@@ -4,6 +4,16 @@ class Company_model extends CI_Model{
         parent::__construct();
     }
     
+    function get_name( $id ){
+    	$query = $this->db->query('SELECT disp_name FROM companies WHERE id='.mysql_real_escape_string($id));
+    	return $query;
+    }
+    
+    function get_full_name( $id ){
+    	$query = $this->db->query('SELECT name FROM companies WHERE id='.mysql_real_escape_string($id));
+    	return $query;
+    }    
+    
     function get_all_count(){
         $query = $this->db->select('count(*) as cnt FROM companies ORDER BY status, id');
         $query = $this->db->get();
@@ -37,6 +47,7 @@ class Company_model extends CI_Model{
     function insert(){      
         // Setting variables
         $this->name = mysql_real_escape_string($_POST['name']);
+        $this->disp_name = mysql_real_escape_string($_POST['disp_name']);
         $this->phone = mysql_real_escape_string($_POST['phone']);
         $this->email = mysql_real_escape_string($_POST['email']);
         $this->address = mysql_real_escape_string($_POST['address']);

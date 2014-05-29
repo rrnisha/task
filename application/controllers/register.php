@@ -19,6 +19,7 @@ class Register extends CI_Controller {
         $this->load->model('Document_model');
         $this->load->model('Document_Transaction_model');
         $this->load->model('Client_model');
+        $this->load->model('Company_model');
         $this->load->model('Employee_model');
         $this->load->model('Task_type_model');
         $this->load->model('Outward_invoice_model');
@@ -35,6 +36,7 @@ class Register extends CI_Controller {
         $data['values'] = array();
 //         $data['values']['particulars'] = '';
         $data['values']['client_id'] = '';
+        $data['values']['company'] = '';
         $data['values']['by_employee'] = '';
         $data['values']['mode_of_receipt'] = 'in_person';
 //         $data['values']['tag'] = '';
@@ -48,6 +50,7 @@ class Register extends CI_Controller {
             $this->load->library('form_validation');
 
             // Setting validation rules
+            $this->form_validation->set_rules('company', 'Company', 'required');
             $this->form_validation->set_rules('client_id', 'Client', 'callback_dropdown_id_check');
             $this->form_validation->set_rules('status', 'Status', 'required');
             $this->form_validation->set_rules('type', 'Type', 'required');
@@ -99,6 +102,24 @@ class Register extends CI_Controller {
         $data['clients']['-1'] = '-- Select a Client --';
         foreach ($client_query->result() as $res) {
         	$data['clients'][$res->id] = $res->full_name;
+        }
+        
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        
+        $data['companies'] = array();
+        $count=0;
+        foreach ($company_query->result() as $res) {
+        	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+        	if ($count == 0) {
+       			$company['checked'] = TRUE;
+       			$count++;
+        	}
+        	$data['companies'][$res->id] = $company;
         }
         
         // Get all employees
@@ -246,6 +267,10 @@ class Register extends CI_Controller {
 				$row->email = $client_result[0]->email;
 			}
 		
+			$company_name_query = $this->Company_model->get_full_name($row->company_id);
+			$company_name_result = $company_name_query->result();
+			$row->company_name = $company_name_result[0]->name;
+				
 			$data['registers'][] = $row;
 		}
 
@@ -394,7 +419,9 @@ class Register extends CI_Controller {
         $data = array();
         $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
         $data['filter_client_id']='';
+        $data['filter_company_id']='';
         $data['filter_client_search']='';
+        $data['filter_company_search']='';
         $data['filter_type_id']='all';
         
         $this->load->library('pagination');
@@ -408,7 +435,7 @@ class Register extends CI_Controller {
 
         $this->pagination->initialize($config);
 
-		$document_query = $this->Register_model->get_all($config['per_page'], $this->uri->segment(3));
+		$document_query = $this->Register_model->get_all('', $config['per_page'], $this->uri->segment(3));
 
         $data['registers'] = array();
         foreach ($document_query->result() as $row) {
@@ -418,8 +445,12 @@ class Register extends CI_Controller {
             if (count($client_result) >= 1) {
             	$row->client_name = $client_result[0]->full_name;
             }
+            
+            $company_name_query = $this->Company_model->get_name($row->company_id);
+            $company_name_result = $company_name_query->result();
+            $row->company_name = $company_name_result[0]->disp_name;
+            
             $documents_query = $this->Document_model->get($row->id);
-
             if (count($documents_query) < 1){
                 $row->particulars[] = '';
             }
@@ -482,6 +513,27 @@ class Register extends CI_Controller {
         foreach ($employee_query->result() as $res) {
             $data['employees'][$res->id] = $res->login;
         }
+        
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        
+        $data['companies'] = array();
+        $count=0;
+        foreach ($company_query->result() as $res) {
+        	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+        	if ($count == 0) {
+        		$data['filter_company_id'] = $res->id;
+        		$company['checked'] = TRUE;
+        		$count++;
+        	} else {
+        		$company['checked'] = FALSE;
+        	}
+        	$data['companies'][$res->id] = $company;
+        }        
 
         $data['mode_receipt'] = array();
         $data['mode_receipt'][''] = '-- Select --';
@@ -579,24 +631,29 @@ class Register extends CI_Controller {
         $data['msg'] = isset($_POST['msg']) ? $_POST['msg'] : '';
 
         $client_id = isset($_POST['filter_client_id']) ? $_POST['filter_client_id'] : '';
+        $company_id = isset($_POST['filter_company_id']) ? $_POST['filter_company_id'] : '';
         $type = isset($_POST['filter_type_id']) ? $_POST['filter_type_id'] : 'all';
         
         $data['filter_type_id']=$type;
         	
         $data['filter_client_id']=$client_id;
         $data['filter_client_search']=isset($_POST['filter_client_search']) ? $_POST['filter_client_search'] : '';
+        
+        $data['filter_company_id']=$company_id;
+        $data['filter_company_search']=isset($_POST['filter_company_search']) ? $_POST['filter_company_search'] : '';
+        
         $this->load->library('pagination');
 
         $config['base_url'] = base_url() . 'index.php/register/filter/';
         if ($client_id == '')
         {
         	if ($type == 'all')
-        		$cnt_query = $this->Register_model->get_all_count();
+        		$cnt_query = $this->Register_model->get_all_count($company_id);
         	else
-        		$cnt_query = $this->Register_model->get_type_count($type);
+        		$cnt_query = $this->Register_model->get_type_count($type, $company_id);
         }
         else 
-        	$cnt_query = $this->Register_model->get_client_count($client_id);
+        	$cnt_query = $this->Register_model->get_client_count($client_id, $company_id);
         $cnt_res = $cnt_query->result();
         $config['total_rows'] = $cnt_res[0]->cnt;
         $config['per_page'] = 20;
@@ -607,18 +664,22 @@ class Register extends CI_Controller {
         if ($client_id == '')
         {
         	if ($type == 'all')
-        		$register_query = $this->Register_model->get_all($config['per_page'], $this->uri->segment(3));
+        		$register_query = $this->Register_model->get_all($company_id, $config['per_page'], $this->uri->segment(3));
         	else 
-        		$register_query = $this->Register_model->get_all_per_type($type, $config['per_page'], $this->uri->segment(3));
+        		$register_query = $this->Register_model->get_all_per_type($company_id, $type, $config['per_page'], $this->uri->segment(3));
         }
         else
-        	$document_query = $this->Register_model->get_all_per_client_type($client_id, $type, $config['per_page'], $this->uri->segment(3));	
+        	$register_query = $this->Register_model->get_all_per_client_type($company_id, $client_id, $type, $config['per_page'], $this->uri->segment(3));	
 
         $data['registers'] = array();
-        foreach ($document_query->result() as $row) {
+        foreach ($register_query->result() as $row) {
             $client_query = $this->Client_model->get($row->client_id);
             $client_result = $client_query->result();
             $row->client_name = $client_result[0]->full_name;
+            
+            $company_name_query = $this->Company_model->get_name($row->company_id);
+            $company_name_result = $company_name_query->result();
+            $row->company_name = $company_name_result[0]->disp_name;
 
 //            $received_emp_name_query = $this->Employee_model->get_name($row->received_by);
 //            $received_emp_name_result = $received_emp_name_query->result();
@@ -687,6 +748,24 @@ class Register extends CI_Controller {
         	$data['types'][$res->id] = $type;
         }
                 
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        
+        $data['companies'] = array();
+        foreach ($company_query->result() as $res) {
+        	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+        	if ($data['filter_company_id'] == $res->id) {
+        		$company['checked'] = TRUE;
+        	} else {
+        		$company['checked'] = FALSE;
+        	}
+        	$data['companies'][$res->id] = $company;
+        }
+        
         // Get all employees
         $employee_query = $this->Employee_model->get_active();
 

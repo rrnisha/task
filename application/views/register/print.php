@@ -35,12 +35,13 @@ function persistInvoice() {
 				</textarea>
 			</div>
 			<div>
-            <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">SRAM AND CO
+            <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 16px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden; white-space:pre-wrap;">
+<?php echo strtoupper($register->company_name). PHP_EOL; ?>
 #63, East Vanniar Street
 West KK Nagar, Chennai 600078
 Phone: 91-44-23643710</textarea>
             <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
-              <img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" alt="logo" />
+            	<img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" />
             </div>
 			</div>
 			<div style="clear:both"></div>
@@ -120,7 +121,7 @@ echo $line;
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
 	        			<?php echo $_SESSION['emp_name']; ?></textarea>
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        	       	For SRAM AND CO</textarea>
+	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></textarea>
 			</div>
 		</div>
 		<footer>

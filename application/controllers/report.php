@@ -16,6 +16,7 @@ class Report extends CI_Controller {
         $this->load->model('Year_model');
         $this->load->model('Itr_model');
         $this->load->model('Client_model');
+        $this->load->model('Company_model');
         $this->load->model('Employee_model');
     }
 
@@ -81,6 +82,25 @@ class Report extends CI_Controller {
         foreach ($fy_query->result() as $res) {
         	if ($res->is_curr_year == 'Y') $data['values']['fy'] = $res->fin_year;  
             $data['fys'][$res->fin_year] = $res->fin_year;
+        }     
+
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        $data['companies'] = array();
+        $company = array();
+        $company['name'] = "company";
+        $company['id'] = "company";
+        $company['value'] = '';
+        $company['ui_name'] = "All";
+        $company['checked'] = TRUE;
+        $data['companies'][0] = $company;
+        foreach ($company_query->result() as $res) {
+        	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+        	$data['companies'][$res->id] = $company;
         }        
         
         $this->load->view('layout/header');
@@ -181,6 +201,10 @@ class Report extends CI_Controller {
             $emp_name_query = $this->Employee_model->get_name($row->emp_id);
             $emp_name_result = $emp_name_query->result();
             $row->emp_name = $emp_name_result[0]->login;
+            
+            $company_name_query = $this->Company_model->get_name($row->company_id);
+            $company_name_result = $company_name_query->result();
+            $row->company_name = $company_name_result[0]->disp_name;
 
             if ($row->type == 'itr') {
                 $itr_query = $this->Itr_model->get($row->id);

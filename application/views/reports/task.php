@@ -18,6 +18,7 @@
 		<tr>
 			<th rowspan="1">SNo</th>
 			<th rowspan="1">ID</th>
+			<th rowspan="1">Company</th>
 			<th rowspan="1">Onwer</th>
 			<th rowspan="1">Task</th>
 			<th rowspan="1">Client</th>
@@ -34,6 +35,7 @@
 		<tr>
 			<td><?php echo $i; ?></td>
 			<td><?php echo $task->id; ?></td>
+			<td><?php echo $task->company_name; ?></td>
 			<td><?php echo $task->emp_name; ?></td>
 			<td><?php echo $task->title; ?></td>
 			<td><?php echo $task->client_name; ?></td>

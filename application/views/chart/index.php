@@ -5,7 +5,7 @@
 <header>
 <h3 class="tabs_involved">Task</h3>
 </header>
-<canvas id="myChart00" width="270" height="40"  style="border:1px solid #c3c3c3;">
+<canvas id="myChart00" width="400" height="40"  style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart00").getContext("2d");
 ctx.font="bold 13px Cambria";
@@ -26,7 +26,7 @@ ctx.fillRect(180,20,15,15);
 ctx.fillText("Finalized <?php if (isset($status['finalized'])) echo $status['finalized']; else echo 0; ?>",200,30);
 </script>
 </canvas>
-<canvas id="myChart01" width="270" height="40"  style="border:1px solid #c3c3c3;">
+<canvas id="myChart01" width="400" height="40"  style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart01").getContext("2d");
 ctx.font="bold 13px Cambria";
@@ -60,7 +60,7 @@ ctx.fillText("Others <?php if (isset($type['other'])) echo $type['other']; else 
 
 </script>
 </canvas>
-<canvas id="myChart02" width="270" height="40"  style="border:1px solid #c3c3c3;">
+<canvas id="myChart02" width="400" height="40"  style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart02").getContext("2d");
 ctx.font="bold 13px Cambria";
@@ -85,7 +85,7 @@ ctx.fillRect(235,20,15,15);
 ctx.fillText("Pending <?php if (isset($status['pending'])) echo $status['pending']; else echo 0;?>",255,30);
 </script>
 </canvas>
-<canvas id="myChart11" width="270" height="280" style="border:1px solid #c3c3c3;">
+<canvas id="myChart11" width="400" height="280" style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart11").getContext("2d");
 
@@ -108,7 +108,7 @@ var myNewChart0 = new Chart(ctx).Pie(data);
 
 </script>
 </canvas>
-<canvas id="myChart12" width="270" height="280" style="border:1px solid #c3c3c3;">
+<canvas id="myChart12" width="400" height="280" style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart12").getContext("2d");
 
@@ -142,7 +142,7 @@ var data = [
 var myNewChart0 = new Chart(ctx).Doughnut(data);
 </script>
 </canvas>
-<canvas id="myChart13" width="270" height="280" style="border:1px solid #c3c3c3;">
+<canvas id="myChart13" width="400" height="280" style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart13").getContext("2d");
 
@@ -170,7 +170,7 @@ var data = [
 var myNewChart0 = new Chart(ctx).Pie(data);
 </script>
 </canvas>
-<canvas id="myChart20" width="820" height="40"  style="border:1px solid #c3c3c3;">
+<canvas id="myChart20" width="1210" height="40"  style="border:1px solid #c3c3c3;">
 <script>
 var ctx = document.getElementById("myChart20").getContext("2d");
 ctx.font="bold 13px Cambria";
@@ -191,7 +191,7 @@ ctx.fillRect(170,20,15,15);
 ctx.fillText("Finalized",190,30);
 </script>
 </canvas>
-<canvas id="myChart30" width="820" height="380" style="border:1px solid #c3c3c3;">
+<canvas id="myChart30" width="1210" height="380" style="border:1px solid #c3c3c3;">
 <script>
 var ctx1 = document.getElementById("myChart30").getContext("2d");
 

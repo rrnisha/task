@@ -38,6 +38,15 @@
                     <?php $js = 'id="client_select"'; echo form_dropdown('client_id', $clients, $values['client_id'], $js); ?>
                 </fieldset>
                 <fieldset>
+                    <label class="required" <?php if (form_error('company') !='') echo 'style="color:red;font-style:normal"'; ?>>Company</label>
+                   	<?php foreach ($companies as $company) { ?>
+                   		<?php 
+                   			echo form_radio($company); 
+                   			echo ' '.$company['ui_name'].' ';
+                   		?>
+                   	<?php } ?>
+                </fieldset>                
+                <fieldset>
                     <label class="required" <?php if (form_error('emp_id') !='') echo 'style="color:red;font-style:normal"'; ?>>Employee</label>
                     <?php echo form_dropdown('emp_id', $employees, $values['emp_id']); ?>
                 </fieldset>

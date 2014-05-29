@@ -10,14 +10,15 @@
 				</p>
 			</div>
 			<div>
-            <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">SRAM AND CO
+            <textarea readonly style="resize:none; width: 300px; height: 90px; float: left; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+<?php echo strtoupper($register->company_name). PHP_EOL; ?>            
 #63, East Vanniar Street
 West KK Nagar, Chennai 600078
 Phone: 91-44-23643710</textarea>
             <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
 <!--               <img id="image" src="logo.png" alt="logo" /> -->
             	<p readonly style="height: 40px; width: 100%; margin: 20px 0; text-align: center; color: black; font: bold 25px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 2px; padding: 18px 0px; border: 0 none; overflow: hidden; resize: none;">
-            	SRAM AND CO
+            	<?php echo strtoupper($register->company_name). PHP_EOL; ?>
             	</p>
             </div>
 			</div>
@@ -98,7 +99,7 @@ echo $line;
 	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
 	        			<?php echo $_SESSION['emp_name']; ?></p>
 	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        	       	For SRAM AND CO</p>
+	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></p>
 			</div>
 		</div>
 	</article>

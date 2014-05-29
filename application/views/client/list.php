@@ -167,9 +167,9 @@
                                     <th rowspan="1" colspan="2" style="border-left:1px dotted #CCCCCC; border-right:1px dotted #CCCCCC; text-align:center;">Office</th>
                                     <th rowspan="1">eMail</th>
                                     <th class="required_table" rowspan="1">PAN/TAN</th>
-                                    <th rowspan="1">Address</th>
+<!--                                     <th rowspan="1">Address</th> -->
                                     <th class="required_table" rowspan="1">Genius#</th>
-                                    <th  rowspan="1" colspan="2" style="text-align:center;">Action</th>
+                                    <th  rowspan="1" colspan="3" style="text-align:center;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,11 +189,12 @@
                                         <td <?php if ($client->email=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->email!='') { echo $client->email; } else { echo '--'; } ?></td>
                                         <td><?php echo $client->pan; ?></td>
                                         
-                                        <td <?php if ($client->address=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->address!='') { echo $client->address; } else { echo '--'; } ?></td>
+                                        <!--  <td <?php if ($client->address=='') { echo 'style="text-align:center"'; } ?> ><?php if ($client->address!='') { echo $client->address; } else { echo '--'; } ?></td> -->
                                         <td><?php echo $client->genius_id; ?></td>
 
                                         <!--<td><?php echo $client->status; ?></td>-->
-                                        <td><a href="<?php echo base_url(); ?>index.php/client/get/<?php echo $client->id; ?>">Edit</a></td>
+                                        <td><a href="<?php echo base_url(); ?>index.php/client/get/<?php echo $client->id; ?>/view">View</a></td>
+                                        <td><a href="<?php echo base_url(); ?>index.php/client/get/<?php echo $client->id; ?>/edit">Edit</a></td>
                                         <?php if ($client->status == 'active') { ?>
                                             <td><a href="#<?php echo $client->id; ?>" class="deleteClient">Delete</a></td>
                                         <?php } else { ?>

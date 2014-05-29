@@ -65,6 +65,15 @@
 	                    <label>Employee</label>
 	                    <?php echo form_dropdown('emp_id', $employees, $values['emp_id']); ?>
 	                </fieldset>				
+                	<fieldset>
+                    	<label>Type</label>
+                    	<?php foreach ($companies as $company) { ?>
+                    		<?php 
+                    			echo form_radio($company); 
+                    			echo '<span>'.' '.$company['ui_name'].' '.'</span>';
+                    		?>
+                    	<?php } ?>
+                	</fieldset>
 	                <fieldset>
 	                    <label>Client</label>
 	                    <?php $js = 'id="client_select"'; echo form_dropdown('client_id', $clients, $values['client_id'], $js); ?>

@@ -118,6 +118,7 @@
                                     <th rowspan="1">SNo</th>
                                     <th rowspan="1">Company ID</th>
                                     <th class="required" rowspan="1">Company Name</th> 
+                                    <th class="required" rowspan="1">On Screen Name</th> 
                                     <th class="required" rowspan="1">TAN</th>
                                     <th class="required" rowspan="1">Phone</th>
                                     <th class="required" rowspan="1">eMail</th>
@@ -136,6 +137,7 @@
                                         <td><?php echo $i; ?></td>
                                         <td><?php echo $company->id; ?></td>
                                         <td><?php echo $company->name; ?></td>
+                                        <td><?php echo $company->disp_name; ?></td>
                                         <td><?php echo $company->tan; ?></td>
                                         <td><?php echo $company->phone; ?></td>
                                         <td><?php echo $company->email; ?></td>

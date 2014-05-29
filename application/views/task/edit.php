@@ -27,6 +27,19 @@
                     <input type="radio" name="priority" value="medium"  <?php if ($task->priority == 'medium') { ?>checked<?php } ?>/> Medium
                     <input type="radio" name="priority" value="low"   <?php if ($task->priority == 'low') { ?>checked<?php } ?>/> Low
                 </fieldset>
+                <fieldset>
+                    <label class="required" <?php if (form_error('company') !='') echo 'style="color:red;font-style:normal"'; ?>>Company</label>
+                   	<?php foreach ($companies as $company) { ?>
+                   		<?php 
+                   			echo form_radio($company); 
+                   			echo ' '.$company['ui_name'].' ';
+                   		?>
+                   	<?php } ?>
+                </fieldset> 
+                <fieldset>
+                	<label>Client</label>
+                    <?php echo form_dropdown('client_id', $clients, $task->client_id); ?>
+				</fieldset                                
                 <div class="clear"></div>
 <!--
                 <fieldset>

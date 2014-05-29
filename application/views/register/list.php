@@ -141,6 +141,10 @@
     	document.getElementById("filter_type_id").value = type;
     }
     
+    function filterByCompany(company){
+    	document.getElementById("filter_company_id").value = company;
+    }
+
 </script>
 <section id="main" class="column">
     <article class="module filter_width_full">
@@ -153,6 +157,18 @@
 		    <div class="module_content" >
 				<form id="frmFilterClient" method="post" action="<?php echo base_url(); ?>index.php/register/filter">
 			    	<fieldset>
+			    		<label>By Company</label>
+                    	<?php foreach ($companies as $company) { ?>
+                    		<?php 
+                    			$js = 'onclick="filterByCompany(\''.$company['value'].'\')"';
+                    			echo form_radio($company['name'], $company['value'], $company['checked'], $js); 
+                    			echo ' '.$company['ui_name'].' ';
+                    		?>
+                    	<?php } ?>
+                    	
+						<input type="hidden" name="filter_company_id" id="filter_company_id" value="<?php echo $filter_company_id; ?>"/>
+			    	</fieldset>
+					<fieldset>
 			    		<label>By Client</label>
 			    		<input type="text" id="filter_client_search" name="filter_client_search"  value="<?php echo $filter_client_search; ?>">
 						<input type="hidden" name="filter_client_id" id="filter_client_id" value="<?php echo $filter_client_id; ?>"/>
@@ -344,6 +360,7 @@
                                     <th rowspan="1">ID</th>
                                     <th rowspan="1" align="center">Status</th>
                                     <th rowspan="1">Date</th>
+                                    <th rowspan="1">Company</th>
                                     <th rowspan="1">Client</th>
                                     <th rowspan="1">Type</th>
                                     <th rowspan="1" colspan="3" align="center">Action</th>
@@ -366,7 +383,8 @@
                                         <?php } else if ($register->status == 'in_out') { ?>                                        
                                         	<td align="center"><label style="visibility:hidden">1</label><img src="<?php echo base_url(); ?>/assets/img/new/IO2.png"/></td>
                                         <?php } ?>
-                                        <td><?php echo $register->create_date; ?></td> 
+                                        <td><?php echo $register->create_date; ?></td>
+                                        <td><?php echo $register->company_name; ?></td> 
                                         <td><?php echo $register->client_name; ?></td>
                                         <td><?php echo strtoupper($register->type); ?></td>
 

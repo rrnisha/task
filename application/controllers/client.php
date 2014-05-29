@@ -155,14 +155,18 @@ class Client extends CI_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function get($clientId) {
+    public function get($clientId, $option) {
         $client_query = $this->Client_model->get($clientId);
         $res = $client_query->result();
         if ($res[0]->dob!="0000-00-00") 
         	$res[0]->dob = mdate('%d-%m-%Y', strtotime($res[0]->dob));
         $data['client'] = $res[0];
         $this->load->view('layout/header');
-        $this->load->view('client/edit', $data);
+        if ($option=="edit") {
+        	$this->load->view('client/edit', $data);
+        } else if ($option=="view") {
+        	$this->load->view('client/view', $data);
+        }
         $this->load->view('layout/footer');
     }
 

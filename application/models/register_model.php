@@ -8,24 +8,28 @@ class Register_model extends CI_Model{
         
         return $query;
     }    
-    function get_all_count() {
+    function get_all_count($company_id='') {
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
         $query = $this->db->select('count(*) as cnt FROM registers');
         $query = $this->db->get();
         return $query;
     }
-    function get_type_count($type) {
+    function get_type_count($type, $company_id='') {
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
     	$this->db->where('type', $type);
         $query = $this->db->select('count(*) as cnt FROM registers ');
         $query = $this->db->get();
         return $query;
     }
-    function get_client_count($client_id) {
+    function get_client_count($client_id, $company_id='') {
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
     	$this->db->where('client_id', $client_id);
         $query = $this->db->select('count(*) as cnt FROM registers ');
         $query = $this->db->get();
         return $query;
     }
-    function get_all($num, $offset){
+    function get_all($company_id='', $num, $offset){
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
     	$this->db->order_by("update_date", "desc");
     	$this->db->order_by("id", "desc");    	
     	$query = $this->db->select('* FROM registers')->limit($num, $offset);
@@ -33,7 +37,8 @@ class Register_model extends CI_Model{
         
         return $query;
     }
-    function get_all_per_type($type, $num, $offset){
+    function get_all_per_type($company_id='', $type, $num, $offset){
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
     	$this->db->where('type', $type);
     	$this->db->order_by("update_date", "desc");
     	$this->db->order_by("id", "desc");    	
@@ -42,7 +47,8 @@ class Register_model extends CI_Model{
         
         return $query;
     }
-    function get_all_per_client_type($client_id, $type, $num, $offset){
+    function get_all_per_client_type($company_id='', $client_id, $type, $num, $offset){
+    	if ($company_id!='') $this->db->where('company_id', $company_id);
     	$this->db->where('client_id', $client_id);
     	if ($type != 'all') $this->db->where('type', $type);
     	$this->db->order_by("update_date", "desc");
@@ -68,6 +74,7 @@ class Register_model extends CI_Model{
         return $query;
     }
     function insert(){      
+    	$this->company_id = mysql_real_escape_string($_POST['company']);
         $this->client_id = mysql_real_escape_string($_POST['client_id']);
         $this->type = mysql_real_escape_string($_POST['type']);            
         $this->status = mysql_real_escape_string($_POST['status']);

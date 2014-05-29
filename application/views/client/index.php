@@ -167,14 +167,16 @@
             <div class="tab_container">
                 <div class="client_details_list">
                     <div id="tab1" class="tab_content">
-                        <table class="tabledisplayer" cellspacing="0"> 
-<!--                            <thead> 
-                            <th rowspan="1">Client</th>
-                            <th rowspan="1">Contact</th> 
-                            <th rowspan="1">eMail</th> 
-                            <th rowspan="1">PAN/TAN</th> 
-                            <th rowspan="1">Type</th>
-                            </thead>-->
+                        <table class="tablesorter" cellspacing="0"> 
+							<thead>
+								<th rowspan="1">File Id</th> 
+	                            <th rowspan="1">Name</th>
+	                            <th rowspan="1">Contact</th> 
+	                            <th rowspan="1">eMail</th> 
+	                            <th rowspan="1">PAN/TAN</th> 
+	                            <th rowspan="1">Type</th>
+	                            <th rowspan="1">Genius Id</th>
+                            </thead>
                             <tbody>                            
                                 <?php
                                 $i = 1;

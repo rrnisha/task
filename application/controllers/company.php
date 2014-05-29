@@ -21,6 +21,7 @@ class Company extends CI_Controller {
 
         $data['values'] = array();
         $data['values']['name'] = '';
+        $data['values']['disp_name'] = '';
         $data['values']['phone'] = '';
         $data['values']['email'] = '';
         $data['values']['address'] = '';
@@ -32,7 +33,8 @@ class Company extends CI_Controller {
             // Loading form validation library
             $this->load->library('form_validation');
             // Setting validation rules
-            $this->form_validation->set_rules('name', 'Company Name', 'required');    
+            $this->form_validation->set_rules('name', 'Company Name', 'required');
+            $this->form_validation->set_rules('disp_name', 'Company Display Name', 'required');
             $this->form_validation->set_rules('phone', 'Phone', 'required');    
             $this->form_validation->set_rules('email', 'Email', 'required');    
             $this->form_validation->set_rules('doi', 'Date of Inception', 'required');
@@ -90,6 +92,7 @@ class Company extends CI_Controller {
             $data['values'] = array();
             $data['values']['id'] = $_POST['id'];
             $data['values']['name'] = $_POST['name'];
+            $data['values']['disp_name'] = $_POST['disp_name'];
             $data['values']['doi'] = $_POST['doi'];
             $data['values']['phone'] = $_POST['phone'];
             $data['values']['email'] = $_POST['email'];
@@ -103,6 +106,7 @@ class Company extends CI_Controller {
            // Setting validation rules
            $this->form_validation->set_rules('doi', 'Date of Inception', 'required');    
            $this->form_validation->set_rules('name', 'Company Name', 'required');    
+           $this->form_validation->set_rules('disp_name', 'Company Display Name', 'required');
            $this->form_validation->set_rules('phone', 'Phone', 'required');    
            $this->form_validation->set_rules('email', 'Email', 'required');    
            $this->form_validation->set_rules('tan', 'TAN', 'required');

@@ -19,6 +19,10 @@ $(document).ready(function() {
                         <input type="text" name="name" value="<?php echo $company->name; ?>"/>
                     </fieldset>
                     <fieldset>
+                        <label class="required" <?php if (form_error('disp_name') !='') echo 'style="color:red;font-style:normal"'; ?> >On Screen Name</label>
+                        <input type="text" name="disp_name" value="<?php echo $company->disp_name; ?>"/>
+                    </fieldset>
+                    <fieldset>
                         <label class="required" <?php if (form_error('tan') !='') echo 'style="color:red;font-style:normal"'; ?> >TAN</label>
                         <input type="text" name="tan" value="<?php echo $company->tan; ?>"/>
                     </fieldset>

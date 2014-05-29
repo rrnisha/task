@@ -167,6 +167,7 @@ class Task_model extends CI_Model {
         $this->type = mysql_real_escape_string($_POST['type']);
         $this->client_id = mysql_real_escape_string($_POST['client_id']);
         $this->emp_id = mysql_real_escape_string($_POST['emp_id']);
+        $this->company_id = mysql_real_escape_string($_POST['company']);
         $this->priority = mysql_real_escape_string($_POST['priority']);
         $this->start_date = mysql_real_escape_string($_POST['date_start']);
         $this->due_date = mysql_real_escape_string($_POST['date_end']);
@@ -205,6 +206,8 @@ class Task_model extends CI_Model {
         $task['title'] = $_POST['title'];
         $task['type'] = $_POST['type'];
         $task['priority'] = $_POST['priority'];
+        $task['company_id'] = $_POST['company'];
+        $task['client_id'] = $_POST['client_id'];
 
 //        $task['emp_id'] = $_POST['emp_id'];
 //        $task['client_id'] = $_POST['client_id'];
@@ -274,6 +277,7 @@ class Task_model extends CI_Model {
         }
         if ($_POST['emp_id'] != -1) $ext_sql .= ' AND emp_id = ' . $_POST['emp_id'];
         if ($_POST['client_id'] != -1) $ext_sql .= ' AND client_id = ' . $_POST['client_id'];
+        if ($_POST['company'] != '') $ext_sql .= ' AND company_id = ' . $_POST['company'];
         if ($_POST['type'] != 'all') $ext_sql .= ' AND type = \'' . $_POST['type'] .'\'';
         if ($_POST['priority'] != 'all') $ext_sql .= ' AND priority = \'' . $_POST['priority'] .'\'';
         $date_sql = ' WHERE start_date between \'' .$_POST['date_start']. '\''.' AND \''. $_POST['date_end']. '\''.

@@ -17,6 +17,7 @@ class Task extends CI_Controller {
         $this->load->model('Year_model');
         $this->load->model('Itr_model');
         $this->load->model('Client_model');
+        $this->load->model('Company_model');
         $this->load->model('Employee_model');
         $this->load->model('Role_model');
     }
@@ -269,6 +270,7 @@ class Task extends CI_Controller {
         $data['values']['type'] = '';
         $data['values']['client_id'] = '';
         $data['values']['emp_id'] = '';
+        $data['values']['company'] = '';
         $data['values']['priority'] = 'medium';
         $data['values']['comments'] = '';
         $data['values']['date_start'] = '';
@@ -284,6 +286,7 @@ class Task extends CI_Controller {
             $this->form_validation->set_rules('type', 'Type', 'required');
             $this->form_validation->set_rules('client_id', 'Client', 'callback_client_id_check');
             $this->form_validation->set_rules('emp_id', 'Employee', 'required');
+//             $this->form_validation->set_rules('company', 'Company', 'required');
             $this->form_validation->set_rules('priority', 'Priority', 'required');
             $this->form_validation->set_rules('date_start', 'from date', 'required');
             $this->form_validation->set_rules('date_end', 'end date', 'required');
@@ -332,6 +335,24 @@ class Task extends CI_Controller {
             $data['clients'][$res->id] = $res->full_name;
         }
 
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        
+    	$data['companies'] = array();
+	    $count=0;
+	    foreach ($company_query->result() as $res) {
+	    	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+	    	if ($count == 0) {
+	        	$company['checked'] = TRUE;
+	            $count++;
+			}
+	    	$data['companies'][$res->id] = $company;
+	    }
+        
         // Get all employees
         $employee_query = $this->Employee_model->get_active();
 
@@ -383,7 +404,8 @@ class Task extends CI_Controller {
         		$role_result = $role_query->result();
         		$row->role = $role_result[0]->role;
         		$data['employees'][] = $row;
-        	}        	
+        	}     
+        	   	
         	$this->load->view('layout/header');
         	$this->load->view('employee/list', $data);
         	$this->load->view('layout/footer');        	
@@ -414,7 +436,11 @@ class Task extends CI_Controller {
 	            $emp_name_query = $this->Employee_model->get_name($row->emp_id);
 	            $emp_name_result = $emp_name_query->result();
 	            $row->emp_name = $emp_name_result[0]->login;
-	
+
+	            $company_name_query = $this->Company_model->get_name($row->company_id);
+	            $company_name_result = $company_name_query->result();
+	            $row->company_name = $company_name_result[0]->disp_name;
+	             
 	            if ($row->type == 'itr') {
 	                $itr_query = $this->Itr_model->get($row->id);
 	                $itr_result = $itr_query->result();
@@ -492,6 +518,33 @@ class Task extends CI_Controller {
         	else
         		$type['checked'] = FALSE;
         	$data['types'][$res->id] = $type;
+        }
+        
+        // Get all companies
+        $company_query = $this->Company_model->get_active();
+        
+        $data['companies'] = array();
+        foreach ($company_query->result() as $res) {
+        	$company = array();
+        	$company['name'] = "company";
+        	$company['id'] = "company";
+        	$company['value'] = $res->id;
+        	$company['ui_name'] = $res->name;
+        	if ($res->id == $data['task']->company_id) {
+        		$company['checked'] = TRUE;
+        	} else {
+        		$company['checked'] = FALSE;
+        	}
+        	$data['companies'][$res->id] = $company;
+        }
+        
+        // Get all clients
+        $client_query = $this->Client_model->get_all_clients();
+        
+        $data['clients'] = array();
+        $data['clients'][''] = '-- Select --';
+        foreach ($client_query->result() as $res) {
+        	$data['clients'][$res->id] = $res->full_name;
         }
         
         $this->load->view('layout/header');
