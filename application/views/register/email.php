@@ -4,9 +4,9 @@
 			<input type="hidden" name="id" value="<?php echo $register->id; ?>"></input>
 			<div>
 				<p readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
-<?php if ($flag == 'print' || $flag == 'edit' || $flag == 'create'){ echo 'INWARD INVOICE';  ?><?php } ?>
-<?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE' ?><?php } ?>
-<?php if ($flag == 'outwardDoc' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
+<?php if ($flag == 'edit'){ echo 'EDITED INVOICE';  ?><?php } ?>
+<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE';  ?><?php } ?>
+<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
 				</p>
 			</div>
 			<div>
@@ -33,20 +33,19 @@ echo $line;
 	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
 	                <tr>
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php echo $invoice_id; ?></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></td>
 	                </tr>
 	                <tr>
 	
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php echo $invoice_create_date; ?></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?></td>
 	                </tr>
 	            </table>
 			
 			</div>		
 			<div>
 	            <textarea style="width: 100%; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly>
-<?php if ($flag == 'print' || $flag == 'edit' || $flag == 'create'){ echo 'Received with thanks the following documents' ?><?php } ?>
-<?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'Received with thanks the following documents' ?><?php } ?>
+<?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister' || $flag == 'print' || $flag == 'create'){ echo 'Received with thanks the following documents' ?><?php } ?>
 <?php if ($flag == 'outwardDoc' || $flag == 'outwardRegister'){ echo 'Verified and returned with thanks' ?><?php } ?>				
 				</textarea>
 			</div>
@@ -96,10 +95,15 @@ echo $line;
 				<br>
 				<br>
 				<br>
-	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        			<?php echo $_SESSION['emp_name']; ?></p>
-	        	<p readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></p>
+				<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){?>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        			<?php echo $_SESSION['emp_name']; ?></textarea>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></textarea>
+	        	<?php } else if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){?>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        			<?php echo $register->client_name; "\n"; ?></textarea>
+	        	<?php } ?>
 			</div>
 		</div>
 	</article>

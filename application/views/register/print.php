@@ -29,9 +29,9 @@ function persistInvoice() {
 			<input type="hidden" name="email" value="<?php echo $register->email; ?>"></input>
 			<div>
 				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
-<?php if ($flag == 'edit' || $flag == 'create'){ echo 'INWARD INVOICE';  ?><?php } ?>
-<?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE' ?><?php } ?>
-<?php if ($flag == 'outwardDoc' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
+<?php if ($flag == 'edit'){ echo 'ERRATA INVOICE';  ?><?php } ?>				
+<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE';  ?><?php } ?>
+<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
 				</textarea>
 			</div>
 			<div>
@@ -55,21 +55,20 @@ echo $line;
 	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
 	                <tr>
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php echo $invoice_id; ?></textarea></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></textarea></td>
 	                </tr>
 	                <tr>
 	
 	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php echo $invoice_create_date; ?> </textarea></td>
+	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?> </textarea></td>
 	                </tr>
 	            </table>
 			
 			</div>		
 			<div>
 	            <textarea style="width: 100%; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly>
-<?php if ($flag == 'print' || $flag == 'edit' || $flag == 'create'){ echo 'Received with thanks the following documents' ?><?php } ?>
-<?php if ($flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'Received with thanks the following documents' ?><?php } ?>
-<?php if ($flag == 'outwardDoc' || $flag == 'outwardRegister'){ echo 'Verified and returned with thanks' ?><?php } ?>				
+<?php if ($flag == 'print' || $flag == 'create' || $flag == 'inwardDoc' || $flag == 'printInwardInv' || $flag == 'inwardRegister'){ echo 'Received with thanks the following documents' ?><?php } ?>
+<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'Verified and returned with thanks' ?><?php } ?>				
 				</textarea>
 			</div>
 			<div style="clear:both"></div>		
@@ -118,17 +117,22 @@ echo $line;
 				<br>
 				<br>
 				<br>
+				<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){?>
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
 	        			<?php echo $_SESSION['emp_name']; ?></textarea>
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
 	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></textarea>
-			</div>
+	        	<?php } else if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){?>
+	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+	        			<?php echo $register->client_name; "\n"; ?></textarea>
+	        	<?php } ?>
+	        	</div>
 		</div>
 		<footer>
 			<div class="submit_link">
 				<input type="submit" name="print" value="Print" onclick="printDiv('printRegister', 'Document Register Receipt <?php echo $register->id; ?>')"></input>
-				<a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/<?php echo $invoice_id;?>/<?php echo $flag; ?>/<?php echo 'emptyvalue'; ?>/email"><input type="button" name="eMail" value="eMail"/></a>
-				<a href="<?php echo base_url(); ?>index.php/register/get/<?php echo $register->id; ?>"><input type="button" name="cancel" value="Edit"/></a>
+				<a href="<?php echo base_url(); ?>index.php/register/tomedia/<?php echo $register->id; ?>/<?php if (isset($invoice_id)) { echo $invoice_id; } else { echo "novalue"; }?>/<?php echo $flag; ?>/<?php if (isset($edit_start_date) && $edit_start_date!='') { echo $edit_start_date; } else { echo 'emptyvalue'; } ?>/email"><input type="button" name="eMail" value="eMail"/></a>
+				<a href="<?php echo base_url(); ?>index.php/register/lists"><input type="button" name="cancel" value="List"/></a>
 			</div>
 		</footer>
 	</article>

@@ -504,9 +504,11 @@
                                 <?php
                             }
                             $remarkslist = explode('<br>', $tasks[0]->comments);
-                            foreach ($remarkslist as $remark) {
+                            $cnt = count($remarkslist);
+                            for ($index = $cnt-1; $index >= 0; $index--)  {
+                            //foreach ($remarkslist as $remark) {
                                 ?>
-                                <div class="message"><p><?php echo $remark; ?></p></div>
+                                <div class="message"><p><?php echo $remarkslist[$index]; ?></p></div>
                                 <?php
                             }
                         }

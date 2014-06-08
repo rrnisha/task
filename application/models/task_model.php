@@ -35,12 +35,12 @@ class Task_model extends CI_Model {
         		$ext_sql .= ' AND status = \'' . 'completed' . '\' AND type in (SELECT type from `type_owners` WHERE emp_id='.$_SESSION['emp_id'].')';
             else if ($status != 'created')
         		$ext_sql .= ' AND status = \'' . $status . '\'';
-        	if ($status == 'created')
+            if ($status == 'created')
             	$ext_sql .= ' AND created_by = '.$_SESSION['emp_id'];
-        } elseif ($status == 'all') {
+        } elseif ($status == 'all' || $status == 'super') {
             $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
-        }
-        if (!($status == 'query' || $status == 'created' || $status == 'tofinalize')) $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'];
+        } 
+        if (!($status == 'query' || $status == 'created' || $status == 'super' || $status == 'tofinalize')) $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'];
         $ext_sql .= ' ORDER by priority, update_date desc, status, id desc';
         $query = $this->db->select('* FROM tasks' . $ext_sql)->limit($num, $offset);
 

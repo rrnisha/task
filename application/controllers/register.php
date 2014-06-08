@@ -24,7 +24,8 @@ class Register extends CI_Controller {
         $this->load->model('Task_type_model');
         $this->load->model('Outward_invoice_model');
         $this->load->model('Inward_invoice_model');
-        $this->load->model('Invoice_sequence_model');
+        $this->load->model('Inward_invoice_sequence_model');
+        $this->load->model('Outward_invoice_sequence_model');
         $this->load->library('session');
         $this->load->library('email');
         $this->session->requireLogin();
@@ -222,7 +223,7 @@ class Register extends CI_Controller {
     	
         $register_query = $this->Register_model->get($registerId);
         $doc_res = $register_query->result();
-        $doc_res[0]->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($doc_res[0]->create_date));
+        $doc_res[0]->create_date = mdate('%d-%m-%Y', strtotime($doc_res[0]->create_date));
         $data['register'] = $doc_res[0];
 		$data['current_date'] = now();
 		$data['flag'] = $flag;
@@ -240,7 +241,7 @@ class Register extends CI_Controller {
 				$inv_query = $this->Inward_invoice_model->get_by_id($inv_id);
 			} else if ($flag == 'printOutwardInv') {
 				$inv_query = $this->Outward_invoice_model->get_by_id($inv_id);
-			} else if ((($flag == 'create' || $flag == 'edit' || $flag == 'inwardDoc' || $flag == 'inwardRegister') && $media=='email')) {
+			} else if ((($flag == 'create' || $flag == 'inwardDoc' || $flag == 'inwardRegister') && $media=='email')) {
 				$inv_query = $this->Inward_invoice_model->get_by_id($inv_id);
 				$flag = 'printInwardInv';
 			} else if ((($flag == 'outwardDoc' || $flag == 'outwardRegister' ) && $media=='email')) {
@@ -280,28 +281,46 @@ class Register extends CI_Controller {
 			foreach ($inv_query->result() as $row) {
 				$data['particulars'][] = $row;
 			}
-		} else {
+		} else if ($flag == 'edit') {
+			foreach ($documents_query->result() as $row) {
+				if ($row->update_date == "0000-00-00 00:00:00") {
+					$row->create_date = mdate('%d-%m-%Y', strtotime($row->create_date));
+				} else {
+					$row->create_date = mdate('%d-%m-%Y', strtotime($row->update_date));
+				}
+				$data['particulars'][] = $row;
+			}			
+    	} else {
 			$inv_no = '';
-			$inv_session_query = $this->Invoice_sequence_model->get_id_by_sessionid($session_id);
+			if ($flag == 'inwardRegister' || $flag == 'create' || $flag == 'inwardDoc') {
+				$inv_session_query = $this->Inward_invoice_sequence_model->get_id_by_sessionid($session_id);
+			} else if ($flag == 'outwardRegister' || $flag == 'outwardDoc') {
+				$inv_session_query = $this->Outward_invoice_sequence_model->get_id_by_sessionid($session_id);
+			}
 			$inv_session_result = $inv_session_query->result();
 			if (count($inv_session_result) == 1) {
 				$inv_no = $inv_session_result[0]->inv_no;
 			}
 			
 			if ($inv_no == '') {
-				$inv_seq_id = $this->Invoice_sequence_model->insert($session_id);
+				if ($flag == 'inwardRegister' || $flag == 'inwardDoc' || $flag == 'create') {
+					$inv_seq_id = $this->Inward_invoice_sequence_model->insert($session_id);
+				} else if ($flag == 'outwardRegister' || $flag == 'outwardDoc') {
+					$inv_seq_id = $this->Outward_invoice_sequence_model->insert($session_id);
+				}				
+				
 			} else {
 				$inv_seq_id = $inv_no;
 			}
 	        foreach ($documents_query->result() as $row) {
 	        	if ($row->update_date == "0000-00-00 00:00:00") {
-	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+	        		$row->create_date = mdate('%d-%m-%Y', strtotime($row->create_date));
 	        	} else {
-	        		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->update_date));
+	        		$row->create_date = mdate('%d-%m-%Y', strtotime($row->update_date));
 	        	}
 	            $data['particulars'][] = $row;
 	            
-	            if ($flag=='edit' || ($row->status == 'inward' && $flag != 'printInwardInv')) {
+	            if ($row->status == 'inward' && $flag != 'printInwardInv') {
 	            	$inv_gen_id = "I"."_".$doc_res[0]->id."_".$inv_seq_id;
 	            	if ($inv_no == '') {
 	            	$this->Inward_invoice_model->insert($inv_gen_id, $doc_res[0]->id, $client_id, $client_name, 
@@ -317,20 +336,30 @@ class Register extends CI_Controller {
 	        }
 		}
 
-		if ($inv_gen_id!='') 
-			$data['invoice_id'] = $inv_gen_id;
-		else
-			$data['invoice_id'] = $inv_id;
-		
-		if ($inv_seq_id=='') {
-			$inv_id_arr = explode('_', $data['invoice_id']);
-			$inv_seq_id = $inv_id_arr[2];
- 		}
-		$inv_date_query = $this->Invoice_sequence_model->get_inv_date($inv_seq_id);
-		$inv_date_result = $inv_date_query->result();
-		$data['invoice_create_date'] = mdate('%d-%m-%Y %H:%i:%s', strtotime($inv_date_result[0]->create_date));
-		
-        if ($media=='print') {
+		if ($flag != 'edit') {
+			if ($inv_gen_id!='') 
+				$data['invoice_id'] = $inv_gen_id;
+			else
+				$data['invoice_id'] = $inv_id;
+			
+			if ($inv_seq_id=='') {
+				$inv_id_arr = explode('_', $data['invoice_id']);
+				$inv_seq_id = $inv_id_arr[2];
+	 		}
+	
+	    	if ($flag == 'inwardRegister' || $flag == 'printInwardInv' || $flag == 'create' || $flag == 'inwardDoc') {
+	 			$inv_date_query = $this->Inward_invoice_sequence_model->get_inv_date($inv_seq_id);
+	    	} else if ($flag == 'outwardRegister' || $flag == 'outwardDoc' || $flag == 'printOutwardInv') {
+				$inv_date_query = $this->Outward_invoice_sequence_model->get_inv_date($inv_seq_id);
+			}
+			$inv_date_result = $inv_date_query->result();
+			$data['invoice_create_date'] = mdate('%d-%m-%Y', strtotime($inv_date_result[0]->create_date));
+		}
+		if (count($documents_query->result()) == 0) {
+			$this->load->view('layout/header');
+			$this->load->view('register/noedit');
+			$this->load->view('layout/footer');
+		} else if ($media=='print') {
 	        $this->load->view('layout/header');
 	        $this->load->view('register/print', $data);
 	        $this->load->view('layout/footer');
@@ -354,7 +383,8 @@ class Register extends CI_Controller {
 			$this->load->view('register/success');
 			$this->load->view('layout/footer');
 			}
-        }
+        } 
+        	
   	
      }
     
@@ -470,7 +500,7 @@ class Register extends CI_Controller {
             $res = $doc_trans_query->result();
             
             foreach ($doc_trans_query->result() as $trans_row) {
-            	$trans_row->trans_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($trans_row->trans_date));
+            	$trans_row->trans_date = mdate('%d-%m-%Y', strtotime($trans_row->trans_date));
             	
                 $emp_name_query = $this->Employee_model->get_name($trans_row->emp_id);
                 $emp_name_result = $emp_name_query->result();
@@ -478,7 +508,7 @@ class Register extends CI_Controller {
             	
                 $row->trans[] = $trans_row;
             }            
-            $row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+            $row->create_date = mdate('%d-%m-%Y', strtotime($row->create_date));
             
             $data['registers'][] = $row;
         }
@@ -562,7 +592,7 @@ class Register extends CI_Controller {
     		if (count($client_result) >= 1) {
     			$row->client_name = $client_result[0]->full_name;
     		}
-    		$row->create_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->create_date));
+    		$row->create_date = mdate('%d-%m-%Y', strtotime($row->create_date));
 
     		$data['inward_invoices'] = array();
     		$data['inward_invoices_no'] = array();
@@ -716,7 +746,7 @@ class Register extends CI_Controller {
             $res = $doc_trans_query->result();
             
             foreach ($doc_trans_query->result() as $trans_row) {
-            	$trans_row->trans_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($trans_row->trans_date));
+            	$trans_row->trans_date = mdate('%d-%m-%Y', strtotime($trans_row->trans_date));
                 $emp_name_query = $this->Employee_model->get_name($trans_row->emp_id);
                 $emp_name_result = $emp_name_query->result();
                 $trans_row->emp = $emp_name_result[0]->login;
@@ -910,7 +940,7 @@ class Register extends CI_Controller {
         $res = $doc_trans_query->result();
         $data['trans'] = array();
         foreach ($doc_trans_query->result() as $row) {
-        	$row->trans_date = mdate('%d-%m-%Y %H:%i:%s', strtotime($row->trans_date));
+        	$row->trans_date = mdate('%d-%m-%Y', strtotime($row->trans_date));
             $emp_name_query = $this->Employee_model->get_name($row->emp_id);
             $emp_name_result = $emp_name_query->result();
             $row->emp = $emp_name_result[0]->login;

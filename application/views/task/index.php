@@ -319,7 +319,8 @@
                 <li <?php if ($status == 'pending') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/pending/">Pending</a></li>
                 <li <?php if ($status == 'completed') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/completed/">Completed</a></li>
                 <li <?php if ($status == 'finalized') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/finalized/">Finalized</a></li>
-                <li <?php if ($status == 'created') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/created/">Created</a></li> 
+                <li <?php if ($status == 'created') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/created/">Created</a></li>
+                <?php if (isset($_SESSION['emp_role_id']) && $_SESSION['emp_role_id']==2) { ?><li <?php if ($status == 'super') { ?>class="active"<?php } ?>><a href="<?php echo base_url(); ?>index.php/task/index/super/">ALL</a></li><?php } ?> 
             </ul>            
         </header>
 	
@@ -722,7 +723,7 @@
                                 <tr>
                                     <th rowspan="1"></th>
                                     <th rowspan="1">ID</th>                                    
-                                    <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <th class="required" rowspan="1">Owner</th>  <!-- TODO : Only for Super Admin --> <?php } ?>
+                                    <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created' || $status == 'super') { ?> <th class="required" rowspan="1">Owner</th>  <?php } ?>
                                     <th class="required" rowspan="1">Task</th>
                                     <th class="required" rowspan="1">Company</th>
                                     <th class="required" rowspan="1">Client</th>
@@ -745,7 +746,7 @@
                                             <input type="radio" name="select" value="selected" <?php if ($i == 1) { ?>checked<?php } ?> onclick="captureTaskId(<?php echo $task->id; ?>)"/>
                                         </td>
                                         <td><?php echo $task->id; ?></td>
-                                        <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created') { ?> <td> <?php echo $task->emp_name; ?> </td>  <!-- TODO : Only for Super Admin --> <?php } ?>
+                                        <?php if ($status == 'tofinalize' || $status == 'finalized' || $status == 'created' || $status == 'super') { ?> <td> <?php echo $task->emp_name; ?> </td>  <!-- TODO : Only for Super Admin --> <?php } ?>
                                         <td><?php echo $task->title; ?></td>
                                         <td><?php echo $task->company_name; ?></td>
                                         <td><?php echo $task->client_name; ?></td>

@@ -837,9 +837,9 @@ overflow-x: auto;
 overflow-y: auto;
 }
 
-.required:after { content:" * "; color:orange; }
+.required:after { content:" * "; color:red; }
 .required_can_null:after { content:" # "; color:orange; }
-.required_table:after { content:"*"; color:orange; } 
+.required_table:after { content:"*"; color:red; } 
 
 /* New/Edit Article Module */
 

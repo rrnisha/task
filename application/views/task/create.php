@@ -4,7 +4,7 @@
 <script>
 	$(document).ready(function() { 
 		$("#client_select").select2({});
-		$("#start_date" ).datepicker({ dateFormat: "dd-mm-yy", minDate : 0 });
+		$("#start_date" ).datepicker({ dateFormat: "dd-mm-yy" });
 		$("#due_date" ).datepicker({ dateFormat: "dd-mm-yy", minDate : 0 }); 
 	});
 	

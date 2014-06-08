@@ -12,7 +12,7 @@ class Employee_model extends CI_Model{
     * Function to check username and password are valid
     */
     function validEmployee( $username, $password ){
-        $query = $this->db->query('SELECT * FROM employees WHERE status='."'active'".' AND login = \''.$username.'\' AND password=\''.md5($password).'\'');
+        $query = $this->db->query('SELECT * FROM employees WHERE status='."'active'".' AND BINARY login = \''.$username.'\' AND password=\''.md5($password).'\'');
         return $query;
     }
 
@@ -32,7 +32,7 @@ class Employee_model extends CI_Model{
         return $query;
     }
     function get_active(){
-        $query = $this->db->query('SELECT * FROM employees WHERE status='."'active'");
+        $query = $this->db->query('SELECT * FROM employees WHERE status='."'active'".' AND login !='."'admin'");
         return $query;
     }    
     function get($emp_id){
@@ -40,7 +40,7 @@ class Employee_model extends CI_Model{
         return $query;
     }
     function get_others(){
-        $query = $this->db->query('SELECT * FROM employees WHERE id <>'.$_SESSION['emp_id'].' and status='."'active'");
+        $query = $this->db->query('SELECT * FROM employees WHERE id <>'.$_SESSION['emp_id'].' and status='."'active'".' AND login !='."'admin'");
         return $query;
     }
     function delete($emp_id){

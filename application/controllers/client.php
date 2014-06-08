@@ -148,6 +148,8 @@ class Client extends CI_Controller {
         }
         $client_query = $this->Client_model->get($_POST['id']);
         $res = $client_query->result();
+        if ($res[0]->dob!="0000-00-00") 
+        	$res[0]->dob = mdate('%d-%m-%Y', strtotime($res[0]->dob));
         $data['client'] = $res[0];
                 
         $this->load->view('layout/header');
@@ -353,7 +355,7 @@ class Client extends CI_Controller {
     	 
     	// Read the spreadsheet via a relative path to the document
     	// for example $this->excel_reader->read('./uploads/file.xls');
-    	$this->excel_reader->read('C:\xampp\htdocs\tasks_new\application\controllers\client.xls');
+    	$this->excel_reader->read('C:\xampp\htdocs\tasks\application\controllers\client.xls');
     	 
     	// Get the contents of the first worksheet
     	$worksheet = $this->excel_reader->sheets[0];
