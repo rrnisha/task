@@ -11,6 +11,16 @@ class Year_model extends CI_Model {
         return $query;
     }
 
+    function get_by_id($id) {
+    	$query = $this->db->query('SELECT * FROM years WHERE id = '.$id.' order by from_year');
+    	return $query;
+    }
+    
+    function get_all() {
+        $query = $this->db->query('SELECT * FROM years order by is_curr_year, from_year');
+        return $query;
+    }
+    
     function get_curr_year() {
         $query = $this->db->query('SELECT * FROM years WHERE is_curr_year =\'Y\' order by from_year');
         return $query;
@@ -52,4 +62,15 @@ class Year_model extends CI_Model {
         return $this->db->insert_id();
     }
 
+    function delete($id){
+    	$this->db->query("DELETE FROM years WHERE id=".$id) or die('error');
+    }
+    
+    function edit($fy){
+    	$this->db->set('update_date', 'NOW()', FALSE);
+    	$this->db->where('id', $fy['id']);
+    	$this->db->update('years', $fy);
+    }
+    
+   
 }

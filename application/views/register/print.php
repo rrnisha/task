@@ -29,9 +29,9 @@ function persistInvoice() {
 			<input type="hidden" name="email" value="<?php echo $register->email; ?>"></input>
 			<div>
 				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
-<?php if ($flag == 'edit'){ echo 'ERRATA INVOICE';  ?><?php } ?>				
 <?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE';  ?><?php } ?>
-<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
+<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>
+<?php if ($flag == 'edit'){ echo 'ERRATA INVOICE';  ?><?php } ?>					
 				</textarea>
 			</div>
 			<div>
@@ -40,30 +40,24 @@ function persistInvoice() {
 #63, East Vanniar Street
 West KK Nagar, Chennai 600078
 Phone: 91-44-23643710</textarea>
-            <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
-            	<img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" />
-            </div>
+
+            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
+                <tr>
+                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
+                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></textarea></td>
+                </tr>
+                <tr>
+
+                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
+                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?> </textarea></td>
+                </tr>
+            </table>
+		
 			</div>
 			<div style="clear:both"></div>
 				
 			<div>
-	            <textarea style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n"; ?></textarea>  
-<!--<?php $addLine = explode(',', $register->address); foreach ($addLine as $line) {
-echo $line;
-?> <?php } ?></textarea>-->
-	
-	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
-	                <tr>
-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></textarea></td>
-	                </tr>
-	                <tr>
-	
-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?> </textarea></td>
-	                </tr>
-	            </table>
-			
+	            <textarea style="width: 200px; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n"; ?></textarea>  
 			</div>		
 			<div>
 	            <textarea style="width: 100%; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly>
@@ -77,9 +71,7 @@ echo $line;
 					<thead>
 						<tr style="height: 34px; background: url(<?php echo base_url(); ?>assets/img/table_sorter_header.png) repeat-x; text-align: left; text-indent: 6px; cursor: pointer;">
 							<th rowspan="1">SNo</th>
-							<th rowspan="1">Date</th>
 							<th rowspan="1">Particulars</th>
-<!--							<th rowspan="1">Quantity</th>-->
 							<th rowspan="1">Receipt Mode</th>
 						</tr>
 					</thead>
@@ -90,18 +82,8 @@ echo $line;
 							?>
 							<tr>
 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $i; ?></td>
-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->create_date; ?></td>
 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->particulars; ?></td>
-								<!--<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->quantity; ?></td>-->
 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->mode_of_receipt; ?></td>
-								<!--
-								<?php if ($particular->type == 'inward') { ?>
-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->received_by_name; ?></td>
-								<?php } else { ?>
-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->surrender_by_name; ?></td>
-								<?php } ?>
-								-->
-								
 							</tr>
 							<?php
 							$i++;
@@ -119,7 +101,7 @@ echo $line;
 				<br>
 				<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){?>
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
-	        			<?php echo $_SESSION['emp_name']; ?></textarea>
+	        			<?php echo $invoice_created_by; ?></textarea>
 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
 	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></textarea>
 	        	<?php } else if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){?>

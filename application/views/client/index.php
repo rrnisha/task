@@ -79,6 +79,7 @@
             var result = data.split('|||');
             if (result[1] == 'success')
             {
+            	document.getElementById("remarks").value = "";
                 $('#addRemarkStatus').show();
                 showRemark();
             }
@@ -525,11 +526,7 @@
                         echo $tasks[0]->id;
                     }
                     ?>"/>
-                    <input type="text" name="remarks" value="Remarks" onfocus="if (!this._haschanged) {
-            this.value = ''
-        }
-        ;
-        this._haschanged = true;">
+                    <input type="text" id="remarks" name="remarks">
                     <input type="submit" class="btn_post_message" value="" onclick="submitRemark();"></input>
                 </form>
             </footer>            
