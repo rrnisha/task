@@ -172,7 +172,7 @@ class Task_model extends CI_Model {
         $this->start_date = mysql_real_escape_string($_POST['date_start']);
         $this->due_date = mysql_real_escape_string($_POST['date_end']);
         $this->created_by = mysql_real_escape_string($_SESSION['emp_id']);
-        $this->comments = mysql_real_escape_string($_POST['remarks']);
+        $this->comments = $_POST['remarks'];
 
 //        $this->db->set('start_date', $_POST['date_start'] , FALSE);
 //        $this->db->set('due_date', $_POST['date_end'], FALSE);

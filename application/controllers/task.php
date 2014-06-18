@@ -28,6 +28,8 @@ class Task extends CI_Controller {
             $res = $user_query->result();
             
             $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
+            print_r($_POST);
+            
             $remark = $date.' : '. $res[0]->login . ' : ' . $_POST['remarks'] . "<br>";
 
             $this->Task_model->addRemark($remark, $_POST['sr_task_id']);

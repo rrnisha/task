@@ -78,6 +78,7 @@ class Register_model extends CI_Model{
         $this->client_id = mysql_real_escape_string($_POST['client_id']);
         $this->type = mysql_real_escape_string($_POST['type']);            
         $this->status = mysql_real_escape_string($_POST['status']);
+        $this->fin_yr = mysql_real_escape_string($_POST['fin_year']);
                 
         $this->db->set('create_date', 'NOW()', FALSE);
         $this->db->set('update_date', 'NOW()', FALSE);

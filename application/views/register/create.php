@@ -59,6 +59,10 @@ function removeParticularsRow(r){
                     			echo ' '.$type['ui_desc'].' ';
                     		?>
                     	<?php } ?>
+                	</fieldset>
+                    <fieldset>
+                		<label>Assessment Year</label>
+                        <?php echo form_dropdown('fin_year', $fin_year); ?>
                 	</fieldset>	                                         
                     <fieldset>
                         <label>Status</label>

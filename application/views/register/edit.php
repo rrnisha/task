@@ -101,7 +101,11 @@ function removeParticulars(id,r){
                     			echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
                     		?>
                     	<?php } ?>
-                	</fieldset>    
+                	</fieldset>   
+                     <fieldset>
+                		<label>Assessment Year</label>
+                        <?php echo form_dropdown('fin_year', $fin_years, $register->fin_yr); ?>
+                	</fieldset>               	 
                     <input type="hidden" name="status_value" value="<?php if ($register->status == 'inward') { echo "inward"; } else if ($register->status == 'outward') { echo "outward"; } else if ($register->status == 'in_out') { echo "in_out"; } ?>" />
 	                <table id="particularsTable" class="tablerow" cellspacing="0">
 						<thead>
