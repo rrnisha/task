@@ -157,6 +157,7 @@
             var result = data.split('|||');
             if (result[1] == 'success')
             {
+            	document.getElementById("remarks").value = "";
 //                $('#addRemarkStatus').show();
                 showRemark();
             }
@@ -893,8 +894,7 @@
             <footer>
                 <form class="post_message" name="frmSubmitRemark" id="frmSubmitRemark" onsubmit="return false;">
                     <input type="hidden" name="sr_task_id" id="sr_task_id" value="<?php if (count($tasks) < 1){ echo ''; } else { echo $tasks[0]->id; } ?>"/>
-					<!-- onfocus="this.value = '';" -->
-                    <input type="text" name="remarks" value="">
+                    <input type="text" id="remarks" name="remarks" value="">
                     <input type="submit" class="btn_post_message" value="" onclick="submitRemark();"></input>
                 </form>
             </footer>            
