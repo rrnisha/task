@@ -1,0 +1,798 @@
+From 4b408a6782d031f33aa25bff7822d077e8075877 Mon Sep 17 00:00:00 2001
+From: rrengasa-task <r.rishishankar@gmail.com>
+Date: Wed, 18 Jun 2014 19:50:23 +0530
+Subject: [PATCH 1/2] patch 1 - Issues 1-7,9,10
+
+---
+ application/models/user_model.php | 43 ---------------------------------------
+ 1 file changed, 43 deletions(-)
+ delete mode 100644 application/models/user_model.php
+
+diff --git a/application/models/user_model.php b/application/models/user_model.php
+deleted file mode 100644
+index b131eee..0000000
+--- a/application/models/user_model.php
++++ /dev/null
+@@ -1,43 +0,0 @@
+-<?php
+-/*
+-* Model file for user
+-*/
+-class User_model extends CI_Model {
+-    /*
+-    * Constructor to initialize.
+-    */
+-    function __construct(){
+-        parent::__construct();
+-    }
+-    function get( $id ){
+-        $query = $this->db->query('SELECT * FROM users WHERE id = '.$id);
+-        
+-        return $query;
+-    }
+-    /*
+-    * Function to check username and password are valid
+-    */
+-    function validEmployee( $username, $password ){
+-        $query = $this->db->query('SELECT * FROM users WHERE username = \''.$username.'\' AND password=\''.md5($password).'\'');
+-        
+-        return $query;
+-        
+-    }
+-    /*
+-    * Function to insert discussions.
+-    */
+-    function insert(){               
+-        // Setting variables
+-        $this->username = $_POST['username'];
+-        $this->password = md5($_POST['password']);
+-        $this->name = $_POST['name'];
+-        $this->db->set('insertion_date', 'NOW()', FALSE);
+-        $this->db->set('updation_date', 'NOW()', FALSE);
+-        
+-        // Inserting..
+-        $this->db->insert('users', $this)  or die($this->db->_error_message());
+-        
+-        return $this->db->insert_id();
+-    } 
+-}
+-?>
+\ No newline at end of file
+-- 
+1.9.0.msysgit.0
+
+
+From 9aac614052a6fe804368cb1cd1311c4ffd084f73 Mon Sep 17 00:00:00 2001
+From: rrengasa-task <r.rishishankar@gmail.com>
+Date: Wed, 18 Jun 2014 19:50:58 +0530
+Subject: [PATCH 2/2] patch 1 - Issues 1-7,9,10
+
+---
+ application/controllers/fy.php                | 88 ++++++++++++++++++++++++++-
+ application/controllers/register.php          | 26 ++++++--
+ application/controllers/task.php              |  2 +
+ application/models/register_model.php         |  1 +
+ application/models/task_model.php             |  2 +-
+ application/models/year_model.php             | 21 +++++++
+ application/views/client/index.php            |  7 +--
+ application/views/fy/create.php               |  5 +-
+ application/views/fy/edit.php                 | 25 ++++++++
+ application/views/fy/list.php                 | 58 +++++++++++++++++-
+ application/views/register/create.php         |  4 ++
+ application/views/register/edit.php           |  6 +-
+ application/views/register/email.php          | 44 +++++---------
+ application/views/register/print.php          | 52 ++++++----------
+ application/views/task/index.php              |  4 +-
+ sql/patch1_fy_table_update_date_inclusion.sql |  1 +
+ 16 files changed, 260 insertions(+), 86 deletions(-)
+ create mode 100644 application/views/fy/edit.php
+ create mode 100644 sql/patch1_fy_table_update_date_inclusion.sql
+
+diff --git a/application/controllers/fy.php b/application/controllers/fy.php
+index 403f9ce..f8ee5ee 100644
+--- a/application/controllers/fy.php
++++ b/application/controllers/fy.php
+@@ -35,8 +35,8 @@ class Fy extends CI_Controller {
+             // Loading form validation library
+             $this->load->library('form_validation');
+             // Setting validation rules
+-            $this->form_validation->set_rules('from_year', 'From Year', 'required');
+-            $this->form_validation->set_rules('to_year', 'To Year', 'required');
++            $this->form_validation->set_rules('from_year', 'From Year', 'callback_from_year_check');
++            $this->form_validation->set_rules('to_year', 'To Year', 'callback_to_year_check');
+             
+             // Validating..
+             if ($this->form_validation->run() == TRUE) {
+@@ -49,13 +49,47 @@ class Fy extends CI_Controller {
+             	 
+                 $this->Year_model->insert();
+                 redirect('/fy/lists?msg=finyearaddedsuccess');
++            } else {
++            	$data['values']['curr_fy'] = 'off';
+             }
+         }
++        
+         $this->load->view('layout/header');
+         $this->load->view('fy/create', $data);
+         $this->load->view('layout/footer');        
+     }
+-
++    
++    public function from_year_check($year)
++    {
++    	if (is_numeric($year)) {
++    		if ($year >= 2000 and $year <= 2100) {
++    			return TRUE;
++    		} else {
++    			$this->form_validation->set_message('from_year_check', 'From Year should be between 2000 and 2100');
++    			return FALSE;    			
++    		}
++    	} else {
++    		$this->form_validation->set_message('from_year_check', 'From Year should be between 2000 and 2100');
++    		return FALSE;
++    	}
++    }
++    
++    public function to_year_check($year)
++    {
++    	$from_year = $_POST['from_year'];
++    	if (is_numeric($from_year) && is_numeric($year)) {
++    		if ($year == $from_year+1) {
++    			return TRUE;
++    		} else {
++    			$this->form_validation->set_message('to_year_check', 'To Year should be one year greated than from year');
++    			return FALSE;
++    		}
++    	} else {
++    		$this->form_validation->set_message('to_year_check', 'To Year should be one year greated than from year');
++    		return FALSE;
++    	}
++    }
++        
+     public function lists() {
+         $data = array();
+         $data['msg'] = isset($_GET['msg']) ? $_GET['msg'] : '';
+@@ -72,5 +106,53 @@ class Fy extends CI_Controller {
+         $this->load->view('layout/footer');
+     }
+ 
++    public function delete(){
++    	print_r($_POST);
++    	if( isset($_POST['year_id']) && $_POST['year_id'] ){
++    		$user_query = $this->Year_model->delete($_POST['year_id']);
++    		echo '|||success|||';
++    	}
++    	exit;
++    }
++    
++    public function get($id){
++    	$fy_query = $this->Year_model->get_by_id($id);
++    	$res = $fy_query->result();
++    	$data['fy'] = $res[0];
++    
++    	$this->load->view('layout/header');
++    	$this->load->view('fy/edit',$data);
++    	$this->load->view('layout/footer');
++    }  
++
++    public function edit(){
++    	$data = array();
++    
++    	if( isset($_POST['edit']) && $_POST['edit'] == 'Ok'){
++    		$data['values'] = array();
++    		$data['values']['id'] = $_POST['id'];
++    		$data['values']['from_year'] = $_POST['from_year'];
++    		$data['values']['to_year'] = $_POST['to_year'];
++    
++    		// Loading form validation library
++    		$this->load->library('form_validation');
++    		// Setting validation rules
++    		$this->form_validation->set_rules('from_year', 'from year', 'callback_from_year_check');
++    		$this->form_validation->set_rules('to_year', 'to year', 'callback_to_year_check');
++    			
++    		// Validating..
++    		if ($this->form_validation->run() == TRUE ){
++    			$this->Year_model->edit($data['values']);
++    			redirect('/fy/lists?msg=editTypeSuccess');
++    		}
++    	}
++    	$fy_query = $this->Year_model->get_by_id($_POST['id']);
++    	$res = $fy_query->result();
++    	$data['fy'] = $res[0];
++    	    
++    	$this->load->view('layout/header');
++    	$this->load->view('fy/edit',$data);
++    	$this->load->view('layout/footer');
++    }    
+ }
+ 
+diff --git a/application/controllers/register.php b/application/controllers/register.php
+index 3d439e7..b67d0fa 100644
+--- a/application/controllers/register.php
++++ b/application/controllers/register.php
+@@ -26,6 +26,7 @@ class Register extends CI_Controller {
+         $this->load->model('Inward_invoice_model');
+         $this->load->model('Inward_invoice_sequence_model');
+         $this->load->model('Outward_invoice_sequence_model');
++        $this->load->model('Year_model');
+         $this->load->library('session');
+         $this->load->library('email');
+         $this->session->requireLogin();
+@@ -141,7 +142,11 @@ class Register extends CI_Controller {
+         $data['mode_receipt'][4] = 'other';
+         $data['mode_receipt'][5] = 'post';
+         
+-        
++        $data['fin_year'] = array();
++        $fy_curr_yr_query = $this->Year_model->get_all();
++        foreach ($fy_curr_yr_query->result() as $res) {
++        	$data['fin_year'][$res->id] = $res->fin_year;
++        }
+     	 
+     	$this->load->view('layout/header');
+     	$this->load->view('register/create', $data);
+@@ -188,6 +193,7 @@ class Register extends CI_Controller {
+             $data['values']['client_id'] = $_POST['client_id'];
+             $data['values']['status'] = $_POST['status'];
+             $data['values']['type'] = $_POST['type'];
++            $data['values']['fin_yr'] = $_POST['fin_year'];
+             
+             // Loading form validation library
+ //             $this->load->library('form_validation');
+@@ -228,6 +234,7 @@ class Register extends CI_Controller {
+ 		$data['current_date'] = now();
+ 		$data['flag'] = $flag;
+ 		$data['edit_start_date'] = $edit_start_date;
++		$documents_query = '';
+ 		
+ 		$data['particulars']=array();
+ 		if ($edit_start_date=='' || $edit_start_date=='novalue') {
+@@ -280,6 +287,7 @@ class Register extends CI_Controller {
+ 		if (($flag == 'printInwardInv' || $flag == 'printOutwardInv')) {
+ 			foreach ($inv_query->result() as $row) {
+ 				$data['particulars'][] = $row;
++				$data['invoice_created_by'] = $row->emp_name;
+ 			}
+ 		} else if ($flag == 'edit') {
+ 			foreach ($documents_query->result() as $row) {
+@@ -289,6 +297,7 @@ class Register extends CI_Controller {
+ 					$row->create_date = mdate('%d-%m-%Y', strtotime($row->update_date));
+ 				}
+ 				$data['particulars'][] = $row;
++				$data['invoice_created_by'] = $_SESSION['emp_name'];
+ 			}			
+     	} else {
+ 			$inv_no = '';
+@@ -334,6 +343,7 @@ class Register extends CI_Controller {
+ 	            	}
+ 	            }
+ 	        }
++	        $data['invoice_created_by'] =$_SESSION['emp_name'];
+ 		}
+ 
+ 		if ($flag != 'edit') {
+@@ -355,7 +365,7 @@ class Register extends CI_Controller {
+ 			$inv_date_result = $inv_date_query->result();
+ 			$data['invoice_create_date'] = mdate('%d-%m-%Y', strtotime($inv_date_result[0]->create_date));
+ 		}
+-		if (count($documents_query->result()) == 0) {
++		if ($documents_query!='' && count($documents_query->result()) == 0) {
+ 			$this->load->view('layout/header');
+ 			$this->load->view('register/noedit');
+ 			$this->load->view('layout/footer');
+@@ -412,8 +422,14 @@ class Register extends CI_Controller {
+         		$type['checked'] = FALSE;
+         	$data['types'][$res->id] = $type;
+         }
+-                
+-        // Get all clients
++
++        $data['fin_years'] = array();
++        $fy_curr_yr_query = $this->Year_model->get_all();
++        foreach ($fy_curr_yr_query->result() as $res) {
++        	$data['fin_years'][$res->id] = $res->fin_year;
++        }
++
++		// Get all clients
+         $client_query = $this->Client_model->get_all_clients();
+ 
+         $data['clients'] = array();
+@@ -430,7 +446,7 @@ class Register extends CI_Controller {
+         foreach ($employee_query->result() as $res) {
+             $data['employees'][$res->id] = $res->login;
+         }
+-
++        
+         $data['mode_receipt'] = array();
+         $data['mode_receipt'][''] = '-- Select --';
+         $data['mode_receipt']['in_person'] = 'in_person';
+diff --git a/application/controllers/task.php b/application/controllers/task.php
+index 24088c1..80240e3 100644
+--- a/application/controllers/task.php
++++ b/application/controllers/task.php
+@@ -28,6 +28,8 @@ class Task extends CI_Controller {
+             $res = $user_query->result();
+             
+             $date = date('d-m-Y', gmt_to_local(now(),'UP45', TRUE));
++            print_r($_POST);
++            
+             $remark = $date.' : '. $res[0]->login . ' : ' . $_POST['remarks'] . "<br>";
+ 
+             $this->Task_model->addRemark($remark, $_POST['sr_task_id']);
+diff --git a/application/models/register_model.php b/application/models/register_model.php
+index fee6d1f..5a17d98 100644
+--- a/application/models/register_model.php
++++ b/application/models/register_model.php
+@@ -78,6 +78,7 @@ class Register_model extends CI_Model{
+         $this->client_id = mysql_real_escape_string($_POST['client_id']);
+         $this->type = mysql_real_escape_string($_POST['type']);            
+         $this->status = mysql_real_escape_string($_POST['status']);
++        $this->fin_yr = mysql_real_escape_string($_POST['fin_year']);
+                 
+         $this->db->set('create_date', 'NOW()', FALSE);
+         $this->db->set('update_date', 'NOW()', FALSE);
+diff --git a/application/models/task_model.php b/application/models/task_model.php
+index f46a90b..07909f3 100644
+--- a/application/models/task_model.php
++++ b/application/models/task_model.php
+@@ -172,7 +172,7 @@ class Task_model extends CI_Model {
+         $this->start_date = mysql_real_escape_string($_POST['date_start']);
+         $this->due_date = mysql_real_escape_string($_POST['date_end']);
+         $this->created_by = mysql_real_escape_string($_SESSION['emp_id']);
+-        $this->comments = mysql_real_escape_string($_POST['remarks']);
++        $this->comments = $_POST['remarks'];
+ 
+ //        $this->db->set('start_date', $_POST['date_start'] , FALSE);
+ //        $this->db->set('due_date', $_POST['date_end'], FALSE);
+diff --git a/application/models/year_model.php b/application/models/year_model.php
+index f5fa349..9f35260 100644
+--- a/application/models/year_model.php
++++ b/application/models/year_model.php
+@@ -11,6 +11,16 @@ class Year_model extends CI_Model {
+         return $query;
+     }
+ 
++    function get_by_id($id) {
++    	$query = $this->db->query('SELECT * FROM years WHERE id = '.$id.' order by from_year');
++    	return $query;
++    }
++    
++    function get_all() {
++        $query = $this->db->query('SELECT * FROM years order by is_curr_year, from_year');
++        return $query;
++    }
++    
+     function get_curr_year() {
+         $query = $this->db->query('SELECT * FROM years WHERE is_curr_year =\'Y\' order by from_year');
+         return $query;
+@@ -52,4 +62,15 @@ class Year_model extends CI_Model {
+         return $this->db->insert_id();
+     }
+ 
++    function delete($id){
++    	$this->db->query("DELETE FROM years WHERE id=".$id) or die('error');
++    }
++    
++    function edit($fy){
++    	$this->db->set('update_date', 'NOW()', FALSE);
++    	$this->db->where('id', $fy['id']);
++    	$this->db->update('years', $fy);
++    }
++    
++   
+ }
+\ No newline at end of file
+diff --git a/application/views/client/index.php b/application/views/client/index.php
+index 1486815..2a4f616 100644
+--- a/application/views/client/index.php
++++ b/application/views/client/index.php
+@@ -79,6 +79,7 @@
+             var result = data.split('|||');
+             if (result[1] == 'success')
+             {
++            	document.getElementById("remarks").value = "";
+                 $('#addRemarkStatus').show();
+                 showRemark();
+             }
+@@ -525,11 +526,7 @@
+                         echo $tasks[0]->id;
+                     }
+                     ?>"/>
+-                    <input type="text" name="remarks" value="Remarks" onfocus="if (!this._haschanged) {
+-            this.value = ''
+-        }
+-        ;
+-        this._haschanged = true;">
++                    <input type="text" id="remarks" name="remarks">
+                     <input type="submit" class="btn_post_message" value="" onclick="submitRemark();"></input>
+                 </form>
+             </footer>            
+diff --git a/application/views/fy/create.php b/application/views/fy/create.php
+index af4e7e7..ae9bf42 100644
+--- a/application/views/fy/create.php
++++ b/application/views/fy/create.php
+@@ -1,17 +1,18 @@
+ <section id="main" class="column">
+     <article class="module width_full">
+         <header><h3>Add New Financial/Assessment Year</h3></header>
++        <label style="color:red;font-style:normal"><?php echo validation_errors(); ?></label>
+         <div id="content" >
+             <div class="module_content">
+                 <!-- TODO : To Fix Error Link -->
+                 <!-- <h4 class="alert_error"><?php echo validation_errors(); ?></h4> -->
+                 <form name="frmCreateFY" id="frmCreateFY" method="post" action="<?php echo base_url(); ?>index.php/fy/create">    
+                     <fieldset>
+-                        <label>From Year</label>
++                        <label  class="required" <?php if (form_error('from_year') !='') echo 'style="color:red;font-style:normal"'; ?>>From Year</label>
+                         <input type="text" name="from_year" value="<?php echo $values['from_year']; ?>"/>
+                     </fieldset>
+                     <fieldset>
+-                        <label>To Year</label>
++                        <label  class="required" <?php if (form_error('to_year') !='') echo 'style="color:red;font-style:normal"'; ?>>To Year</label>
+                         <input type="text" name="to_year" value="<?php echo $values['to_year']; ?>"/>
+                     </fieldset>
+                     <fieldset>
+diff --git a/application/views/fy/edit.php b/application/views/fy/edit.php
+new file mode 100644
+index 0000000..6a29a2e
+--- /dev/null
++++ b/application/views/fy/edit.php
+@@ -0,0 +1,25 @@
++<section id="main" class="column">
++    <article class="module width_full">
++        <header><h3>Edit Financial Year</h3></header>
++        <label style="color:red;font-style:normal"><?php echo validation_errors(); ?></label>
++        <div class="module_content">
++            <form name="frmEditYear" id="frmEditYear" method="post" action="<?php echo base_url(); ?>index.php/fy/edit">    
++                    <input type="hidden" name="id" value="<?php echo $fy->id; ?>"/>
++                    <fieldset>
++                        <label class="required" <?php if (form_error('from_year') !='') echo 'style="color:red;font-style:normal"'; ?> >From Year</label>
++                        <input type="text" name="from_year" value="<?php echo $fy->from_year; ?>"/>
++                    </fieldset>
++                    <fieldset>
++                        <label class="required" <?php if (form_error('to_year') !='') echo 'style="color:red;font-style:normal"'; ?> >To Year</label>
++                        <input type="text" name="to_year" value="<?php echo $fy->to_year; ?>"/>
++                    </fieldset>
++                    <footer>
++                        <div class="submit_link">
++                            <input type="submit" name="edit" value="Ok"/>
++                        	<a href="<?php echo base_url(); ?>index.php/fy/lists"><input type="button" name="No" value="Back"/></a>
++                        </div>
++                    </footer>                    
++            </form>    
++        </div>
++    </article>
++</section>
+\ No newline at end of file
+diff --git a/application/views/fy/list.php b/application/views/fy/list.php
+index efa6b86..5405c8a 100644
+--- a/application/views/fy/list.php
++++ b/application/views/fy/list.php
+@@ -1,3 +1,31 @@
++<script type="text/javascript">
++    $(document).ready(function() {
++        $('.deleteYear').click(function() {
++            var yearId = $(this).attr('href').substr(1);
++            $('#del_year_id').val(yearId);
++            $.blockUI({message: $('#delete_year')});
++            return false;
++            //setTimeout($.unblockUI, 2000); 
++        });
++    });
++
++    function closeBox() {
++        $.unblockUI();
++        return false;
++    }    
++    function deleteYear() {
++        $.post("<?php echo base_url(); ?>index.php/fy/delete/", $("#frmDeleteYear").serialize())
++                .done(function(data) {
++            var result = data.split('|||');
++            if (result[1] == 'success')
++            {
++                $.unblockUI();
++                window.location.href = "<?php echo base_url(); ?>index.php/fy/lists/?msg=delYearSuccess";
++            }
++        });
++    }
++
++</script>
+ <section id="main" class="column">
+ 
+     <article class="module width_full">
+@@ -9,9 +37,32 @@
+         <div id="success">
+             <?php if ($msg == 'finyearaddedsuccess') { ?> 
+                 <h4 class="alert_success">Fin Year created Successfully</h4> 
+-            <?php } ?>                
++            <?php } elseif ($msg == 'delYearSuccess') { ?> 
++                <h4 class="alert_success">Fin Year delete Successful</h4> 
++            <?php } elseif ($msg == 'editYearSuccess') { ?> 
++                <h4 class="alert_success">Fin Year edit Successful</h4> 
++            <?php } ?>           
+         </div>
+-        <br>  
++        <br>
++        
++            <div id="delete_year" style="display:none">
++                <h3 id="sub_heading" style="float:left;margin-left: 5px;">Delete Task Year</h3>
++                <p style="float:right;margin-right: 5px;"><a href="#" onclick="return closeBox();">Close</a></p>
++                <div style="clear:both;" style="">
++                    <form name="frmDeleteYear" id="frmDeleteYear" onsubmit="return false;">
++                        <table cellpadding="1">
++                            <tr>
++                                <td>
++                                    <input type="hidden" name="year_id" id="del_year_id" value=""/>
++                                    <input type="button" name="submit_deleteYear" value="Yes" onclick="deleteYear();"/>
++                                    <input type="button" name="no_deleteYear" value="No" onclick="return closeBox();"/>
++                                </td>
++                            </tr>
++                        </table>
++                    </form>    
++                </div>     
++            </div>
++                      
+         <div style="clear:both;" id="list">
+             <div class="tab_container">
+                 <div class="itr_list">
+@@ -27,6 +78,7 @@
+ 	                            <th>From Date</th>
+ 	                            <th>To Date</th>
+ 	                            <th>Assessment Year</th>
++	                            <th  rowspan="1" colspan="2">Action</th>	                            
+ 	                        </tr> 
+                             </thead>
+                             <tbody>                            
+@@ -42,6 +94,8 @@
+                                         <td><?php echo $year->from_date; ?></td>
+                                         <td><?php echo $year->to_date; ?></td>
+                                         <td><?php echo $year->assessment_year; ?></td>
++                                        <td><a href="<?php echo base_url(); ?>index.php/fy/get/<?php echo $year->id; ?>">Edit</a></td>
++                                        <td><a href="#<?php echo $year->id; ?>" class="deleteYear">Delete</a></td>
+                                     </tr>
+                                     <?php
+                                 }
+diff --git a/application/views/register/create.php b/application/views/register/create.php
+index 03403cd..2db2371 100644
+--- a/application/views/register/create.php
++++ b/application/views/register/create.php
+@@ -59,6 +59,10 @@ function removeParticularsRow(r){
+                     			echo ' '.$type['ui_desc'].' ';
+                     		?>
+                     	<?php } ?>
++                	</fieldset>
++                    <fieldset>
++                		<label>Assessment Year</label>
++                        <?php echo form_dropdown('fin_year', $fin_year); ?>
+                 	</fieldset>	                                         
+                     <fieldset>
+                         <label>Status</label>
+diff --git a/application/views/register/edit.php b/application/views/register/edit.php
+index c9ab693..792390a 100644
+--- a/application/views/register/edit.php
++++ b/application/views/register/edit.php
+@@ -101,7 +101,11 @@ function removeParticulars(id,r){
+                     			echo '<span>'.' '.$type['ui_desc'].' '.'</span>';
+                     		?>
+                     	<?php } ?>
+-                	</fieldset>    
++                	</fieldset>   
++                     <fieldset>
++                		<label>Assessment Year</label>
++                        <?php echo form_dropdown('fin_year', $fin_years, $register->fin_yr); ?>
++                	</fieldset>               	 
+                     <input type="hidden" name="status_value" value="<?php if ($register->status == 'inward') { echo "inward"; } else if ($register->status == 'outward') { echo "outward"; } else if ($register->status == 'in_out') { echo "in_out"; } ?>" />
+ 	                <table id="particularsTable" class="tablerow" cellspacing="0">
+ 						<thead>
+diff --git a/application/views/register/email.php b/application/views/register/email.php
+index fc8997b..5eaad2d 100644
+--- a/application/views/register/email.php
++++ b/application/views/register/email.php
+@@ -15,32 +15,28 @@
+ #63, East Vanniar Street
+ West KK Nagar, Chennai 600078
+ Phone: 91-44-23643710</textarea>
+-            <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
+-<!--               <img id="image" src="logo.png" alt="logo" /> -->
+-            	<p readonly style="height: 40px; width: 100%; margin: 20px 0; text-align: center; color: black; font: bold 25px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 2px; padding: 18px 0px; border: 0 none; overflow: hidden; resize: none;">
+-            	<?php echo strtoupper($register->company_name). PHP_EOL; ?>
+-            	</p>
+-            </div>
++
++            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
++                <tr>
++                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
++                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></td>
++                </tr>
++                <tr>
++
++                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
++                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?></td>
++                </tr>
++            </table>
+ 			</div>
+ 			<div style="clear:both"></div>
+ 				
+ 			<div>
+-	            <p style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n" ?></p>  
++	            <p style="width: 200px; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n" ?></p>  
+ <!--<?php $addLine = explode(',', $register->address); foreach ($addLine as $line) {
+ echo $line;
+ ?> <?php } ?></textarea>-->
+ 	
+-	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
+-	                <tr>
+-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
+-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></td>
+-	                </tr>
+-	                <tr>
+-	
+-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
+-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?></td>
+-	                </tr>
+-	            </table>
++
+ 			
+ 			</div>		
+ 			<div>
+@@ -55,9 +51,7 @@ echo $line;
+ 					<thead>
+ 						<tr style="height: 34px; background: url(<?php echo base_url(); ?>assets/img/table_sorter_header.png) repeat-x; text-align: left; text-indent: 6px; cursor: pointer;">
+ 							<th rowspan="1">SNo</th>
+-							<th rowspan="1">Date</th>
+ 							<th rowspan="1">Particulars</th>
+-<!--							<th rowspan="1">Quantity</th>-->
+ 							<th rowspan="1">Receipt Mode</th>
+ 						</tr>
+ 					</thead>
+@@ -68,18 +62,8 @@ echo $line;
+ 							?>
+ 							<tr>
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $i; ?></td>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->create_date; ?></td>
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->particulars; ?></td>
+-								<!--<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->quantity; ?></td>-->
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->mode_of_receipt; ?></td>
+-								<!--
+-								<?php if ($particular->type == 'inward') { ?>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->received_by_name; ?></td>
+-								<?php } else { ?>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->surrender_by_name; ?></td>
+-								<?php } ?>
+-								-->
+-								
+ 							</tr>
+ 							<?php
+ 							$i++;
+diff --git a/application/views/register/print.php b/application/views/register/print.php
+index a0468ec..00ef91d 100644
+--- a/application/views/register/print.php
++++ b/application/views/register/print.php
+@@ -29,9 +29,9 @@ function persistInvoice() {
+ 			<input type="hidden" name="email" value="<?php echo $register->email; ?>"></input>
+ 			<div>
+ 				<textarea readonly style="height: 40px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; border: 0 none; overflow: hidden; resize: none;">
+-<?php if ($flag == 'edit'){ echo 'ERRATA INVOICE';  ?><?php } ?>				
+ <?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){ echo 'INWARD INVOICE';  ?><?php } ?>
+-<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>				
++<?php if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ echo 'OUTWARD INVOICE' ?><?php } ?>
++<?php if ($flag == 'edit'){ echo 'ERRATA INVOICE';  ?><?php } ?>					
+ 				</textarea>
+ 			</div>
+ 			<div>
+@@ -40,30 +40,24 @@ function persistInvoice() {
+ #63, East Vanniar Street
+ West KK Nagar, Chennai 600078
+ Phone: 91-44-23643710</textarea>
+-            <div style="text-align: right; float: right; position: relative; margin-top: 0px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden;">
+-            	<img id="image" src="<?php echo base_url(); ?>assets/img/logo.png" />
+-            </div>
++
++            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
++                <tr>
++                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
++                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></textarea></td>
++                </tr>
++                <tr>
++
++                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
++                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?> </textarea></td>
++                </tr>
++            </table>
++		
+ 			</div>
+ 			<div style="clear:both"></div>
+ 				
+ 			<div>
+-	            <textarea style="width: 200px; height: 70px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n"; ?></textarea>  
+-<!--<?php $addLine = explode(',', $register->address); foreach ($addLine as $line) {
+-echo $line;
+-?> <?php } ?></textarea>-->
+-	
+-	            <table style="border-collapse: collapse; margin-top: 1px; margin-right: 15px; width: 200px; float: right;">
+-	                <tr>
+-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Invoice #</td>
+-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly><?php if (isset($invoice_id)) { echo $invoice_id; } else {echo '';} ?></textarea></td>
+-	                </tr>
+-	                <tr>
+-	
+-	                    <td style="text-align: left; background: #F1F1F4; border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif;">Date</td>
+-	                    <td style="border: 1px solid black; font: 14px Cambria,Helvetica, Sans-Serif; width:100px; text-align: right;" ><textarea style="border: 0 none; resize: none; width: 100%; font: 13px Cambria,Helvetica, Sans-Serif; height: 20px; text-align: right;" readonly id="date"><?php if (isset($invoice_create_date)) { echo $invoice_create_date; } else { echo mdate('%d-%m-%Y', now()); } ?> </textarea></td>
+-	                </tr>
+-	            </table>
+-			
++	            <textarea style="width: 200px; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly><?php echo $register->client_name; "\n"; ?></textarea>  
+ 			</div>		
+ 			<div>
+ 	            <textarea style="width: 100%; height: 50px; float: left; font: 20px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow: hidden; resize: none;" readonly>
+@@ -77,9 +71,7 @@ echo $line;
+ 					<thead>
+ 						<tr style="height: 34px; background: url(<?php echo base_url(); ?>assets/img/table_sorter_header.png) repeat-x; text-align: left; text-indent: 6px; cursor: pointer;">
+ 							<th rowspan="1">SNo</th>
+-							<th rowspan="1">Date</th>
+ 							<th rowspan="1">Particulars</th>
+-<!--							<th rowspan="1">Quantity</th>-->
+ 							<th rowspan="1">Receipt Mode</th>
+ 						</tr>
+ 					</thead>
+@@ -90,18 +82,8 @@ echo $line;
+ 							?>
+ 							<tr>
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $i; ?></td>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->create_date; ?></td>
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->particulars; ?></td>
+-								<!--<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->quantity; ?></td>-->
+ 								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->mode_of_receipt; ?></td>
+-								<!--
+-								<?php if ($particular->type == 'inward') { ?>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->received_by_name; ?></td>
+-								<?php } else { ?>
+-								<td style="margin: 0; padding: 20px 5px 0px; border-bottom: 1px dotted #ccc;"><?php echo $particular->surrender_by_name; ?></td>
+-								<?php } ?>
+-								-->
+-								
+ 							</tr>
+ 							<?php
+ 							$i++;
+@@ -119,7 +101,7 @@ echo $line;
+ 				<br>
+ 				<?php if ($flag == 'create' || $flag == 'printInwardInv' || $flag == 'inwardDoc' || $flag == 'inwardRegister'){?>
+ 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+-	        			<?php echo $_SESSION['emp_name']; ?></textarea>
++	        			<?php echo $invoice_created_by; ?></textarea>
+ 	        	<textarea readonly style="resize:none; width: 100%; height: 20px; text-align: right; font: 14px Cambria,Helvetica, Sans-Serif; border: 0 none; overflow:hidden;">
+ 	        	       	For <?php echo strtoupper($register->company_name). PHP_EOL; ?></textarea>
+ 	        	<?php } else if ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){?>
+diff --git a/application/views/task/index.php b/application/views/task/index.php
+index 3a40d72..cebd9bd 100644
+--- a/application/views/task/index.php
++++ b/application/views/task/index.php
+@@ -157,6 +157,7 @@
+             var result = data.split('|||');
+             if (result[1] == 'success')
+             {
++            	document.getElementById("remarks").value = "";
+ //                $('#addRemarkStatus').show();
+                 showRemark();
+             }
+@@ -893,8 +894,7 @@
+             <footer>
+                 <form class="post_message" name="frmSubmitRemark" id="frmSubmitRemark" onsubmit="return false;">
+                     <input type="hidden" name="sr_task_id" id="sr_task_id" value="<?php if (count($tasks) < 1){ echo ''; } else { echo $tasks[0]->id; } ?>"/>
+-					<!-- onfocus="this.value = '';" -->
+-                    <input type="text" name="remarks" value="">
++                    <input type="text" id="remarks" name="remarks" value="">
+                     <input type="submit" class="btn_post_message" value="" onclick="submitRemark();"></input>
+                 </form>
+             </footer>            
+diff --git a/sql/patch1_fy_table_update_date_inclusion.sql b/sql/patch1_fy_table_update_date_inclusion.sql
+new file mode 100644
+index 0000000..2bdd431
+--- /dev/null
++++ b/sql/patch1_fy_table_update_date_inclusion.sql
+@@ -0,0 +1 @@
++ALTER TABLE `years` ADD `update_date` DATETIME NOT NULL AFTER `create_date`;
+\ No newline at end of file
+-- 
+1.9.0.msysgit.0
+
