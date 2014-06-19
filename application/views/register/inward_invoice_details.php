@@ -19,7 +19,7 @@ function showInwardInvoices() {
 									<th rowspan="1">ID</th>
 									<th rowspan="1">Date</th>
 									<th rowspan="1">Particulars</th>
-									<th rowspan="1">Mode of Receipt</th>
+									<th rowspan="1">Financial Year</th>
 								</tr>
 							</thead>
 							<tbody>                            
@@ -28,7 +28,7 @@ function showInwardInvoices() {
 									<td><?php echo $inv->inv_id; ?></td>
 									<td><?php echo $inv->date; ?></td>
 									<td><?php echo $inv->particulars; ?></td>
-									<td><?php echo $inv->mode_of_receipt; ?></td>
+									<td><?php echo $inv->fin_year; ?></td>
                                 </tr>
 							<?php } ?>
                             </tbody>

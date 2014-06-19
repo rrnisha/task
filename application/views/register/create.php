@@ -11,7 +11,7 @@ function addParticularsRow(){
 			+'<td>'
 			+'<?php $select = form_dropdown('by_employee[]', $employees, $values['by_employee']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
 			+'<td>'
-			+'<?php $select = form_dropdown('mode_of_receipt[]', $mode_receipt, $values['mode_of_receipt']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
+			+'<?php $select = form_dropdown('fin_year[]', $fin_year, $values['fin_year']); $ar = explode("\n", $select); foreach ($ar as $s)	{ echo $s; } ?></td>'
 			+'<td><fieldset><input style="width:100px;" type="text" name="tag[]" value="<?php echo set_value('tag[]'); ?>" "/></fieldset></td>'
 			+'<td><a onclick="addParticularsRow()"><img src="<?php echo base_url(); ?>/assets/img/add.png"/></a></td></tr>');
 }
@@ -61,8 +61,8 @@ function removeParticularsRow(r){
                     	<?php } ?>
                 	</fieldset>
                     <fieldset>
-                		<label>Assessment Year</label>
-                        <?php echo form_dropdown('fin_year', $fin_year); ?>
+                		<label class="required" <?php if (form_error('mode_of_receipt') !='') echo 'style="color:red;font-style:normal"';?> >Mode of Receipt</label>
+                        <?php echo form_dropdown('mode_of_receipt', $mode_receipt); ?>
                 	</fieldset>	                                         
                     <fieldset>
                         <label>Status</label>
@@ -76,7 +76,7 @@ function removeParticularsRow(r){
 							<th class="required" <?php if (form_error('particulars[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Particulars</th>
 <!--							<th class="required">Quantity</th>-->
 							<th class="required" <?php if (form_error('by_employee[]') !='') echo 'style="color:red;font-style:normal"'; ?> >By Employee</th>
-							<th class="required" <?php if (form_error('mode_of_receipt[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Mode of Receipt</th>
+							<th class="required" <?php if (form_error('fin_year[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Financial Year</th>
 							<th class="required" <?php if (form_error('tag[]') !='') echo 'style="color:red;font-style:normal"'; ?> >Tag</th>							
 							<th></th>
 						</tr>
@@ -96,7 +96,7 @@ function removeParticularsRow(r){
 									<?php echo form_dropdown('by_employee[]', $employees, $values['by_employee']); ?>
 								</td>
 								<td>
-									<?php echo form_dropdown('mode_of_receipt[]', $mode_receipt, $values['mode_of_receipt']); ?>
+									<?php echo form_dropdown('fin_year[]', $fin_year, $values['fin_year']); ?>
 								</td>
 								<td>
 									<fieldset><input type="text" style="width:100px;" name="tag[]" value="<?php echo set_value('tag[]'); ?>" /></fieldset>

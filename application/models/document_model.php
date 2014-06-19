@@ -29,11 +29,11 @@ class Document_model extends CI_Model{
         $this->register_id = mysql_real_escape_string($_POST['register_id']);
         
 		$this->particulars = mysql_real_escape_string($_POST['particulars'][$i]);
-// 		$this->quantity = mysql_real_escape_string($_POST['quantity'][$i]);
 		$this->tag = mysql_real_escape_string($_POST['tag'][$i]);
 		$this->status = mysql_real_escape_string($_POST['status']);
 		$this->by_employee = mysql_real_escape_string($_POST['by_employee'][$i]);
-		$this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt'][$i]);
+		$this->fin_year = mysql_real_escape_string($_POST['fin_year'][$i]);
+		$this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt']);
         $this->db->set('create_date', 'NOW()', FALSE);
 
         // Inserting..
@@ -42,45 +42,19 @@ class Document_model extends CI_Model{
     }    
 
     function edit(){
-//     else if (mysql_real_escape_string($_POST['particularsChanged'][$i])=="ND") {
-//        		// do nothing
-//        	} else if (mysql_real_escape_string($_POST['particularsChanged'][$i])=="D") {
-//        		if ($_POST['particularsID'][$i]==null){
-//        			//do nothing
-//        		}else {
-////			        $this->register_id = mysql_real_escape_string($_POST['register_id']);
-////					$this->particulars = mysql_real_escape_string($_POST['particulars'][$i]);
-////					$this->by_employee = mysql_real_escape_string($_POST['by_employee'][$i]);
-////					$this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt'][$i]);
-////					$this->quantity = mysql_real_escape_string($_POST['quantity'][$i]);
-//					$this->status = "deleted";
-////			        $this->db->set('update_date', 'NOW()', FALSE);
-//			
-//			        // Updating..
-////			        $this->db->where('doc_id', $_POST['particularsID'][$i]);
-////			        $this->db->update('documents', $this)  or die($this->db->_error_message());
-//			        
-//			        $this->db->query("UPDATE documents SET status='deleted', update_date=NOW() WHERE doc_id=".$_POST['particularsID'][$i]) or die('error');
-//			        
-//			        $_POST['doc_id'] = $_POST['particularsID'][$i];
-//		        	$_POST['trans_type'] = 'delete';
-//            		$this->Document_Transaction_model->insert();            
-//        		}
-//        	}    	      
-	
+    	print_r($_POST);
         for($i=0;$i<count($_POST["particularsID"]);$i++) {
         	if (mysql_real_escape_string($_POST['particularsChanged'][$i])=="Y") {
 		        $this->register_id = mysql_real_escape_string($_POST['register_id']);
 				$this->particulars = mysql_real_escape_string($_POST['particulars'][$i]);
 				$this->tag = mysql_real_escape_string($_POST['tag'][$i]);
 				$this->by_employee = mysql_real_escape_string($_POST['by_employee'][$i]);
-				$this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt'][$i]);
-// 				$this->quantity = mysql_real_escape_string($_POST['quantity'][$i]);
+				$this->fin_year = mysql_real_escape_string($_POST['fin_year'][$i]);
 				$this->status = mysql_real_escape_string($_POST['status']);
 				
 		        $this->db->set('update_date', 'NOW()', FALSE);
 		
-		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->mode_of_receipt == '') {
+		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->fin_year == '') {
 		        	continue;
 		        } else {		        
 			        // Updating..
@@ -96,12 +70,11 @@ class Document_model extends CI_Model{
 				$this->particulars = mysql_real_escape_string($_POST['particulars'][$i]);
 				$this->tag = mysql_real_escape_string($_POST['tag'][$i]);
 				$this->by_employee = mysql_real_escape_string($_POST['by_employee'][$i]);
-				$this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt'][$i]);
-// 				$this->quantity = mysql_real_escape_string($_POST['quantity'][$i]);
+				$this->fin_year = mysql_real_escape_string($_POST['fin_year'][$i]);
 				$this->status = mysql_real_escape_string($_POST['status']);
 		        $this->db->set('create_date', 'NOW()', FALSE);
 		
-		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->mode_of_receipt == '') {
+		        if ($this->particulars=='' || $this->tag=='' || $this->by_employee == '' || $this->fin_year == '') {
 		        	continue;
 		        } else {
 			        // Inserting..

@@ -15,7 +15,7 @@ class Inward_invoice_model extends CI_Model {
 		return $query;
 	}
 	
-	function insert($inv_id, $reg_id, $client_id, $client_name, $emp_id,  $emp_name, $particulars, $date, $receipt_mode) {
+	function insert($inv_id, $reg_id, $client_id, $client_name, $emp_id,  $emp_name, $particulars, $date, $mode_of_receipt, $fin_year) {
 		// Setting variables
 		$this->inv_id = $inv_id;
 		$this->reg_id = $reg_id;
@@ -25,7 +25,8 @@ class Inward_invoice_model extends CI_Model {
 		$this->emp_name = $emp_name;
 		$this->particulars = $particulars;
 		$this->date = $date;
-		$this->mode_of_receipt = $receipt_mode;
+		$this->fin_year = $fin_year;
+		$this->mode_of_receipt = $mode_of_receipt;
 		
 		$this->db->set('create_date', 'NOW()', FALSE);
 		
