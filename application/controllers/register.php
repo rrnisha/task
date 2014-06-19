@@ -40,7 +40,8 @@ class Register extends CI_Controller {
         $data['values']['client_id'] = '';
         $data['values']['company'] = '';
         $data['values']['by_employee'] = '';
-        $data['values']['mode_of_receipt'] = 'in_person';
+        $data['values']['mode_of_receipt'] = 'In Person';
+        $data['values']['fin_year'] = '';
 //         $data['values']['tag'] = '';
         $data['values']['status'] = 'inward';
         $data['values']['type'] = '';
@@ -56,9 +57,10 @@ class Register extends CI_Controller {
             $this->form_validation->set_rules('client_id', 'Client', 'callback_dropdown_id_check');
             $this->form_validation->set_rules('status', 'Status', 'required');
             $this->form_validation->set_rules('type', 'Type', 'required');
+            $this->form_validation->set_rules('mode_of_receipt', 'Mode of Receipt', 'callback_dropdown_id_check');
             $this->form_validation->set_rules('particulars[]', 'Particulars', 'required');
             $this->form_validation->set_rules('by_employee[]', 'Received/Surrender By Employee', 'callback_dropdown_id_check');
-            $this->form_validation->set_rules('mode_of_receipt[]', 'Mode of Receipt', 'callback_dropdown_id_check');
+            $this->form_validation->set_rules('fin_year[]', 'Financial Year', 'callback_dropdown_id_check');
             $this->form_validation->set_rules('tag[]', 'Tag', 'required');
             
             // Validating..
@@ -75,7 +77,7 @@ class Register extends CI_Controller {
             } else {
             	$data['values']['particulars'] = '';
             	$data['values']['by_employee'] = '';
-            	$data['values']['mode_of_receipt'] = 'in_person';
+            	$data['values']['fin_year'] = '';
             	$data['values']['tag'] = '';
             }
         }
@@ -135,12 +137,11 @@ class Register extends CI_Controller {
         }
         
         $data['mode_receipt'] = array();
-        $data['mode_receipt']['-1'] = '-- Select --';
-        $data['mode_receipt'][1] = 'in_person';
-        $data['mode_receipt'][2] = 'email';
-        $data['mode_receipt'][3] = 'courier';
-        $data['mode_receipt'][4] = 'other';
-        $data['mode_receipt'][5] = 'post';
+        $data['mode_receipt'][''] = '-- Select --';
+        $data['mode_receipt']['In Person'] = 'In Person';
+        $data['mode_receipt']['eMail'] = 'eMail';
+        $data['mode_receipt']['Courier'] = 'Courier';
+
         
         $data['fin_year'] = array();
         $fy_curr_yr_query = $this->Year_model->get_all();
@@ -193,7 +194,7 @@ class Register extends CI_Controller {
             $data['values']['client_id'] = $_POST['client_id'];
             $data['values']['status'] = $_POST['status'];
             $data['values']['type'] = $_POST['type'];
-            $data['values']['fin_yr'] = $_POST['fin_year'];
+            $data['values']['mode_of_receipt'] = $_POST['mode_of_receipt'];
             
             // Loading form validation library
 //             $this->load->library('form_validation');
@@ -201,7 +202,7 @@ class Register extends CI_Controller {
 //             for($i=0;$i<count($_POST["particulars"]);$i++) {
 //             	$this->form_validation->set_rules('particulars', 'Particulars', 'required');
 //             	$this->form_validation->set_rules('by_employee', 'Received/Surrender By Employee', 'required');
-//             	$this->form_validation->set_rules('mode_of_receipt', 'Mode Of Receipt', 'required');
+//             	$this->form_validation->set_rules('fin_year', 'Financial Year', 'required');
 //             	$this->form_validation->set_rules('tag', 'Tag', 'required');
 //             }            
             
@@ -279,6 +280,7 @@ class Register extends CI_Controller {
 			$company_name_result = $company_name_query->result();
 			$row->company_name = $company_name_result[0]->name;
 				
+			$data['mode_of_receipt'] = $row->mode_of_receipt;
 			$data['registers'][] = $row;
 		}
 
@@ -286,6 +288,12 @@ class Register extends CI_Controller {
 		$inv_seq_id = '';
 		if (($flag == 'printInwardInv' || $flag == 'printOutwardInv')) {
 			foreach ($inv_query->result() as $row) {
+				$fy_query = $this->Year_model->get_by_id($row->fin_year);
+				$fy_query_result = $fy_query->result();
+				$row->fin_year = $fy_query_result[0]->fin_year;
+				
+				$data['mode_of_receipt'] = $row->mode_of_receipt;
+				
 				$data['particulars'][] = $row;
 				$data['invoice_created_by'] = $row->emp_name;
 			}
@@ -296,6 +304,11 @@ class Register extends CI_Controller {
 				} else {
 					$row->create_date = mdate('%d-%m-%Y', strtotime($row->update_date));
 				}
+				
+				$fy_query = $this->Year_model->get_by_id($row->fin_year);
+				$fy_query_result = $fy_query->result();
+				$row->fin_year = $fy_query_result[0]->fin_year;
+								
 				$data['particulars'][] = $row;
 				$data['invoice_created_by'] = $_SESSION['emp_name'];
 			}			
@@ -327,21 +340,30 @@ class Register extends CI_Controller {
 	        	} else {
 	        		$row->create_date = mdate('%d-%m-%Y', strtotime($row->update_date));
 	        	}
-	            $data['particulars'][] = $row;
+	        		        	
+	        	if ( $flag == 'inwardDoc' ||  $flag == 'outwardDoc') {
+	        		$data['mode_of_receipt'] = $row->mode_of_receipt;
+	        	}
 	            
 	            if ($row->status == 'inward' && $flag != 'printInwardInv') {
-	            	$inv_gen_id = "I"."_".$doc_res[0]->id."_".$inv_seq_id;
+	            	$inv_gen_id = "IW"."-".$inv_seq_id."-REG-".$doc_res[0]->id;
 	            	if ($inv_no == '') {
 	            	$this->Inward_invoice_model->insert($inv_gen_id, $doc_res[0]->id, $client_id, $client_name, 
-	            		$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            		$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt, $row->fin_year);
 	            	}
 	            } else if ($row->status == 'outward' && $flag != 'printOutwardInv') {
-	            	$inv_gen_id = "O"."_".$doc_res[0]->id."_".$inv_seq_id;
+	            	$inv_gen_id = "OW"."-".$inv_seq_id."-REG-".$doc_res[0]->id;
 	            	if ($inv_no == '') {
 	            	$this->Outward_invoice_model->insert($inv_gen_id, $doc_res[0]->id, $client_id, $client_name,
-	            			$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt);
+	            			$_SESSION['emp_id'], $_SESSION['emp_name'], $row->particulars, mdate('%Y-%m-%d %H:%i:%s', strtotime($row->create_date)), $row->mode_of_receipt, $row->fin_year);
 	            	}
 	            }
+
+	            $fy_query = $this->Year_model->get_by_id($row->fin_year);
+	            $fy_query_result = $fy_query->result();
+	            $row->fin_year = $fy_query_result[0]->fin_year;
+	            
+	            $data['particulars'][] = $row;
 	        }
 	        $data['invoice_created_by'] =$_SESSION['emp_name'];
 		}
@@ -353,8 +375,13 @@ class Register extends CI_Controller {
 				$data['invoice_id'] = $inv_id;
 			
 			if ($inv_seq_id=='') {
-				$inv_id_arr = explode('_', $data['invoice_id']);
-				$inv_seq_id = $inv_id_arr[2];
+				if (strpos($data['invoice_id'],'_')) {
+					$inv_id_arr = explode('_', $data['invoice_id']);
+					$inv_seq_id = $inv_id_arr[2];
+				} else { 
+					$inv_id_arr = explode('-', $data['invoice_id']);
+					$inv_seq_id = $inv_id_arr[1];
+				}
 	 		}
 	
 	    	if ($flag == 'inwardRegister' || $flag == 'printInwardInv' || $flag == 'create' || $flag == 'inwardDoc') {
@@ -423,10 +450,10 @@ class Register extends CI_Controller {
         	$data['types'][$res->id] = $type;
         }
 
-        $data['fin_years'] = array();
+        $data['fin_year'] = array();
         $fy_curr_yr_query = $this->Year_model->get_all();
         foreach ($fy_curr_yr_query->result() as $res) {
-        	$data['fin_years'][$res->id] = $res->fin_year;
+        	$data['fin_year'][$res->id] = $res->fin_year;
         }
 
 		// Get all clients
@@ -449,12 +476,10 @@ class Register extends CI_Controller {
         
         $data['mode_receipt'] = array();
         $data['mode_receipt'][''] = '-- Select --';
-        $data['mode_receipt']['in_person'] = 'in_person';
-        $data['mode_receipt']['email'] = 'email';
-        $data['mode_receipt']['courier'] = 'courier';
-        $data['mode_receipt']['post'] = 'post';
-        $data['mode_receipt']['other'] = 'other';
-
+        $data['mode_receipt']['In Person'] = 'In Person';
+        $data['mode_receipt']['eMail'] = 'eMail';
+        $data['mode_receipt']['Courier'] = 'Courier';
+        
         $data['edit_start_date'] =  mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),"UP45",TRUE)); 
         $this->load->view('layout/header');
         $this->load->view('register/edit', $data);
@@ -508,6 +533,11 @@ class Register extends CI_Controller {
 	                if (count($emp_name_result) >= 1) {
 	                	$particulars_row->by_employee_name = $emp_name_result[0]->login;
 	                }
+	                
+	                $fy_query = $this->Year_model->get_by_id($particulars_row->fin_year);
+	                $fy_query_result = $fy_query->result();
+	                $particulars_row->fin_year = $fy_query_result[0]->fin_year;
+	                	                
 	            	$row->particulars[] = $particulars_row;
 	            }
             }            
@@ -583,12 +613,9 @@ class Register extends CI_Controller {
 
         $data['mode_receipt'] = array();
         $data['mode_receipt'][''] = '-- Select --';
-        $data['mode_receipt'][1] = 'in_person';
-        $data['mode_receipt'][2] = 'email';
-        $data['mode_receipt'][3] = 'courier';
-        $data['mode_receipt'][4] = 'other';
-        $data['mode_receipt'][5] = 'post';
-
+        $data['mode_receipt']['In Person'] = 'In Person';
+        $data['mode_receipt']['eMail'] = 'eMail';
+        $data['mode_receipt']['Courier'] = 'Courier';
         
         $this->load->view('layout/header');
         $this->load->view('register/list', $data);
@@ -620,6 +647,10 @@ class Register extends CI_Controller {
     			if ($inw_cnt==1) {
 	    			$inward_invoices_query = $this->Inward_invoice_model->get_by_id($inward_invoices_no_row->inv_id);
 	    			foreach ($inward_invoices_query->result() as $inward_invoices_row) {
+	    				$fy_query = $this->Year_model->get_by_id($inward_invoices_row->fin_year);
+	    				$fy_query_result = $fy_query->result();
+	    				$inward_invoices_row->fin_year = $fy_query_result[0]->fin_year;
+	    				
 	    				$data['inward_invoices'][] = $inward_invoices_row;
 	    			}
 	    			$inw_cnt++;
@@ -636,6 +667,9 @@ class Register extends CI_Controller {
 				if ($outw_cnt==1) {
 					$outward_invoices_query = $this->Outward_invoice_model->get_by_id($outward_invoices_no_row->inv_id);
 					foreach ($outward_invoices_query->result() as $outward_invoices_row) {
+						$fy_query = $this->Year_model->get_by_id($outward_invoices_row->fin_year);
+						$fy_query_result = $fy_query->result();
+						$outward_invoices_row->fin_year = $fy_query_result[0]->fin_year;						
 						$data['outward_invoices'][] = $outward_invoices_row;
 							
 					}
@@ -657,6 +691,10 @@ class Register extends CI_Controller {
     		 
     	$inward_invoices_query = $this->Inward_invoice_model->get_by_id($inv_id);
     	foreach ($inward_invoices_query->result() as $inward_invoices_row) {
+    		$fy_query = $this->Year_model->get_by_id($inward_invoices_row->fin_year);
+    		$fy_query_result = $fy_query->result();
+    		$inward_invoices_row->fin_year = $fy_query_result[0]->fin_year;
+    		
     		$data['inward_invoices'][] = $inward_invoices_row;
 		}
     	$this->load->view('register/inward_invoice_details', $data);
@@ -667,6 +705,10 @@ class Register extends CI_Controller {
     	$data['outward_invoices'] = array();
 	 	$outward_invoices_query = $this->Outward_invoice_model->get_by_id($inv_id);
     	foreach ($outward_invoices_query->result() as $outward_invoices_row) {
+    		$fy_query = $this->Year_model->get_by_id($outward_invoices_row->fin_year);
+    		$fy_query_result = $fy_query->result();
+    		$outward_invoices_row->fin_year = $fy_query_result[0]->fin_year;
+    		
     		$data['outward_invoices'][] = $outward_invoices_row;
 	    }
     	$this->load->view('register/outward_invoice_details', $data);
@@ -823,12 +865,9 @@ class Register extends CI_Controller {
 
         $data['mode_receipt'] = array();
         $data['mode_receipt'][''] = '-- Select --';
-        $data['mode_receipt'][1] = 'in_person';
-        $data['mode_receipt'][2] = 'email';
-        $data['mode_receipt'][3] = 'courier';
-        $data['mode_receipt'][4] = 'other';
-        $data['mode_receipt'][5] = 'post';
-
+        $data['mode_receipt']['In Person'] = 'In Person';
+        $data['mode_receipt']['eMail'] = 'eMail';
+        $data['mode_receipt']['Courier'] = 'Courier';
         
         $this->load->view('layout/header');
         $this->load->view('register/list', $data);
@@ -915,7 +954,7 @@ class Register extends CI_Controller {
         if (isset($_POST['register_id']) && $_POST['register_id']) {
             $_POST['status'] = 'outward';
 
-            $this->Register_model->mark_status($_POST['register_id'], $_POST['status']);
+            $this->Register_model->mark_status($_POST['register_id'], $_POST['status'],  $_POST['mode_of_receipt']);
             
             $documents_query = $this->Document_model->get($_POST['register_id']);
             foreach ($documents_query->result() as $document_row) {
@@ -935,7 +974,7 @@ class Register extends CI_Controller {
         if (isset($_POST['register_id']) && $_POST['register_id']) {
             $_POST['status'] = 'inward';
 
-            $user_query = $this->Register_model->mark_status($_POST['register_id'], $_POST['status']);
+            $user_query = $this->Register_model->mark_status($_POST['register_id'], $_POST['status'],  $_POST['mode_of_receipt']);
             
             $documents_query = $this->Document_model->get($_POST['register_id']);
             foreach ($documents_query->result() as $document_row) {
@@ -979,6 +1018,11 @@ class Register extends CI_Controller {
             	$row->by_employee_name = $emp_name_result[0]->login;
             }
             $row->register_id = $registerId;
+            
+            $fy_query = $this->Year_model->get_by_id($row->fin_year);
+            $fy_query_result = $fy_query->result();
+            $row->fin_year = $fy_query_result[0]->fin_year;
+            
             $data['documents'][] = $row;
         }
         

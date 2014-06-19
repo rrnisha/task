@@ -78,7 +78,7 @@ class Register_model extends CI_Model{
         $this->client_id = mysql_real_escape_string($_POST['client_id']);
         $this->type = mysql_real_escape_string($_POST['type']);            
         $this->status = mysql_real_escape_string($_POST['status']);
-        $this->fin_yr = mysql_real_escape_string($_POST['fin_year']);
+        $this->mode_of_receipt = mysql_real_escape_string($_POST['mode_of_receipt']);
                 
         $this->db->set('create_date', 'NOW()', FALSE);
         $this->db->set('update_date', 'NOW()', FALSE);
@@ -93,8 +93,12 @@ class Register_model extends CI_Model{
         $this->db->update('registers', $register); 
     }    
 
-    function mark_status($register_id, $status){
-        $this->db->query("UPDATE registers SET status='".$status."',  update_date=NOW() WHERE id=".$register_id) or die('error');
+    function mark_status($register_id, $status, $mode_of_receipt=''){
+    	if ($mode_of_receipt=='') {
+    		$this->db->query("UPDATE registers SET status='".$status."', update_date=NOW() WHERE id=".$register_id) or die('error');
+    	} else {
+        	$this->db->query("UPDATE registers SET status='".$status."', mode_of_receipt='".$mode_of_receipt."', update_date=NOW() WHERE id=".$register_id) or die('error');
+    	}
     }    
 //    function inward($register_id, $status){
 //        $this->db->query("UPDATE registers SET status='".$status."', update_date=NOW() WHERE id=".$register_id) or die('error');

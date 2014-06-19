@@ -12,7 +12,7 @@ class Year_model extends CI_Model {
     }
 
     function get_by_id($id) {
-    	$query = $this->db->query('SELECT * FROM years WHERE id = '.$id.' order by from_year');
+    	$query = $this->db->query('SELECT * FROM years WHERE id = '.$id);
     	return $query;
     }
     

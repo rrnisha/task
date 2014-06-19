@@ -142,6 +142,7 @@
                 <th rowspan="1">Tag</th> 
                 <th rowspan="1">Status</th>
                 <th rowspan="1">By Employee</th>
+				<th rowspan="1">Financial Year</th>
                 <th rowspan="1">Mode of Receipt</th>
                 <th  rowspan="1">Action</th>
 			</tr>
@@ -161,6 +162,7 @@
                 	<td><label style="visibility:hidden">2</label><img src="<?php echo base_url(); ?>/assets/img/new/Outward.png"/></td>
 				<?php } ?>                                        
                 <td><?php echo $document->by_employee_name; ?></td>
+                <td><?php echo $document->fin_year; ?></td>
                 <td><?php echo $document->mode_of_receipt; ?></td>
                 <?php if ($document->status == 'inward') { ?>
                 	<td><a href="#<?php echo $document->register_id; ?>#<?php echo $document->doc_id; ?>#<?php echo mdate('%Y-%m-%d %H:%i:%s', gmt_to_local(now(),'UP45',TRUE)) ?>" class="outwardDocument">O</a></td>
