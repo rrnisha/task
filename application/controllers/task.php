@@ -488,7 +488,7 @@ class Task extends CI_Controller {
 	        	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;
 	        }
 	        
-	        $fy_query = $this->Year_model->get();
+	        $fy_query = $this->Year_model->get_assessment_years();
 	        foreach ($fy_query->result() as $res) {
 	        	if ($res->is_curr_year == 'N') {
 	            	$data['assessment_year'][$res->assessment_year] = $res->assessment_year;

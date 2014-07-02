@@ -418,7 +418,13 @@
                                 $i = 1;
                                 foreach ($tasks as $task) {
                                     ?>
+                                    <?php if ((strtotime(date('d-m-Y')) > strtotime($task->due_date) && $task->end_date == "00-00-0000" ) && !($status == 'completed' || $status == 'finalized' || $status == 'tofinalize')) { ?>
+                                    <tr style="background-color: #FF3333;">
+                                    <?php } else if (strtotime(date('d-m-Y')) == strtotime($task->due_date)) { ?>
+                                    <tr style="background-color: #FFFF85;">
+                                    <?php } else { ?>
                                     <tr>
+                                    <?php } ?>
                                         <td>
                                             <input type="radio" name="select" value="selected" <?php if ($i == 1) { ?>checked<?php } ?> onclick="captureTaskId(<?php echo $task->id; ?>)"/>
                                         </td>

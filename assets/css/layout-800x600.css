@@ -576,7 +576,7 @@ border-bottom: 1px dotted #ccc;
 .tablesorter thead tr {
 height: 34px;
 background: url(../img/table_sorter_header.png) repeat-x;
-text-align: left;
+text-align: center;
 text-indent: 5px;
 cursor: pointer;
 }

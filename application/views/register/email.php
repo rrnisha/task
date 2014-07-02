@@ -8,7 +8,7 @@
 			<?php } elseif ($flag == 'outwardDoc' || $flag == 'printOutwardInv' || $flag == 'outwardRegister'){ $receipt_name = 'OUTWARD RECEIPT' ?>
 			<?php } elseif ($flag == 'edit'){ $receipt_name = 'ERRATA RECEIPT';  ?><?php } ?>					
 			
-			<p readonly style="height: 20px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 8px; border: 0 none; overflow: hidden; resize: none;">
+			<p readonly style="height: 20px; width: 100%; margin: 20px 0; background: #F1F1F4; text-align: center; color: black; font: bold 15px Cambria,Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 10px; padding: 8px 8px; border: 0 none; overflow: hidden; resize: none;">
 			<?php echo $receipt_name; ?>
 			</p>
 			</div>
@@ -17,7 +17,7 @@
 <strong style="font-size:20px"><?php echo strtoupper($register->company_name)?></strong><?php if ($register->company_name=='SRAM AND CO') { echo ', Chartered Accountants'. PHP_EOL;} else { echo PHP_EOL;}?>
 #63, East Vanniar Street
 West KK Nagar, Chennai 600078
-Phone: +9144 23643710 Mob: +91 9440029640</p>
+Phone: +9144 23643710</p>
 			</div>
 			<div>
 

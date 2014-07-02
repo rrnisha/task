@@ -69,6 +69,10 @@ class Itr extends CI_Controller {
 	        foreach ($itr_query->result() as $row) {
 	            $client_query = $this->Client_model->get($row->client_id);
 	            $client_result = $client_query->result();
+                
+                $row->date_of_uploading = $this->changeDateFormat($row->date_of_uploading);
+                $row->date_of_mailing = $this->changeDateFormat($row->date_of_mailing);
+                $row->date_of_billing = $this->changeDateFormat($row->date_of_billing);                               
 	            $row->client_name = $client_result[0]->full_name;
 	
 	            $filed_emp_name_query = $this->Employee_model->get_name($row->filed_by);
@@ -103,6 +107,15 @@ class Itr extends CI_Controller {
         $data['remarks'] = $res[0]->remarks;
 
         $this->load->view('task/remarks', $data);
-    }    
+    } 
+
+    // UTILITY FUNCTION
+    public function changeDateFormat($date)
+    {
+        if ($date == '') return '';
+        $dateArr = explode('-',$date);
+        $ret_date = $dateArr[2].'-'.$dateArr[1].'-'.$dateArr[0];
+        return $ret_date; 
+    }       
 }
 

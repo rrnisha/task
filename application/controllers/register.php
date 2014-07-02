@@ -144,7 +144,7 @@ class Register extends CI_Controller {
 
         
         $data['fin_year'] = array();
-        $fy_curr_yr_query = $this->Year_model->get_all();
+        $fy_curr_yr_query = $this->Year_model->get();
         foreach ($fy_curr_yr_query->result() as $res) {
         	$data['fin_year'][$res->id] = $res->fin_year;
         }

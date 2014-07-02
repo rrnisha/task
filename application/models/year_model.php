@@ -7,7 +7,12 @@ class Year_model extends CI_Model {
     }
 
     function get() {
-        $query = $this->db->query('SELECT * FROM years order by from_year');
+        $query = $this->db->query('SELECT * FROM years order by from_year desc');
+        return $query;
+    }
+
+    function get_assessment_years() {
+        $query = $this->db->query('SELECT * FROM years order by from_year desc LIMIT 10 OFFSET 1');
         return $query;
     }
 

@@ -279,6 +279,13 @@ class Client extends CI_Controller {
                     $row->itr_id = '';
             }
             
+            $row->start_date = mdate('%d-%m-%Y', strtotime($row->start_date));
+            $row->due_date = mdate('%d-%m-%Y', strtotime($row->due_date));
+            if ($row->end_date != '0000-00-00')
+                $row->end_date = mdate('%d-%m-%Y', strtotime($row->end_date));
+            else
+                $row->end_date = '00-00-0000';
+
             $data['tasks'][] = $row;
         }
 
