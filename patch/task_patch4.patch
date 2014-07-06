@@ -1,0 +1,534 @@
+From 69426da8b7455a34ce637148ae45a2dcc805509b Mon Sep 17 00:00:00 2001
+From: rrnisha <r.rishishankar@gmail.com>
+Date: Sun, 6 Jul 2014 12:52:49 +0530
+Subject: [PATCH] patch 4 - issues 29, 28, 27, 26, 23, 14
+
+---
+ application/controllers/chart.php  |  11 ++-
+ application/controllers/itr.php    | 160 +++++++++++++++++++++++++++++--------
+ application/models/itr_model.php   |  21 +++--
+ application/models/task_model.php  |  27 +++++--
+ application/models/year_model.php  |  12 ++-
+ application/views/itr/list.php     |  27 ++++---
+ application/views/reports/task.php |   8 +-
+ assets/css/layout-1024x768.css     |  10 ++-
+ assets/css/layout-800x600.css      |   6 ++
+ 9 files changed, 221 insertions(+), 61 deletions(-)
+
+diff --git a/application/controllers/chart.php b/application/controllers/chart.php
+index 907c6d3..640fd1d 100644
+--- a/application/controllers/chart.php
++++ b/application/controllers/chart.php
+@@ -21,8 +21,13 @@ class Chart extends CI_Controller {
+     public function index() {
+         $data = array();
+         
+-        $fy = ''; // TODO Change to pick option from ui 
+-        $year_query = $this->Year_model->get_curr_year(); // TODO Currently use current fy
++        $fy = '';
++        $curr_date = date('d-m-Y');
++        $curr_year = substr($curr_date, 6);
++        $next_year = $curr_year+1;
++        $fy = $curr_year.'-'.$next_year;
++
++        $year_query = $this->Year_model->get_by_year($fy);
+         $sdate = '';
+         $edate = '';
+         
+@@ -31,7 +36,7 @@ class Chart extends CI_Controller {
+ 			$sdate = $curr_year_row->from_date;
+ 			$edate = $curr_year_row->to_date;
+ 		}
+-        
++
+         $cnt_query = $this->Task_model->get_status_cnt('open', $sdate, $edate);
+         $cnt_res = $cnt_query->result();
+         $data['status']['open'] = $cnt_res[0]->cnt;
+diff --git a/application/controllers/itr.php b/application/controllers/itr.php
+index 5ec5c2b..0062505 100644
+--- a/application/controllers/itr.php
++++ b/application/controllers/itr.php
+@@ -18,6 +18,7 @@ class Itr extends CI_Controller {
+         $this->load->model('Itr_model');
+         $this->load->model('Client_model');
+         $this->load->model('Employee_model');
++        $this->load->model('Year_model');        
+         $this->load->library('session');
+         $this->session->requireLogin();
+         $this->load->helper('date');
+@@ -31,21 +32,26 @@ class Itr extends CI_Controller {
+         $client_id = isset($_POST['filter_client_id']) ? $_POST['filter_client_id'] : '';;
+         if ($page == 'filter'){
+         	if (isset($_POST['filter_client_id']) && $_POST['filter_client_id']=='') {
+-        		$client_id = -1;
++                $client_id='';    
+         	}
+         	$data['filter_client_id']=$client_id;
+         	$data['filter_client_search']=isset($_POST['filter_client_search']) ? $_POST['filter_client_search'] : '';
++            $data['filter_fy']=isset($_POST['fy']) ? $_POST['fy'] : '';            
+         	$data['msg'] = isset($_POST['msg']) ? $_POST['msg'] : '';
+         }else {
+         	$data['filter_client_id']='';
+         	$data['filter_client_search']='';
++            $curr_date = date('d-m-Y');
++            $curr_year = substr($curr_date, 6);
++            $prev_year = $curr_year-1;
++            $fy = $prev_year.'-'.$curr_year;
++            $data['filter_fy']=$fy;
+         	$client_id = '';
+         }
+-                
+         $this->load->library('pagination');
+ 
+         $config['base_url'] = base_url() . 'index.php/itr/lists/';
+-        $cnt_query = $this->Itr_model->get_count();
++        $cnt_query = $this->Itr_model->get_count($data['filter_fy']);
+         $cnt_res = $cnt_query->result();
+         $config['total_rows'] = $cnt_res[0]->cnt;
+         $config['per_page'] = 12;
+@@ -54,40 +60,112 @@ class Itr extends CI_Controller {
+         $this->pagination->initialize($config);
+ 
+         $data['itrs'] = array();
+-        if ($client_id==-1) {
+-        	$this->load->view('layout/header');
+-        	$data['msg'] = 'clientNotFound';
+-        	$this->load->view('itr/list', $data);
+-        	$this->load->view('layout/footer');
+-        } else {
+ 	        
+-	        if ($client_id=='') {
+-	        	$itr_query = $this->Itr_model->get_all($config['per_page'], $this->uri->segment(3));
+-	        } else if ($client_id!=-1) {
+-	        	$itr_query = $this->Itr_model->get_by_client($client_id, $config['per_page'], $this->uri->segment(3));
+-	        } 
+-	        foreach ($itr_query->result() as $row) {
+-	            $client_query = $this->Client_model->get($row->client_id);
+-	            $client_result = $client_query->result();
+-                
+-                $row->date_of_uploading = $this->changeDateFormat($row->date_of_uploading);
+-                $row->date_of_mailing = $this->changeDateFormat($row->date_of_mailing);
+-                $row->date_of_billing = $this->changeDateFormat($row->date_of_billing);                               
+-	            $row->client_name = $client_result[0]->full_name;
+-	
+-	            $filed_emp_name_query = $this->Employee_model->get_name($row->filed_by);
+-	            $filed_emp_name_result = $filed_emp_name_query->result();
+-	            $row->filed_by_name = $filed_emp_name_result[0]->login;
+-	
+-	            $data['itrs'][] = $row;
+-	        }
+-	
+-	        $this->load->view('layout/header');
+-	        $this->load->view('itr/list', $data);
+-	        $this->load->view('layout/footer');
++        if ($client_id=='') {
++        	$itr_query = $this->Itr_model->get_all($config['per_page'], $this->uri->segment(3), $data['filter_fy']);
++        } else if ($client_id!=-1) {
++        	$itr_query = $this->Itr_model->get_by_client($client_id, $config['per_page'], $this->uri->segment(3), $data['filter_fy']);
++        } 
++        foreach ($itr_query->result() as $row) {
++            $client_query = $this->Client_model->get($row->client_id);
++            $client_result = $client_query->result();
++            
++            $row->assessment_year = $this->changeAYFormat($row->assessment_year);
++            $row->date_of_uploading = $this->changeDateYearFormat($row->date_of_uploading);
++            $row->date_of_mailing = $this->changeDateYearFormat($row->date_of_mailing);
++            $row->date_of_billing = $this->changeDateYearFormat($row->date_of_billing);                               
++            $row->client_name = $client_result[0]->full_name;
++
++            $filed_emp_name_query = $this->Employee_model->get_name($row->filed_by);
++            $filed_emp_name_result = $filed_emp_name_query->result();
++            $row->filed_by_name = $filed_emp_name_result[0]->login;
++
++            $data['itrs'][] = $row;
+         }
++
++        $data['values']['fy'] = '';
++        $data['values']['sel_fy'] = 'N';    
++        $data['fys'] = array();
++        $fy_query = $this->Year_model->get_all_desc();
++        foreach ($fy_query->result() as $res) { 
++            $data['fys'][$res->fin_year] = $res->fin_year;
++        }  
++
++        $this->load->view('layout/header');
++        $this->load->view('itr/list', $data);
++        $this->load->view('layout/footer');
+     }
+     
++    public function get($itrId) {
++        $data = array();
++        $itr_query = $this->Itr_model->get_by_id($itrId);
++        $res = $itr_query->result();
++
++        $client_query = $this->Client_model->get($res[0]->client_id);
++        $client_result = $client_query->result();
++        $res[0]->client_name = '';
++        if (count($client_result) >= 1) {
++            $res[0]->client_name = $client_result[0]->full_name;
++        }
++
++        $res[0]->date_of_uploading = $this->changeDateFormat($res[0]->date_of_uploading);
++        $res[0]->date_of_mailing = $this->changeDateFormat($res[0]->date_of_mailing);
++        $res[0]->date_of_billing = $this->changeDateFormat($res[0]->date_of_billing);
++
++        $data['assessment_year'] = array();
++        $fy_query = $this->Year_model->get_assessment_years();
++        foreach ($fy_query->result() as $ay_res) {
++            $data['assessment_year'][$ay_res->assessment_year] = $ay_res->assessment_year;
++        } 
++
++        $data['itr'] = $res[0];
++        $this->load->view('layout/header');
++        $this->load->view('itr/edit', $data);
++        $this->load->view('layout/footer');
++    }
++
++    public function edit() {
++
++        $data = array();
++
++        print_r($_POST);
++        if (isset($_POST['edit']) && $_POST['edit'] == 'Ok') {
++            $data['values']['itr_id'] = $_POST['id'];
++            $data['values']['assessment_year'] = $_POST['assessment_year'];
++            // $data['values']['data_of_uploading'] = $_POST['data_of_uploading'];
++            // $data['values']['data_of_mailing'] = $_POST['data_of_mailing'];
++            // $data['values']['data_of_acknowledgement'] = $_POST['data_of_acknowledgement'];                        
++
++            // Loading form validation library
++           $this->load->library('form_validation');
++           // Setting validation rules
++           $this->form_validation->set_rules('assessment_year', 'assessment_year', 'required');    
++
++            // Validating..
++           if ($this->form_validation->run() == TRUE ) {
++                $this->Itr_model->edit($data['values']);
++                redirect('/itr/lists?msg=itrEditSuccess');
++           } 
++        }
++        $itr_query = $this->Itr_model->get_by_id($_POST['id']);
++        $res = $itr_query->result();
++
++        $client_query = $this->Client_model->get($res[0]->client_id);
++        $client_result = $client_query->result();
++        $res[0]->client_name = '';
++        if (count($client_result) >= 1) {
++            $res[0]->client_name = $client_result[0]->full_name;
++        }
++
++        $res[0]->date_of_uploading = $this->changeDateFormat($res[0]->date_of_uploading);
++        $res[0]->date_of_mailing = $this->changeDateFormat($res[0]->date_of_mailing);
++        $res[0]->date_of_billing = $this->changeDateFormat($res[0]->date_of_billing);
++
++        $this->load->view('layout/header');
++        $this->load->view('itr/edit', $data);
++        $this->load->view('layout/footer');
++    }
++
+     public function add_remark() {
+         if (isset($_POST['remarks']) && $_POST['remarks'] && isset($_POST['sr_itr_id']) && $_POST['sr_itr_id']) {
+             $user_query = $this->Employee_model->get_name($_SESSION['emp_id']);
+@@ -116,6 +194,20 @@ class Itr extends CI_Controller {
+         $dateArr = explode('-',$date);
+         $ret_date = $dateArr[2].'-'.$dateArr[1].'-'.$dateArr[0];
+         return $ret_date; 
+-    }       
++    }
++
++    public function changeDateYearFormat($date)
++    {
++        if ($date == '') return '';
++        $dateArr = explode('-',$date);
++        $ret_date = $dateArr[2].'-'.$dateArr[1].'-'.substr($dateArr[0],2,2);
++        return $ret_date; 
++    }  
++
++    public function changeAYFormat($ay)
++    {
++        if ($ay == '') return '';
++        return substr($ay,2,2).'-'.substr($ay,7,8); 
++    }          
+ }
+ 
+diff --git a/application/models/itr_model.php b/application/models/itr_model.php
+index f297567..c144fa0 100644
+--- a/application/models/itr_model.php
++++ b/application/models/itr_model.php
+@@ -12,18 +12,23 @@ class Itr_model extends CI_Model {
+         return $query;
+     }
+ 
+-    function get_all($num, $offset) {
+-        $query = $this->db->select('* FROM itrs order by itr_id desc')->limit($num, $offset);
++    function get_all($num, $offset, $fy) {
++        $query = $this->db->select('* FROM itrs WHERE assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
+         $query = $this->db->get();
+         return $query;
+     }
+ 
+-    function get_by_client($client_id, $num, $offset) {
+-    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' order by itr_id desc')->limit($num, $offset);
++    function get_by_client($client_id, $num, $offset, $fy) {
++    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' and assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
+     	$query = $this->db->get();
+     	return $query;
+     }
+-    
++
++    function get_by_id($itr_id) {
++        $query = $this->db->query('SELECT * FROM itrs WHERE itr_id =' . $itr_id);
++        return $query;
++    }
++
+     function get($task_id) {
+         $query = $this->db->query('SELECT * FROM itrs WHERE task_id =' . $task_id);
+         return $query;
+@@ -53,6 +58,12 @@ class Itr_model extends CI_Model {
+         return $this->db->insert_id();
+     }
+ 
++    function edit($itr){
++        $this->db->where('itr_id', $itr['itr_id']);
++        $this->db->set('update_date', 'NOW()', FALSE);
++        $this->db->update('itrs', $itr); 
++    } 
++
+     function update_billing() {
+         print_r($_POST);
+         $this->db->query("UPDATE itrs SET remarks=CONCAT(remarks,'" . mysql_real_escape_string($_POST['finalizeITRTaskComment']) . "'), 
+diff --git a/application/models/task_model.php b/application/models/task_model.php
+index 07909f3..5b2255c 100644
+--- a/application/models/task_model.php
++++ b/application/models/task_model.php
+@@ -8,15 +8,30 @@ class Task_model extends CI_Model {
+ 
+     function get_count($status) {
+         $ext_sql = '';
+-        $statusArr = array('new', 're-assigned', 'query', 'pending', 'completed', 'finalized');
++        $statusArr = array('new', 're-assigned', 'query', 'pending', 'completed', 'finalized', 'created', 'tofinalize');
+         $ext_sql = ' WHERE 1 = 1 ';
+-        if (in_array($status, $statusArr)) {
++        // if (in_array($status, $statusArr)) {
+ 
+-            $ext_sql .= ' AND status = \'' . $status . '\'';
+-        } elseif ($status == 'all') {
++        //     $ext_sql .= ' AND status = \'' . $status . '\'';
++        // } elseif ($status == 'all') {
++        //     $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
++        // }
++        // $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'] . ' ORDER by status';
++
++        if (in_array($status, $statusArr)) {
++            if ($status == 'query')
++                $ext_sql .= ' AND id in (SELECT task_id FROM `task_query` WHERE (raised_by ='.$_SESSION['emp_id'].' or requested_to='.$_SESSION['emp_id'].') AND status = \'open\')';
++            else if ($status == 'tofinalize')
++                $ext_sql .= ' AND status = \'' . 'completed' . '\' AND type in (SELECT type from `type_owners` WHERE emp_id='.$_SESSION['emp_id'].')';
++            else if ($status != 'created')
++                $ext_sql .= ' AND status = \'' . $status . '\'';
++            if ($status == 'created')
++                $ext_sql .= ' AND created_by = '.$_SESSION['emp_id'];
++        } elseif ($status == 'all' || $status == 'super') {
+             $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
+-        }
+-        $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'] . ' ORDER by status';
++        } 
++        if (!($status == 'query' || $status == 'created' || $status == 'super' || $status == 'tofinalize')) $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'];
++                
+         $query = $this->db->select('count(*) as cnt FROM tasks' . $ext_sql);
+ 
+         $query = $this->db->get();
+diff --git a/application/models/year_model.php b/application/models/year_model.php
+index 729c9c5..50d8ff1 100644
+--- a/application/models/year_model.php
++++ b/application/models/year_model.php
+@@ -26,8 +26,13 @@ class Year_model extends CI_Model {
+         return $query;
+     }
+     
++    function get_all_desc() {
++        $query = $this->db->query('SELECT * FROM years order by from_year desc');
++        return $query;
++    }
++
+     function get_curr_year() {
+-        $query = $this->db->query('SELECT * FROM years WHERE is_curr_year =\'Y\' order by from_year');
++        $query = $this->db->query('SELECT * FROM years order by from_year');
+         return $query;
+     }
+ 
+@@ -41,6 +46,11 @@ class Year_model extends CI_Model {
+         return $query;
+     }
+     
++    function get_by_assessment_year($ay) {
++        $query = $this->db->query('SELECT * FROM years WHERE assessment_year =\''.$ay.'\' order by from_year');
++        return $query;
++    }
++
+     function insert() {
+         // Setting variables
+         $this->from_year = mysql_real_escape_string($_POST['from_year']);
+diff --git a/application/views/itr/list.php b/application/views/itr/list.php
+index 5817a9f..9f9e8b4 100644
+--- a/application/views/itr/list.php
++++ b/application/views/itr/list.php
+@@ -32,7 +32,7 @@
+     function captureItrId(itrId) {
+         document.getElementById("selected_itr_id").value = itrId;
+         showRemark();
+-    }
++    }    
+ </script>
+ <section id="main" class="column">
+     <article class="module width_full">
+@@ -48,14 +48,19 @@
+ 			    		<label>By Client</label>
+ 			    		<input type="text" id="filter_client_search" name="filter_client_search"  value="<?php echo $filter_client_search; ?>">
+ 						<input type="hidden" name="filter_client_id" id="filter_client_id" value="<?php echo $filter_client_id; ?>"/>
+-						<input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
+-						<a href="<?php echo base_url(); ?>index.php/itr/lists">Reset Filter</a>
+ 			    	</fieldset>
++
++                    <fieldset>
++                        <label>Assessment Year</label>
++                        <?php $js = 'id="fys"'; echo form_dropdown('fy', $fys, $values['fy'], $js); ?>
++                        <input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
++                        <a href="<?php echo base_url(); ?>index.php/itr/lists">Reset Filter</a>
++                    </fieldset>                     
+ 		        </form>
+ 		    </div>
+ 	    </div>
+ 	</article>
+-    <article class="module width_3_quarter">
++    <article class="module width_full">
+         <header>
+             <h3 class="tabs_involved">ITRs</h3>
+         </header>
+@@ -93,6 +98,7 @@
+                             <?php if ($_SESSION['emp_role_id']==2) { ?>
+                             	<th rowspan="1">Amt</th>
+                             <?php } ?>
++                            <th rowspan="1" colspan="2">Action</th>
+                             </thead>
+                             <tbody>                            
+                                 <?php
+@@ -115,6 +121,9 @@
+                                         <?php if ($_SESSION['emp_role_id']==2) { ?>
+                                         	<td><?php echo $itr->bill_amount; ?></td>
+                                         <?php } ?>
++
++                                        <td><a href="<?php echo base_url(); ?>index.php/itr/get/<?php echo $itr->itr_id; ?>/edit">Edit</a></td>
++                                        <!-- <td><a href="#<?php echo $itr->itr_id; ?>" class="reverseITR">Reverse</a></td> -->
+                                     </tr>
+                                     <?php
+                                     $i++;
+@@ -126,8 +135,8 @@
+                 </div>
+             </div>   
+     </article>
+-
+-    <article class="module width_quarter">
++    <div class="clear"></div>
++    <article class="module width_full">
+         <header>
+             <h3 class="tabs_involved">ITR Remarks</h3>
+         </header>
+@@ -137,14 +146,14 @@
+                     <?php
+                     if (count($itrs) < 1) {
+                         ?>    
+-                        <div class="message">
++                        <div class="itr_message">
+                             <p>No Remarks added</p>
+                         </div>
+                         <?php
+                     } else {
+                         if ($itrs[0]->remarks == '') {
+                             ?>    
+-                            <div class="message">
++                            <div class="itr_message">
+                                 <p>No Remarks added</p>
+                             </div>
+                             <?php
+@@ -154,7 +163,7 @@
+                         $cnt = count($remarkslist);
+                         for ($index = $cnt - 1; $index >= 0; $index--) {
+                             ?>
+-                            <div class="message"><p><?php echo $remarkslist[$index]; ?></p></div>
++                            <div class="itr_message"><p><?php echo $remarkslist[$index]; ?></p></div>
+                             <?php
+                         }
+                     }
+diff --git a/application/views/reports/task.php b/application/views/reports/task.php
+index 7f34757..0a0c50f 100644
+--- a/application/views/reports/task.php
++++ b/application/views/reports/task.php
+@@ -32,7 +32,13 @@
+ 	</thead>
+ 	<tbody>
+ 	<?php $i = 1; foreach ($tasks as $task) { ?>
+-		<tr>
++        <?php if ((strtotime(date('d-m-Y')) > strtotime($task->due_date) && $task->end_date == "00-00-0000" ) && !($status == 'completed' || $status == 'finalized' || $status == 'tofinalize')) { ?>
++        <tr style="background-color: #FF3333;">
++        <?php } else if (strtotime(date('d-m-Y')) == strtotime($task->due_date) && $task->end_date == "00-00-0000") { ?>
++        <tr style="background-color: #FFFF85;">
++        <?php } else { ?>
++        <tr>
++        <?php } ?>
+ 			<td><?php echo $i; ?></td>
+ 			<td><?php echo $task->id; ?></td>
+ 			<td><?php echo $task->company_name; ?></td>
+diff --git a/assets/css/layout-1024x768.css b/assets/css/layout-1024x768.css
+index 846a82e..a579d27 100644
+--- a/assets/css/layout-1024x768.css
++++ b/assets/css/layout-1024x768.css
+@@ -664,6 +664,12 @@ float: left;
+ 
+ .message {
+ border-bottom: 1px dotted #cccccc;
++padding: 5px 5px;
++}
++
++.itr_message {
++border-bottom: 1px dotted #cccccc;
++padding: 5px 20px;
+ }
+ 
+ input[type=submit] {
+@@ -775,13 +781,13 @@ overflow-y:auto;
+ }
+ 
+ .itr_list{
+-height: 570px;
++height: 300px;
+ overflow-x:hidden;
+ overflow-y:auto;    
+ }
+ 
+ .itr_remarks_list{
+-height: 570px;
++height: 180px;
+ overflow-x:hidden;
+ overflow-y:auto;    
+ }
+diff --git a/assets/css/layout-800x600.css b/assets/css/layout-800x600.css
+index ea43e01..deda527 100644
+--- a/assets/css/layout-800x600.css
++++ b/assets/css/layout-800x600.css
+@@ -663,6 +663,12 @@ float: left;
+ 
+ .message {
+ border-bottom: 1px dotted #cccccc;
++padding: 5px 5px;
++}
++
++.itr_message {
++border-bottom: 1px dotted #cccccc;
++padding: 5px 20px;
+ }
+ 
+ input[type=submit] {
+-- 
+1.8.3.4 (Apple Git-47)
+
