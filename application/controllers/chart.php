@@ -21,8 +21,13 @@ class Chart extends CI_Controller {
     public function index() {
         $data = array();
         
-        $fy = ''; // TODO Change to pick option from ui 
-        $year_query = $this->Year_model->get_curr_year(); // TODO Currently use current fy
+        $fy = '';
+        $curr_date = date('d-m-Y');
+        $curr_year = substr($curr_date, 6);
+        $next_year = $curr_year+1;
+        $fy = $curr_year.'-'.$next_year;
+
+        $year_query = $this->Year_model->get_by_year($fy);
         $sdate = '';
         $edate = '';
         
@@ -31,7 +36,7 @@ class Chart extends CI_Controller {
 			$sdate = $curr_year_row->from_date;
 			$edate = $curr_year_row->to_date;
 		}
-        
+
         $cnt_query = $this->Task_model->get_status_cnt('open', $sdate, $edate);
         $cnt_res = $cnt_query->result();
         $data['status']['open'] = $cnt_res[0]->cnt;

@@ -664,6 +664,12 @@ float: left;
 
 .message {
 border-bottom: 1px dotted #cccccc;
+padding: 5px 5px;
+}
+
+.itr_message {
+border-bottom: 1px dotted #cccccc;
+padding: 5px 20px;
 }
 
 input[type=submit] {
@@ -775,13 +781,13 @@ overflow-y:auto;
 }
 
 .itr_list{
-height: 570px;
+height: 300px;
 overflow-x:hidden;
 overflow-y:auto;    
 }
 
 .itr_remarks_list{
-height: 570px;
+height: 180px;
 overflow-x:hidden;
 overflow-y:auto;    
 }

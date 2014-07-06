@@ -8,15 +8,30 @@ class Task_model extends CI_Model {
 
     function get_count($status) {
         $ext_sql = '';
-        $statusArr = array('new', 're-assigned', 'query', 'pending', 'completed', 'finalized');
+        $statusArr = array('new', 're-assigned', 'query', 'pending', 'completed', 'finalized', 'created', 'tofinalize');
         $ext_sql = ' WHERE 1 = 1 ';
-        if (in_array($status, $statusArr)) {
+        // if (in_array($status, $statusArr)) {
 
-            $ext_sql .= ' AND status = \'' . $status . '\'';
-        } elseif ($status == 'all') {
+        //     $ext_sql .= ' AND status = \'' . $status . '\'';
+        // } elseif ($status == 'all') {
+        //     $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
+        // }
+        // $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'] . ' ORDER by status';
+
+        if (in_array($status, $statusArr)) {
+            if ($status == 'query')
+                $ext_sql .= ' AND id in (SELECT task_id FROM `task_query` WHERE (raised_by ='.$_SESSION['emp_id'].' or requested_to='.$_SESSION['emp_id'].') AND status = \'open\')';
+            else if ($status == 'tofinalize')
+                $ext_sql .= ' AND status = \'' . 'completed' . '\' AND type in (SELECT type from `type_owners` WHERE emp_id='.$_SESSION['emp_id'].')';
+            else if ($status != 'created')
+                $ext_sql .= ' AND status = \'' . $status . '\'';
+            if ($status == 'created')
+                $ext_sql .= ' AND created_by = '.$_SESSION['emp_id'];
+        } elseif ($status == 'all' || $status == 'super') {
             $ext_sql .= ' AND status <> \'completed\'' . ' AND status <> \'finalized\'';
-        }
-        $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'] . ' ORDER by status';
+        } 
+        if (!($status == 'query' || $status == 'created' || $status == 'super' || $status == 'tofinalize')) $ext_sql .= ' AND emp_id =' . $_SESSION['emp_id'];
+                
         $query = $this->db->select('count(*) as cnt FROM tasks' . $ext_sql);
 
         $query = $this->db->get();

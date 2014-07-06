@@ -12,18 +12,23 @@ class Itr_model extends CI_Model {
         return $query;
     }
 
-    function get_all($num, $offset) {
-        $query = $this->db->select('* FROM itrs order by itr_id desc')->limit($num, $offset);
+    function get_all($num, $offset, $fy) {
+        $query = $this->db->select('* FROM itrs WHERE assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
         $query = $this->db->get();
         return $query;
     }
 
-    function get_by_client($client_id, $num, $offset) {
-    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' order by itr_id desc')->limit($num, $offset);
+    function get_by_client($client_id, $num, $offset, $fy) {
+    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' and assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
     	$query = $this->db->get();
     	return $query;
     }
-    
+
+    function get_by_id($itr_id) {
+        $query = $this->db->query('SELECT * FROM itrs WHERE itr_id =' . $itr_id);
+        return $query;
+    }
+
     function get($task_id) {
         $query = $this->db->query('SELECT * FROM itrs WHERE task_id =' . $task_id);
         return $query;
@@ -52,6 +57,12 @@ class Itr_model extends CI_Model {
 
         return $this->db->insert_id();
     }
+
+    function edit($itr){
+        $this->db->where('itr_id', $itr['itr_id']);
+        $this->db->set('update_date', 'NOW()', FALSE);
+        $this->db->update('itrs', $itr); 
+    } 
 
     function update_billing() {
         print_r($_POST);

@@ -26,8 +26,13 @@ class Year_model extends CI_Model {
         return $query;
     }
     
+    function get_all_desc() {
+        $query = $this->db->query('SELECT * FROM years order by from_year desc');
+        return $query;
+    }
+
     function get_curr_year() {
-        $query = $this->db->query('SELECT * FROM years WHERE is_curr_year =\'Y\' order by from_year');
+        $query = $this->db->query('SELECT * FROM years order by from_year');
         return $query;
     }
 
@@ -41,6 +46,11 @@ class Year_model extends CI_Model {
         return $query;
     }
     
+    function get_by_assessment_year($ay) {
+        $query = $this->db->query('SELECT * FROM years WHERE assessment_year =\''.$ay.'\' order by from_year');
+        return $query;
+    }
+
     function insert() {
         // Setting variables
         $this->from_year = mysql_real_escape_string($_POST['from_year']);

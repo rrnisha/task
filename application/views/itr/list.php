@@ -32,7 +32,7 @@
     function captureItrId(itrId) {
         document.getElementById("selected_itr_id").value = itrId;
         showRemark();
-    }
+    }    
 </script>
 <section id="main" class="column">
     <article class="module width_full">
@@ -48,14 +48,19 @@
 			    		<label>By Client</label>
 			    		<input type="text" id="filter_client_search" name="filter_client_search"  value="<?php echo $filter_client_search; ?>">
 						<input type="hidden" name="filter_client_id" id="filter_client_id" value="<?php echo $filter_client_id; ?>"/>
-						<input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
-						<a href="<?php echo base_url(); ?>index.php/itr/lists">Reset Filter</a>
 			    	</fieldset>
+
+                    <fieldset>
+                        <label>Assessment Year</label>
+                        <?php $js = 'id="fys"'; echo form_dropdown('fy', $fys, $values['fy'], $js); ?>
+                        <input type="submit" name="filter_submit" id="filter_submit" value="Filter"/>
+                        <a href="<?php echo base_url(); ?>index.php/itr/lists">Reset Filter</a>
+                    </fieldset>                     
 		        </form>
 		    </div>
 	    </div>
 	</article>
-    <article class="module width_3_quarter">
+    <article class="module width_full">
         <header>
             <h3 class="tabs_involved">ITRs</h3>
         </header>
@@ -93,6 +98,7 @@
                             <?php if ($_SESSION['emp_role_id']==2) { ?>
                             	<th rowspan="1">Amt</th>
                             <?php } ?>
+                            <th rowspan="1" colspan="2">Action</th>
                             </thead>
                             <tbody>                            
                                 <?php
@@ -115,6 +121,9 @@
                                         <?php if ($_SESSION['emp_role_id']==2) { ?>
                                         	<td><?php echo $itr->bill_amount; ?></td>
                                         <?php } ?>
+
+                                        <td><a href="<?php echo base_url(); ?>index.php/itr/get/<?php echo $itr->itr_id; ?>/edit">Edit</a></td>
+                                        <!-- <td><a href="#<?php echo $itr->itr_id; ?>" class="reverseITR">Reverse</a></td> -->
                                     </tr>
                                     <?php
                                     $i++;
@@ -126,8 +135,8 @@
                 </div>
             </div>   
     </article>
-
-    <article class="module width_quarter">
+    <div class="clear"></div>
+    <article class="module width_full">
         <header>
             <h3 class="tabs_involved">ITR Remarks</h3>
         </header>
@@ -137,14 +146,14 @@
                     <?php
                     if (count($itrs) < 1) {
                         ?>    
-                        <div class="message">
+                        <div class="itr_message">
                             <p>No Remarks added</p>
                         </div>
                         <?php
                     } else {
                         if ($itrs[0]->remarks == '') {
                             ?>    
-                            <div class="message">
+                            <div class="itr_message">
                                 <p>No Remarks added</p>
                             </div>
                             <?php
@@ -154,7 +163,7 @@
                         $cnt = count($remarkslist);
                         for ($index = $cnt - 1; $index >= 0; $index--) {
                             ?>
-                            <div class="message"><p><?php echo $remarkslist[$index]; ?></p></div>
+                            <div class="itr_message"><p><?php echo $remarkslist[$index]; ?></p></div>
                             <?php
                         }
                     }

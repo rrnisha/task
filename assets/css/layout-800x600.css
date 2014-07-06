@@ -663,6 +663,12 @@ float: left;
 
 .message {
 border-bottom: 1px dotted #cccccc;
+padding: 5px 5px;
+}
+
+.itr_message {
+border-bottom: 1px dotted #cccccc;
+padding: 5px 20px;
 }
 
 input[type=submit] {
