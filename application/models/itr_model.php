@@ -6,20 +6,29 @@ class Itr_model extends CI_Model {
         parent::__construct();
     }
 
-    function get_count() {
-        $query = $this->db->select('count(*) as cnt FROM itrs');
+    function get_count($fy) {
+        if ($fy!='')
+            $query = $this->db->select('count(*) as cnt FROM itrs WHERE assessment_year = "'.$fy.'"');
+        else
+            $query = $this->db->select('count(*) as cnt FROM itrs');
         $query = $this->db->get();
         return $query;
     }
 
     function get_all($num, $offset, $fy) {
-        $query = $this->db->select('* FROM itrs WHERE assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
+        if ($fy!='')
+            $query = $this->db->select('* FROM itrs WHERE assessment_year = "'.$fy.'"'.' order by date_of_uploading desc')->limit($num, $offset);
+        else
+            $query = $this->db->select('* FROM itrs order by date_of_uploading desc')->limit($num, $offset);
         $query = $this->db->get();
         return $query;
     }
 
     function get_by_client($client_id, $num, $offset, $fy) {
-    	$query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' and assessment_year = "'.$fy.'"'.' order by itr_id desc')->limit($num, $offset);
+        if ($fy!='')
+    	   $query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' and assessment_year = "'.$fy.'"'.' order by date_of_uploading desc')->limit($num, $offset);
+        else
+           $query = $this->db->select('* FROM itrs WHERE client_id ='.$client_id.' order by date_of_uploading desc')->limit($num, $offset); 
     	$query = $this->db->get();
     	return $query;
     }

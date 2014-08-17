@@ -41,11 +41,7 @@ class Itr extends CI_Controller {
         }else {
         	$data['filter_client_id']='';
         	$data['filter_client_search']='';
-            $curr_date = date('d-m-Y');
-            $curr_year = substr($curr_date, 6);
-            $prev_year = $curr_year-1;
-            $fy = $prev_year.'-'.$curr_year;
-            $data['filter_fy']=$fy;
+            $data['filter_fy']='';
         	$client_id = '';
         }
         $this->load->library('pagination');
